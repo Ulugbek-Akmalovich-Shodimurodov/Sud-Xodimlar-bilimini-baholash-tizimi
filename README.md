@@ -77,3 +77,4 @@
 
 - `superadmin` foydalanuvchi uchun `backend/db/init.sql` faylida dastlabki ma'lumot mavjud.
 - Frontend va backend `localhost` da ishga tushadi. Agar portni o‘zgartirsangiz, `frontend/src/api.js` ichidagi `VITE_API_BASE` ni moslang.
+# Sud-Xodimlar-bilimini-baholash-tizimi
