@@ -4,6 +4,20 @@ import { optionalAuthenticateToken } from '../middleware/auth.js';
 
 const router = express.Router();
 
+function roundToOneDecimal(value) {
+  const parsed = Number(value);
+  if (Number.isNaN(parsed)) return 0;
+  return Number(parsed.toFixed(1));
+}
+
+function normalizeAverageRows(rows) {
+  return rows.map((row) => ({
+    ...row,
+    employee_count: Number(row.employee_count),
+    average_score: roundToOneDecimal(row.average_score),
+  }));
+}
+
 function buildStatsAccess(user, startIndex = 1) {
   if (user?.role !== 'admin') {
     return { clause: '', values: [], nextIndex: startIndex };
@@ -63,7 +77,7 @@ router.get('/regions', optionalAuthenticateToken, async (req, res, next) => {
          ORDER BY regions.name`,
         [assigned]
       );
-      return res.json(result.rows);
+      return res.json(normalizeAverageRows(result.rows));
     }
 
     const result = await query(
@@ -75,7 +89,7 @@ router.get('/regions', optionalAuthenticateToken, async (req, res, next) => {
        GROUP BY regions.id
        ORDER BY regions.name`
     );
-    res.json(result.rows);
+    res.json(normalizeAverageRows(result.rows));
   } catch (err) {
     next(err);
   }
@@ -104,7 +118,7 @@ router.get('/districts', optionalAuthenticateToken, async (req, res, next) => {
        ORDER BY districts.name`,
       accessValues
     );
-    res.json(result.rows);
+    res.json(normalizeAverageRows(result.rows));
   } catch (err) {
     next(err);
   }
@@ -120,10 +134,9 @@ router.get('/summary', optionalAuthenticateToken, async (req, res, next) => {
       access.values
     );
     const summary = result.rows[0];
-    const averageScore = Number(summary.average_score);
     res.json({
       total_employees: Number(summary.total_employees),
-      average_score: Number.isNaN(averageScore) ? 0 : Number(averageScore.toFixed(2)),
+      average_score: roundToOneDecimal(summary.average_score),
     });
   } catch (err) {
     next(err);
