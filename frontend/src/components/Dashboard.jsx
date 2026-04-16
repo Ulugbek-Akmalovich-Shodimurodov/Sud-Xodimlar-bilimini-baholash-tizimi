@@ -2,9 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { fetchStats } from '../api.js';
 import { scoreColorClass } from '../utils/scoreColor.js';
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
-
-const colors = ['#2563eb', '#22c55e', '#f97316', '#8b5cf6', '#0ea5e9'];
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 
 function Dashboard({ user }) {
   const [stats, setStats] = useState(null);
@@ -26,7 +24,7 @@ function Dashboard({ user }) {
     return (
       <div className="rounded-3xl bg-white p-8 shadow-sm">
         <h1 className="text-2xl font-semibold">Admin panel</h1>
-        <p className="mt-4 text-slate-600">Siz tizimga kirmagansiz. Iltimos, kirish sahifasiga o‘ting.</p>
+        <p className="mt-4 text-slate-600">Siz tizimga kirmagansiz. Iltimos, kirish sahifasiga oting.</p>
         <Link to="/login" className="mt-6 inline-block rounded-2xl bg-slate-900 px-5 py-3 text-white">Kirish</Link>
       </div>
     );
@@ -58,7 +56,7 @@ function Dashboard({ user }) {
           <p className="mt-4 text-3xl font-semibold">{stats ? stats.summary.total_employees : '...'}</p>
         </div>
         <div className="rounded-3xl bg-white p-6 shadow-sm">
-          <p className="text-sm uppercase text-slate-500">O‘rtacha natija</p>
+          <p className="text-sm uppercase text-slate-500">Ortacha natija</p>
           <p className="mt-4 text-3xl font-semibold">{stats ? `${stats.summary.average_score}%` : '...'}</p>
         </div>
         <div className="rounded-3xl bg-white p-6 shadow-sm">
@@ -69,7 +67,7 @@ function Dashboard({ user }) {
 
       <section className="grid gap-6 xl:grid-cols-2">
         <div className="rounded-3xl bg-white p-6 shadow-sm">
-          <h2 className="text-lg font-semibold">Viloyatlar bo‘yicha o‘rtacha natijalar</h2>
+          <h2 className="text-lg font-semibold">Viloyatlar boyicha ortacha natijalar</h2>
           <div className="mt-4 h-80">
             {stats ? (
               <ResponsiveContainer width="100%" height="100%">
@@ -85,7 +83,7 @@ function Dashboard({ user }) {
         </div>
 
         <div className="rounded-3xl bg-white p-6 shadow-sm">
-          <h2 className="text-lg font-semibold">Tumanlar bo‘yicha o‘rtacha natijalar</h2>
+          <h2 className="text-lg font-semibold">Tumanlar boyicha ortacha natijalar</h2>
           <div className="mt-4 h-80">
             {stats ? (
               <ResponsiveContainer width="100%" height="100%">
@@ -101,30 +99,32 @@ function Dashboard({ user }) {
         </div>
       </section>
 
-      <section className="grid gap-6 lg:grid-cols-2">
+      <section className={`grid gap-6 ${stats?.top?.worst?.length ? 'lg:grid-cols-2' : 'lg:grid-cols-1'}`}>
         <div className="rounded-3xl bg-white p-6 shadow-sm">
-          <h2 className="text-lg font-semibold">Top 5 eng yaxshi xodim</h2>
+          <h2 className="text-lg font-semibold">Eng yaxshi natijalar</h2>
           <div className="mt-4 space-y-3">
-            {stats?.top.best.map((employee, index) => (
+            {stats?.top?.best?.map((employee, index) => (
               <div key={index} className="rounded-2xl border border-slate-200 p-4">
-                <p className="font-medium">{employee.full_name} — {employee.position}</p>
+                <p className="font-medium">{employee.full_name} - {employee.position}</p>
                 <p className={`text-sm ${scoreColorClass(employee.score)}`}>Natija: {employee.score}%</p>
               </div>
             ))}
           </div>
         </div>
 
-        <div className="rounded-3xl bg-white p-6 shadow-sm">
-          <h2 className="text-lg font-semibold">Top 5 eng yomon xodim</h2>
-          <div className="mt-4 space-y-3">
-            {stats?.top.worst.map((employee, index) => (
-              <div key={index} className="rounded-2xl border border-slate-200 p-4">
-                <p className="font-medium">{employee.full_name} — {employee.position}</p>
-                <p className={`text-sm ${scoreColorClass(employee.score)}`}>Natija: {employee.score}%</p>
-              </div>
-            ))}
+        {stats?.top?.worst?.length > 0 && (
+          <div className="rounded-3xl bg-white p-6 shadow-sm">
+            <h2 className="text-lg font-semibold">Eng yomon natijalar</h2>
+            <div className="mt-4 space-y-3">
+              {stats.top.worst.map((employee, index) => (
+                <div key={index} className="rounded-2xl border border-slate-200 p-4">
+                  <p className="font-medium">{employee.full_name} - {employee.position}</p>
+                  <p className={`text-sm ${scoreColorClass(employee.score)}`}>Natija: {employee.score}%</p>
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
+        )}
       </section>
     </div>
   );

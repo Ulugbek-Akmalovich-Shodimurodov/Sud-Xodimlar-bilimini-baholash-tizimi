@@ -38,6 +38,7 @@ function buildStatsAccess(user, startIndex = 1) {
 router.get('/top', optionalAuthenticateToken, async (req, res, next) => {
   try {
     const access = buildStatsAccess(req.user, 1);
+    const worstClause = access.clause ? `${access.clause} AND employees.score < 70` : 'WHERE employees.score < 70';
     const best = await query(
       `SELECT full_name, position, score, region_id, district_id
        FROM employees
@@ -49,7 +50,7 @@ router.get('/top', optionalAuthenticateToken, async (req, res, next) => {
     const worst = await query(
       `SELECT full_name, position, score, region_id, district_id
        FROM employees
-       ${access.clause}
+       ${worstClause}
        ORDER BY score ASC, full_name
        LIMIT 5`,
       access.values
