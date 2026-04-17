@@ -207,7 +207,7 @@ function AdminManager({ user }) {
       <section className="rounded-3xl bg-white p-6 shadow-sm">
         <h2 className="text-lg font-semibold">Adminlar ro‘yxati</h2>
         <div className="mt-4 space-y-3">
-          {admins.map((admin) => {
+          {admins.map((admin, index) => {
             const assignedNames = normalizeRegions(admin.assigned_regions).length
               ? normalizeRegions(admin.assigned_regions)
                   .map((id) => regions.find((region) => region.id === id)?.name)
@@ -219,7 +219,7 @@ function AdminManager({ user }) {
               <div key={admin.id} className="rounded-2xl border border-slate-200 p-4">
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <div>
-                    <p className="font-medium">{admin.username}</p>
+                    <p className="font-medium">{index + 1}. {admin.username}</p>
                     <p className="text-sm text-slate-500">{assignedNames}</p>
                   </div>
                   <div className="flex flex-wrap gap-2">

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import * as XLSX from 'xlsx';
 import { fetchEmployees, fetchRegions, fetchDistricts } from '../api.js';
 import { scoreColorClass } from '../utils/scoreColor.js';
 
@@ -22,21 +23,23 @@ function PublicPage() {
   const [total, setTotal] = useState(0);
   const [limit] = useState(10);
   const [loading, setLoading] = useState(false);
+  const [exporting, setExporting] = useState(false);
+
+  const buildFilterParams = (extra = {}) => ({
+    ...extra,
+    search: search || undefined,
+    region_id: selectedRegion || undefined,
+    district_id: selectedDistrict || undefined,
+    min_score: selectedScore?.min === '' ? undefined : selectedScore?.min,
+    max_score: selectedScore?.max === '' ? undefined : selectedScore?.max,
+  });
 
   useEffect(() => {
     fetchRegions().then(setRegions).catch(console.error);
   }, []);
 
   useEffect(() => {
-    const params = {
-      page,
-      limit,
-      search: search || undefined,
-      region_id: selectedRegion || undefined,
-      district_id: selectedDistrict || undefined,
-      min_score: selectedScore?.min || undefined,
-      max_score: selectedScore?.max || undefined,
-    };
+    const params = buildFilterParams({ page, limit });
 
     setLoading(true);
     fetchEmployees(params)
@@ -59,6 +62,53 @@ function PublicPage() {
   }, [selectedRegion]);
 
   const pageCount = Math.ceil(total / limit);
+
+  const handleExportExcel = async () => {
+    try {
+      setExporting(true);
+
+      const exportLimit = 1000;
+      let exportPage = 1;
+      let totalItems = 0;
+      const allEmployees = [];
+
+      while (true) {
+        const response = await fetchEmployees(buildFilterParams({ page: exportPage, limit: exportLimit }));
+        const batch = response?.data || [];
+        totalItems = Number(response?.total || 0);
+        allEmployees.push(...batch);
+
+        if (!batch.length || allEmployees.length >= totalItems) break;
+        exportPage += 1;
+      }
+
+      if (!allEmployees.length) {
+        window.alert('Eksport uchun ma`lumot topilmadi.');
+        return;
+      }
+
+      const rows = allEmployees.map((employee, index) => ({
+        'T/r': index + 1,
+        'F.I.O': employee.full_name,
+        'Lavozimi': employee.position,
+        'Viloyat': employee.region_name,
+        'Tuman': employee.district_name,
+        'Natija (%)': employee.score,
+      }));
+
+      const workbook = XLSX.utils.book_new();
+      const worksheet = XLSX.utils.json_to_sheet(rows);
+      XLSX.utils.book_append_sheet(workbook, worksheet, 'Xodimlar');
+
+      const datePart = new Date().toISOString().slice(0, 10);
+      XLSX.writeFile(workbook, `xodimlar_${datePart}.xlsx`);
+    } catch (err) {
+      console.error(err);
+      window.alert('Excel fayl yaratishda xatolik yuz berdi.');
+    } finally {
+      setExporting(false);
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -106,6 +156,17 @@ function PublicPage() {
               <option key={range.label} value={range.label}>{range.label}</option>
             ))}
           </select>
+        </div>
+
+        <div className="mt-4 flex justify-end">
+          <button
+            type="button"
+            onClick={handleExportExcel}
+            disabled={exporting || loading}
+            className="rounded-xl bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            {exporting ? 'Excel tayyorlanmoqda...' : 'Excelga yuklash'}
+          </button>
         </div>
       </section>
 

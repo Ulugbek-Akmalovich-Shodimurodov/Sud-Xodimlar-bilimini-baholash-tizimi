@@ -199,10 +199,10 @@ function RegionDistrictManager({ view, user }) {
         <h2 className="text-lg font-semibold">Ro‘yxat</h2>
         <div className="mt-4 grid gap-3 md:grid-cols-2">
           {view === 'regions' ? (
-            regions.map((region) => (
+            regions.map((region, index) => (
               <div key={region.id} className="rounded-2xl border border-slate-200 p-4">
                 <div className="flex items-center justify-between gap-4">
-                  <p className="font-medium">{region.name}</p>
+                  <p className="font-medium">{index + 1}. {region.name}</p>
                   <div className="inline-flex min-w-[72px] items-center justify-center gap-2 whitespace-nowrap">
                     <button
                       type="button"
@@ -229,11 +229,11 @@ function RegionDistrictManager({ view, user }) {
               </div>
             ))
           ) : view === 'districts' ? (
-            districts.map((district) => (
+            districts.map((district, index) => (
               <div key={district.id} className="rounded-2xl border border-slate-200 p-4">
                 <div className="flex items-center justify-between gap-4">
                   <div>
-                    <p className="font-medium">{district.name}</p>
+                    <p className="font-medium">{index + 1}. {district.name}</p>
                     <p className="text-sm text-slate-500">Viloyat: {regionName(district.region_id)}</p>
                   </div>
                   <div className="inline-flex min-w-[72px] items-center justify-center gap-2 whitespace-nowrap">
@@ -262,10 +262,10 @@ function RegionDistrictManager({ view, user }) {
               </div>
             ))
           ) : (
-            positions.map((position) => (
+            positions.map((position, index) => (
               <div key={position.id} className="rounded-2xl border border-slate-200 p-4">
                 <div className="flex items-center justify-between gap-4">
-                  <p className="font-medium">{position.name}</p>
+                  <p className="font-medium">{index + 1}. {position.name}</p>
                   <div className="inline-flex min-w-[72px] items-center justify-center gap-2 whitespace-nowrap">
                     <button
                       type="button"
