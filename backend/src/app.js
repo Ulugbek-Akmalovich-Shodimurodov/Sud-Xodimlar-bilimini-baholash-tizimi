@@ -81,13 +81,204 @@ app.post('/api/auth/login', async (req, res) => {
   }
 });
 
-// Simple regions test
+// Regions CRUD with mock data
+let regions = [
+  { id: 1, name: 'Toshkent viloyati' },
+  { id: 2, name: 'Samarqand viloyati' },
+  { id: 3, name: 'Farg\'ona viloyati' },
+  { id: 4, name: 'Buxoro viloyati' },
+  { id: 5, name: 'Xorazm viloyati' }
+];
+
+let nextRegionId = 6;
+
+// GET regions
 app.get('/api/regions', (req, res) => {
-  res.json([
-    { id: 1, name: 'Toshkent viloyati' },
-    { id: 2, name: 'Samarqand viloyati' },
-    { id: 3, name: 'Farg\'ona viloyati' }
-  ]);
+  res.json(regions);
+});
+
+// POST create region
+app.post('/api/regions', (req, res) => {
+  try {
+    const newRegion = {
+      id: nextRegionId++,
+      name: req.body.name
+    };
+    regions.push(newRegion);
+    res.status(201).json(newRegion);
+  } catch (error) {
+    res.status(400).json({ error: 'Viloyat yaratishda xatolik' });
+  }
+});
+
+// PUT update region
+app.put('/api/regions/:id', (req, res) => {
+  try {
+    const regionId = parseInt(req.params.id, 10);
+    const regionIndex = regions.findIndex(region => region.id === regionId);
+
+    if (regionIndex === -1) {
+      return res.status(404).json({ error: 'Viloyat topilmadi' });
+    }
+
+    regions[regionIndex] = { ...regions[regionIndex], ...req.body };
+    res.json(regions[regionIndex]);
+  } catch (error) {
+    res.status(400).json({ error: 'Viloyat yangilashda xatolik' });
+  }
+});
+
+// DELETE region
+app.delete('/api/regions/:id', (req, res) => {
+  try {
+    const regionId = parseInt(req.params.id, 10);
+    const regionIndex = regions.findIndex(region => region.id === regionId);
+
+    if (regionIndex === -1) {
+      return res.status(404).json({ error: 'Viloyat topilmadi' });
+    }
+
+    regions.splice(regionIndex, 1);
+    res.status(204).end();
+  } catch (error) {
+    res.status(400).json({ error: 'Viloyat o\'chirishda xatolik' });
+  }
+});
+
+// Districts CRUD with mock data
+let districts = [
+  { id: 1, name: 'Toshkent shahar', region_id: 1 },
+  { id: 2, name: 'Chirchiq', region_id: 1 },
+  { id: 3, name: 'Samarqand shahar', region_id: 2 },
+  { id: 4, name: 'Buxoro shahar', region_id: 4 },
+  { id: 5, name: 'Urganch', region_id: 5 }
+];
+
+let nextDistrictId = 6;
+
+// GET districts
+app.get('/api/districts', (req, res) => {
+  const { region_id } = req.query;
+  let filteredDistricts = districts;
+  
+  if (region_id) {
+    filteredDistricts = districts.filter(d => d.region_id === parseInt(region_id, 10));
+  }
+  
+  res.json(filteredDistricts);
+});
+
+// POST create district
+app.post('/api/districts', (req, res) => {
+  try {
+    const newDistrict = {
+      id: nextDistrictId++,
+      name: req.body.name,
+      region_id: req.body.region_id
+    };
+    districts.push(newDistrict);
+    res.status(201).json(newDistrict);
+  } catch (error) {
+    res.status(400).json({ error: 'Tuman yaratishda xatolik' });
+  }
+});
+
+// PUT update district
+app.put('/api/districts/:id', (req, res) => {
+  try {
+    const districtId = parseInt(req.params.id, 10);
+    const districtIndex = districts.findIndex(district => district.id === districtId);
+
+    if (districtIndex === -1) {
+      return res.status(404).json({ error: 'Tuman topilmadi' });
+    }
+
+    districts[districtIndex] = { ...districts[districtIndex], ...req.body };
+    res.json(districts[districtIndex]);
+  } catch (error) {
+    res.status(400).json({ error: 'Tuman yangilashda xatolik' });
+  }
+});
+
+// DELETE district
+app.delete('/api/districts/:id', (req, res) => {
+  try {
+    const districtId = parseInt(req.params.id, 10);
+    const districtIndex = districts.findIndex(district => district.id === districtId);
+
+    if (districtIndex === -1) {
+      return res.status(404).json({ error: 'Tuman topilmadi' });
+    }
+
+    districts.splice(districtIndex, 1);
+    res.status(204).end();
+  } catch (error) {
+    res.status(400).json({ error: 'Tuman o\'chirishda xatolik' });
+  }
+});
+
+// Positions CRUD with mock data
+let positions = [
+  { id: 1, name: 'Yuqori sud xodimi' },
+  { id: 2, name: 'Yuridik mutaxassis' },
+  { id: 3, name: 'Ma\'muriyat xodimi' },
+  { id: 4, name: 'Sud raisi' },
+  { id: 5, name: 'Sudya' }
+];
+
+let nextPositionId = 6;
+
+// GET positions
+app.get('/api/positions', (req, res) => {
+  res.json(positions);
+});
+
+// POST create position
+app.post('/api/positions', (req, res) => {
+  try {
+    const newPosition = {
+      id: nextPositionId++,
+      name: req.body.name
+    };
+    positions.push(newPosition);
+    res.status(201).json(newPosition);
+  } catch (error) {
+    res.status(400).json({ error: 'Lavozim yaratishda xatolik' });
+  }
+});
+
+// PUT update position
+app.put('/api/positions/:id', (req, res) => {
+  try {
+    const positionId = parseInt(req.params.id, 10);
+    const positionIndex = positions.findIndex(position => position.id === positionId);
+
+    if (positionIndex === -1) {
+      return res.status(404).json({ error: 'Lavozim topilmadi' });
+    }
+
+    positions[positionIndex] = { ...positions[positionIndex], ...req.body };
+    res.json(positions[positionIndex]);
+  } catch (error) {
+    res.status(400).json({ error: 'Lavozim yangilashda xatolik' });
+  }
+});
+
+// DELETE position
+app.delete('/api/positions/:id', (req, res) => {
+  try {
+    const positionId = parseInt(req.params.id, 10);
+    const positionIndex = positions.findIndex(position => position.id === positionId);
+
+    if (positionIndex === -1) {
+      return res.status(404).json({ error: 'Lavozim topilmadi' });
+    }
+
+    positions.splice(positionIndex, 1);
+    res.status(204).end();
+  } catch (error) {
+    res.status(400).json({ error: 'Lavozim o\'chirishda xatolik' });
+  }
 });
 
 // Employee CRUD routes with mock data
@@ -186,6 +377,68 @@ app.delete('/api/employees/:id', (req, res) => {
   } catch (error) {
     res.status(400).json({ error: 'Xodim o\'chirishda xatolik' });
   }
+});
+
+// Statistics API endpoints
+app.get('/api/stats/summary', (req, res) => {
+  const totalEmployees = employees.length;
+  const averageScore = employees.length > 0 
+    ? Math.round(employees.reduce((sum, emp) => sum + emp.score, 0) / employees.length)
+    : 0;
+
+  res.json({
+    total_employees: totalEmployees,
+    average_score: averageScore
+  });
+});
+
+app.get('/api/stats/regions', (req, res) => {
+  const regionStats = regions.map(region => {
+    const regionEmployees = employees.filter(emp => emp.region_id === region.id);
+    const averageScore = regionEmployees.length > 0
+      ? Math.round(regionEmployees.reduce((sum, emp) => sum + emp.score, 0) / regionEmployees.length)
+      : 0;
+
+    return {
+      region_name: region.name,
+      total_employees: regionEmployees.length,
+      average_score: averageScore
+    };
+  });
+
+  res.json(regionStats);
+});
+
+app.get('/api/stats/districts', (req, res) => {
+  const districtStats = districts.map(district => {
+    const districtEmployees = employees.filter(emp => emp.district_id === district.id);
+    const averageScore = districtEmployees.length > 0
+      ? Math.round(districtEmployees.reduce((sum, emp) => sum + emp.score, 0) / districtEmployees.length)
+      : 0;
+
+    return {
+      district_name: district.name,
+      total_employees: districtEmployees.length,
+      average_score: averageScore
+    };
+  });
+
+  res.json(districtStats);
+});
+
+app.get('/api/stats/top', (req, res) => {
+  const topEmployees = employees
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 10)
+    .map(emp => ({
+      full_name: emp.full_name,
+      position: emp.position,
+      region_name: regions.find(r => r.id === emp.region_id)?.name || 'Unknown',
+      district_name: districts.find(d => d.id === emp.district_id)?.name || 'Unknown',
+      score: emp.score
+    }));
+
+  res.json(topEmployees);
 });
 
 export default app;
