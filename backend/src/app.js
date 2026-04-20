@@ -215,18 +215,80 @@ function loadMockRoutes() {
       score: Math.round((req.body.konstitutsiya_score + req.body.kodeks_score + req.body.protsessual_kodeks_score + req.body.akt_sohasi_score + req.body.odob_axloq_score) / 5)
     };
     employees.push(newEmployee);
+
+    // Add log entry
+    const newLog = {
+      id: nextLogId++,
+      admin_id: 1,
+      admin_username: 'superadmin',
+      action: 'CREATE',
+      entity_type: 'employee',
+      entity_id: newEmployee.id,
+      entity_name: newEmployee.full_name,
+      change_description: `${newEmployee.full_name} yaratildi`,
+      old_data: null,
+      new_data: newEmployee,
+      ip_address: req.ip || '127.0.0.1',
+      user_agent: req.headers['user-agent'] || 'Unknown',
+      created_at: new Date().toISOString()
+    };
+    logs.push(newLog);
+
     res.status(201).json(newEmployee);
   });
 
   app.put('/api/employees/:id', (req, res) => {
     const index = employees.findIndex(e => e.id === parseInt(req.params.id));
     if (index !== -1) {
-      employees[index] = {
+      const oldData = { ...employees[index] };
+      const updatedEmployee = {
         ...employees[index],
         ...req.body,
         score: Math.round((req.body.konstitutsiya_score + req.body.kodeks_score + req.body.protsessual_kodeks_score + req.body.akt_sohasi_score + req.body.odob_axloq_score) / 5)
       };
-      res.json(employees[index]);
+      employees[index] = updatedEmployee;
+
+      // Simple change detection
+      let changeDescription = '';
+      for (const [key, newValue] of Object.entries(req.body)) {
+        if (oldData[key] !== newValue) {
+          const fieldLabels = {
+            full_name: 'F.I.O',
+            position: 'Lavozimi',
+            konstitutsiya_score: 'Konstitutsiya natijasi',
+            kodeks_score: 'Kodeks natijasi',
+            protsessual_kodeks_score: 'Protsessual kodeks natijasi',
+            akt_sohasi_score: 'AKT natijasi',
+            odob_axloq_score: 'Odob-axloq natijasi'
+          };
+          const label = fieldLabels[key] || key;
+          if (key.includes('_score') && typeof oldData[key] === 'number' && typeof newValue === 'number') {
+            changeDescription += `${label}: ${oldData[key]}% dan ${newValue}% ga o\'zgartirildi; `;
+          } else {
+            changeDescription += `${label}: "${oldData[key]}" dan "${newValue}" ga o\'zgartirildi; `;
+          }
+        }
+      }
+
+      // Add log entry
+      const newLog = {
+        id: nextLogId++,
+        admin_id: 1,
+        admin_username: 'superadmin',
+        action: 'UPDATE',
+        entity_type: 'employee',
+        entity_id: updatedEmployee.id,
+        entity_name: updatedEmployee.full_name,
+        change_description: changeDescription || 'O\'zgarishlar topilmadi',
+        old_data,
+        new_data: updatedEmployee,
+        ip_address: req.ip || '127.0.0.1',
+        user_agent: req.headers['user-agent'] || 'Unknown',
+        created_at: new Date().toISOString()
+      };
+      logs.push(newLog);
+
+      res.json(updatedEmployee);
     } else {
       res.status(404).json({ error: 'Xodim topilmadi' });
     }
@@ -296,8 +358,54 @@ function loadMockRoutes() {
   });
 
   // Logs
-  let logs = [];
-  let nextLogId = 1;
+  let logs = [
+    {
+      id: 1,
+      admin_id: 1,
+      admin_username: 'superadmin',
+      action: 'CREATE',
+      entity_type: 'employee',
+      entity_id: 1,
+      entity_name: 'Test Employee',
+      change_description: 'Test Employee yaratildi',
+      old_data: null,
+      new_data: { full_name: 'Test Employee', position: 'Test Position' },
+      ip_address: '127.0.0.1',
+      user_agent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+      created_at: new Date().toISOString()
+    },
+    {
+      id: 2,
+      admin_id: 1,
+      admin_username: 'superadmin',
+      action: 'UPDATE',
+      entity_type: 'employee',
+      entity_id: 1,
+      entity_name: 'Test Employee',
+      change_description: 'AKT natijasi: 80% dan 85% ga o\'zgartirildi',
+      old_data: { akt_sohasi_score: 80 },
+      new_data: { akt_sohasi_score: 85 },
+      ip_address: '127.0.0.1',
+      user_agent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+      created_at: new Date(Date.now() - 3600000).toISOString()
+    },
+    {
+      id: 3,
+      admin_id: 1,
+      admin_username: 'superadmin',
+      action: 'CREATE',
+      entity_type: 'region',
+      entity_id: 6,
+      entity_name: 'Qashqadaryo viloyati',
+      change_description: 'Qashqadaryo viloyati yaratildi',
+      old_data: null,
+      new_data: { name: 'Qashqadaryo viloyati' },
+      ip_address: '127.0.0.1',
+      user_agent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+      created_at: new Date(Date.now() - 7200000).toISOString()
+    }
+  ];
+  let nextLogId = 4;
 
   app.get('/api/logs', (req, res) => {
     const page = parseInt(req.query.page, 10) || 1;
