@@ -93,7 +93,17 @@ function PublicPage() {
         'Lavozimi': employee.position,
         'Viloyat': employee.region_name,
         'Tuman': employee.district_name,
-        'Natija (%)': employee.score,
+        'Konstitutsiya (%)': employee.konstitutsiya_score || 0,
+        'Konstitutsiya holati': employee.konstitutsiya_status || 'topshirmadi',
+        'Kodeks (%)': employee.kodeks_score || 0,
+        'Kodeks holati': employee.kodeks_status || 'topshirmadi',
+        'Protsessual kodeks (%)': employee.protsessual_kodeks_score || 0,
+        'Protsessual kodeks holati': employee.protsessual_kodeks_status || 'topshirmadi',
+        'AKT sohasi (%)': employee.akt_sohasi_score || 0,
+        'AKT sohasi holati': employee.akt_sohasi_status || 'topshirmadi',
+        'Odob-axloq (%)': employee.odob_axloq_score || 0,
+        'Odob-axloq holati': employee.odob_axloq_status || 'topshirmadi',
+        'Umumiy natija (%)': employee.score,
       }));
 
       const workbook = XLSX.utils.book_new();
@@ -184,7 +194,12 @@ function PublicPage() {
                   <th className="px-4 py-3">Lavozimi</th>
                   <th className="px-4 py-3">Viloyat</th>
                   <th className="px-4 py-3">Tuman</th>
-                  <th className="px-4 py-3">Natija (%)</th>
+                  <th className="px-4 py-3">Konst.</th>
+                  <th className="px-4 py-3">Kodeks</th>
+                  <th className="px-4 py-3">Prot.</th>
+                  <th className="px-4 py-3">AKT</th>
+                  <th className="px-4 py-3">Odob</th>
+                  <th className="px-4 py-3">Umumiy</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-200">
@@ -195,7 +210,22 @@ function PublicPage() {
                     <td className="px-4 py-3">{employee.position}</td>
                     <td className="px-4 py-3">{employee.region_name}</td>
                     <td className="px-4 py-3">{employee.district_name}</td>
-                    <td className={`px-4 py-3 ${scoreColorClass(employee.score)}`}>{employee.score}%</td>
+                    <td className={`px-4 py-3 text-center ${employee.konstitutsiya_score > 0 ? scoreColorClass(employee.konstitutsiya_score) : 'text-slate-400'}`}>
+                      {employee.konstitutsiya_score > 0 ? `${employee.konstitutsiya_score}%` : 'Topshirmadi'}
+                    </td>
+                    <td className={`px-4 py-3 text-center ${employee.kodeks_score > 0 ? scoreColorClass(employee.kodeks_score) : 'text-slate-400'}`}>
+                      {employee.kodeks_score > 0 ? `${employee.kodeks_score}%` : 'Topshirmadi'}
+                    </td>
+                    <td className={`px-4 py-3 text-center ${employee.protsessual_kodeks_score > 0 ? scoreColorClass(employee.protsessual_kodeks_score) : 'text-slate-400'}`}>
+                      {employee.protsessual_kodeks_score > 0 ? `${employee.protsessual_kodeks_score}%` : 'Topshirmadi'}
+                    </td>
+                    <td className={`px-4 py-3 text-center ${employee.akt_sohasi_score > 0 ? scoreColorClass(employee.akt_sohasi_score) : 'text-slate-400'}`}>
+                      {employee.akt_sohasi_score > 0 ? `${employee.akt_sohasi_score}%` : 'Topshirmadi'}
+                    </td>
+                    <td className={`px-4 py-3 text-center ${employee.odob_axloq_score > 0 ? scoreColorClass(employee.odob_axloq_score) : 'text-slate-400'}`}>
+                      {employee.odob_axloq_score > 0 ? `${employee.odob_axloq_score}%` : 'Topshirmadi'}
+                    </td>
+                    <td className={`px-4 py-3 text-center ${scoreColorClass(employee.score)}`}>{employee.score}%</td>
                   </tr>
                 ))}
               </tbody>
