@@ -141,3 +141,13 @@ export async function fetchRegionAdmins() {
   const response = await api.get('/admins');
   return response.data;
 }
+
+export async function fetchLogs(params) {
+  const response = await api.get('/logs', { params });
+  return response.data;
+}
+
+export async function fetchLogsStats() {
+  const response = await api.get('/logs/stats');
+  return response.data;
+}

@@ -24,6 +24,21 @@ CREATE TABLE IF NOT EXISTS admins (
   assigned_regions JSONB NOT NULL DEFAULT '[]'
 );
 
+CREATE TABLE IF NOT EXISTS admin_logs (
+  id SERIAL PRIMARY KEY,
+  admin_id INTEGER NOT NULL REFERENCES admins(id) ON DELETE CASCADE,
+  admin_username TEXT NOT NULL,
+  action TEXT NOT NULL CHECK (action IN ('CREATE', 'UPDATE', 'DELETE')),
+  entity_type TEXT NOT NULL CHECK (entity_type IN ('employee', 'admin', 'region', 'district', 'position')),
+  entity_id INTEGER,
+  entity_name TEXT,
+  old_data JSONB,
+  new_data JSONB,
+  ip_address TEXT,
+  user_agent TEXT,
+  created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW()
+);
+
 CREATE TABLE IF NOT EXISTS employees (
   id SERIAL PRIMARY KEY,
   full_name TEXT NOT NULL,
@@ -55,6 +70,18 @@ ALTER TABLE IF EXISTS employees ADD COLUMN IF NOT EXISTS kodeks_status TEXT NOT 
 ALTER TABLE IF EXISTS employees ADD COLUMN IF NOT EXISTS protsessual_kodeks_status TEXT NOT NULL DEFAULT 'topshirmadi' CHECK (protsessual_kodeks_status IN ('topshirdi', 'topshirmadi'));
 ALTER TABLE IF EXISTS employees ADD COLUMN IF NOT EXISTS akt_sohasi_status TEXT NOT NULL DEFAULT 'topshirmadi' CHECK (akt_sohasi_status IN ('topshirdi', 'topshirmadi'));
 ALTER TABLE IF EXISTS employees ADD COLUMN IF NOT EXISTS odob_axloq_status TEXT NOT NULL DEFAULT 'topshirmadi' CHECK (odob_axloq_status IN ('topshirdi', 'topshirmadi'));
+
+ALTER TABLE IF EXISTS admin_logs ADD COLUMN IF NOT EXISTS admin_id INTEGER NOT NULL REFERENCES admins(id) ON DELETE CASCADE;
+ALTER TABLE IF EXISTS admin_logs ADD COLUMN IF NOT EXISTS admin_username TEXT NOT NULL;
+ALTER TABLE IF EXISTS admin_logs ADD COLUMN IF NOT EXISTS action TEXT NOT NULL CHECK (action IN ('CREATE', 'UPDATE', 'DELETE'));
+ALTER TABLE IF EXISTS admin_logs ADD COLUMN IF NOT EXISTS entity_type TEXT NOT NULL CHECK (entity_type IN ('employee', 'admin', 'region', 'district', 'position'));
+ALTER TABLE IF EXISTS admin_logs ADD COLUMN IF NOT EXISTS entity_id INTEGER;
+ALTER TABLE IF EXISTS admin_logs ADD COLUMN IF NOT EXISTS entity_name TEXT;
+ALTER TABLE IF EXISTS admin_logs ADD COLUMN IF NOT EXISTS old_data JSONB;
+ALTER TABLE IF EXISTS admin_logs ADD COLUMN IF NOT EXISTS new_data JSONB;
+ALTER TABLE IF EXISTS admin_logs ADD COLUMN IF NOT EXISTS ip_address TEXT;
+ALTER TABLE IF EXISTS admin_logs ADD COLUMN IF NOT EXISTS user_agent TEXT;
+ALTER TABLE IF EXISTS admin_logs ADD COLUMN IF NOT EXISTS created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW();
 
 ALTER TABLE IF EXISTS employees DROP CONSTRAINT IF EXISTS employees_district_id_fkey;
 ALTER TABLE IF EXISTS employees ADD CONSTRAINT employees_district_id_fkey FOREIGN KEY (district_id) REFERENCES districts(id) ON DELETE CASCADE;

@@ -2,6 +2,7 @@ import express from 'express';
 import { query } from '../db.js';
 import { authenticateToken, optionalAuthenticateToken, permit } from '../middleware/auth.js';
 import { employeeSchema } from '../validators.js';
+import { logAdminAction, getEntityName, getClientInfo } from '../utils/logger.js';
 
 const router = express.Router();
 const examScoreKeys = [
@@ -172,6 +173,19 @@ router.post('/', authenticateToken, permit('super_admin', 'admin'), async (req, 
       ]
     );
 
+    // Log the action
+    const clientInfo = getClientInfo(req);
+    await logAdminAction({
+      adminId: req.user.id,
+      adminUsername: req.user.username,
+      action: 'CREATE',
+      entityType: 'employee',
+      entityId: insert.rows[0].id,
+      entityName: getEntityName('employee', insert.rows[0]),
+      newData: insert.rows[0],
+      ...clientInfo,
+    });
+
     res.status(201).json(insert.rows[0]);
   } catch (err) {
     next(err);
@@ -179,15 +193,15 @@ router.post('/', authenticateToken, permit('super_admin', 'admin'), async (req, 
 });
 
 router.put('/:id', authenticateToken, permit('super_admin', 'admin'), async (req, res, next) => {
-  try {
-    const { error, value } = employeeSchema.validate(req.body);
-    if (error) return res.status(400).json({ error: error.message });
+  // Get old data for logging
+  const oldEmployeeResult = await query('SELECT * FROM employees WHERE id = $1', [req.params.id]);
+  const oldData = oldEmployeeResult.rows[0];
 
-    const employeeResult = await query('SELECT region_id FROM employees WHERE id = $1', [req.params.id]);
-    if (!employeeResult.rows.length) return res.status(404).json({ error: 'Xodim topilmadi' });
+  const employeeResult = await query('SELECT region_id FROM employees WHERE id = $1', [req.params.id]);
+  if (!employeeResult.rows.length) return res.status(404).json({ error: 'Xodim topilmadi' });
 
-    const currentRegion = employeeResult.rows[0].region_id;
-    const newRegion = value.region_id;
+  const currentRegion = employeeResult.rows[0].region_id;
+  const newRegion = req.body.region_id;
 
     if (req.user.role === 'admin') {
       const assigned = Array.isArray(req.user.assigned_regions) ? req.user.assigned_regions : [];
@@ -229,6 +243,20 @@ router.put('/:id', authenticateToken, permit('super_admin', 'admin'), async (req
       ]
     );
 
+    // Log the action
+    const clientInfo = getClientInfo(req);
+    await logAdminAction({
+      adminId: req.user.id,
+      adminUsername: req.user.username,
+      action: 'UPDATE',
+      entityType: 'employee',
+      entityId: update.rows[0].id,
+      entityName: getEntityName('employee', update.rows[0]),
+      oldData,
+      newData: update.rows[0],
+      ...clientInfo,
+    });
+
     res.json(update.rows[0]);
   } catch (err) {
     next(err);
@@ -237,14 +265,31 @@ router.put('/:id', authenticateToken, permit('super_admin', 'admin'), async (req
 
 router.delete('/:id', authenticateToken, permit('super_admin', 'admin'), async (req, res, next) => {
   try {
-    const employeeResult = await query('SELECT region_id FROM employees WHERE id = $1', [req.params.id]);
+    // Get employee data for logging before deletion
+    const employeeResult = await query('SELECT * FROM employees WHERE id = $1', [req.params.id]);
     if (!employeeResult.rows.length) return res.status(404).json({ error: 'Xodim topilmadi' });
 
-    if (req.user.role === 'admin' && !req.user.assigned_regions.includes(employeeResult.rows[0].region_id)) {
-      return res.status(403).json({ error: 'Siz bu xodimni o‘chira olmaysiz' });
+    const employeeData = employeeResult.rows[0];
+
+    if (req.user.role === 'admin' && !req.user.assigned_regions.includes(employeeData.region_id)) {
+      return res.status(403).json({ error: 'Siz bu xodimni o\'chira olmaysiz' });
     }
 
     await query('DELETE FROM employees WHERE id = $1', [req.params.id]);
+
+    // Log the action
+    const clientInfo = getClientInfo(req);
+    await logAdminAction({
+      adminId: req.user.id,
+      adminUsername: req.user.username,
+      action: 'DELETE',
+      entityType: 'employee',
+      entityId: employeeData.id,
+      entityName: getEntityName('employee', employeeData),
+      oldData: employeeData,
+      ...clientInfo,
+    });
+
     res.status(204).end();
   } catch (err) {
     next(err);

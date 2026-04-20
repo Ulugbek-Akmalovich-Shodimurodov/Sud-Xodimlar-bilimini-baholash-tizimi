@@ -44,6 +44,7 @@ function Dashboard({ user }) {
             {user.role === 'super_admin' && <Link to="/admin/districts" className="rounded-2xl bg-slate-700 px-5 py-3 text-white">Tumanlar</Link>}
             {user.role === 'super_admin' && <Link to="/admin/positions" className="rounded-2xl bg-slate-700 px-5 py-3 text-white">Lavozimlar</Link>}
             {user.role === 'super_admin' && <Link to="/admin/admins" className="rounded-2xl bg-slate-700 px-5 py-3 text-white">Adminlar</Link>}
+            {user.role === 'super_admin' && <Link to="/admin/logs" className="rounded-2xl bg-red-600 px-5 py-3 text-white">Loglar</Link>}
           </div>
         </div>
       </section>
