@@ -4,6 +4,38 @@ import { authenticateToken, optionalAuthenticateToken, permit } from '../middlew
 import { employeeSchema } from '../validators.js';
 
 const router = express.Router();
+const examScoreKeys = [
+  'konstitutsiya_score',
+  'kodeks_score',
+  'protsessual_kodeks_score',
+  'akt_sohasi_score',
+  'odob_axloq_score',
+];
+
+function normalizeScore(value) {
+  const score = Number(value);
+  if (!Number.isFinite(score) || score <= 0) return 0;
+  return Math.round(score);
+}
+
+function buildExamPayload(value) {
+  const payload = {};
+  const activeScores = [];
+
+  examScoreKeys.forEach((key) => {
+    const score = normalizeScore(value[key]);
+    const statusKey = key.replace('_score', '_status');
+    payload[key] = score;
+    payload[statusKey] = score > 0 ? 'topshirdi' : 'topshirmadi';
+    if (score > 0) activeScores.push(score);
+  });
+
+  payload.score = activeScores.length
+    ? Math.round(activeScores.reduce((sum, current) => sum + current, 0) / activeScores.length)
+    : 0;
+
+  return payload;
+}
 
 function buildFilters(queryParams, user) {
   const filters = [];
@@ -109,11 +141,33 @@ router.post('/', authenticateToken, permit('super_admin', 'admin'), async (req, 
       return res.status(403).json({ error: 'Siz faqat belgilangan viloyatlar bo‘yicha xodim qo‘sha olasiz' });
     }
 
+    const examPayload = buildExamPayload(value);
+
     const insert = await query(
-      `INSERT INTO employees (full_name, position, region_id, district_id, score)
-       VALUES ($1, $2, $3, $4, $5)
+      `INSERT INTO employees (
+         full_name, position, region_id, district_id, score,
+         konstitutsiya_score, kodeks_score, protsessual_kodeks_score, akt_sohasi_score, odob_axloq_score,
+         konstitutsiya_status, kodeks_status, protsessual_kodeks_status, akt_sohasi_status, odob_axloq_status
+       )
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
        RETURNING *`,
-      [value.full_name, value.position, value.region_id, value.district_id, value.score]
+      [
+        value.full_name,
+        value.position,
+        value.region_id,
+        value.district_id,
+        examPayload.score,
+        examPayload.konstitutsiya_score,
+        examPayload.kodeks_score,
+        examPayload.protsessual_kodeks_score,
+        examPayload.akt_sohasi_score,
+        examPayload.odob_axloq_score,
+        examPayload.konstitutsiya_status,
+        examPayload.kodeks_status,
+        examPayload.protsessual_kodeks_status,
+        examPayload.akt_sohasi_status,
+        examPayload.odob_axloq_status,
+      ]
     );
 
     res.status(201).json(insert.rows[0]);
@@ -143,10 +197,34 @@ router.put('/:id', authenticateToken, permit('super_admin', 'admin'), async (req
       }
     }
 
+    const examPayload = buildExamPayload(value);
+
     const update = await query(
-      `UPDATE employees SET full_name = $1, position = $2, region_id = $3, district_id = $4, score = $5, updated_at = NOW()
-       WHERE id = $6 RETURNING *`,
-      [value.full_name, value.position, value.region_id, value.district_id, value.score, req.params.id]
+      `UPDATE employees
+       SET full_name = $1, position = $2, region_id = $3, district_id = $4, score = $5,
+           konstitutsiya_score = $6, kodeks_score = $7, protsessual_kodeks_score = $8, akt_sohasi_score = $9, odob_axloq_score = $10,
+           konstitutsiya_status = $11, kodeks_status = $12, protsessual_kodeks_status = $13, akt_sohasi_status = $14, odob_axloq_status = $15,
+           updated_at = NOW()
+       WHERE id = $16
+       RETURNING *`,
+      [
+        value.full_name,
+        value.position,
+        value.region_id,
+        value.district_id,
+        examPayload.score,
+        examPayload.konstitutsiya_score,
+        examPayload.kodeks_score,
+        examPayload.protsessual_kodeks_score,
+        examPayload.akt_sohasi_score,
+        examPayload.odob_axloq_score,
+        examPayload.konstitutsiya_status,
+        examPayload.kodeks_status,
+        examPayload.protsessual_kodeks_status,
+        examPayload.akt_sohasi_status,
+        examPayload.odob_axloq_status,
+        req.params.id,
+      ]
     );
 
     res.json(update.rows[0]);

@@ -31,9 +31,30 @@ CREATE TABLE IF NOT EXISTS employees (
   region_id INTEGER NOT NULL REFERENCES regions(id) ON DELETE CASCADE,
   district_id INTEGER NOT NULL REFERENCES districts(id) ON DELETE CASCADE,
   score INTEGER NOT NULL CHECK (score >= 0 AND score <= 100),
+  konstitutsiya_score INTEGER NOT NULL DEFAULT 0 CHECK (konstitutsiya_score >= 0 AND konstitutsiya_score <= 100),
+  kodeks_score INTEGER NOT NULL DEFAULT 0 CHECK (kodeks_score >= 0 AND kodeks_score <= 100),
+  protsessual_kodeks_score INTEGER NOT NULL DEFAULT 0 CHECK (protsessual_kodeks_score >= 0 AND protsessual_kodeks_score <= 100),
+  akt_sohasi_score INTEGER NOT NULL DEFAULT 0 CHECK (akt_sohasi_score >= 0 AND akt_sohasi_score <= 100),
+  odob_axloq_score INTEGER NOT NULL DEFAULT 0 CHECK (odob_axloq_score >= 0 AND odob_axloq_score <= 100),
+  konstitutsiya_status TEXT NOT NULL DEFAULT 'topshirmadi' CHECK (konstitutsiya_status IN ('topshirdi', 'topshirmadi')),
+  kodeks_status TEXT NOT NULL DEFAULT 'topshirmadi' CHECK (kodeks_status IN ('topshirdi', 'topshirmadi')),
+  protsessual_kodeks_status TEXT NOT NULL DEFAULT 'topshirmadi' CHECK (protsessual_kodeks_status IN ('topshirdi', 'topshirmadi')),
+  akt_sohasi_status TEXT NOT NULL DEFAULT 'topshirmadi' CHECK (akt_sohasi_status IN ('topshirdi', 'topshirmadi')),
+  odob_axloq_status TEXT NOT NULL DEFAULT 'topshirmadi' CHECK (odob_axloq_status IN ('topshirdi', 'topshirmadi')),
   created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW()
 );
+
+ALTER TABLE IF EXISTS employees ADD COLUMN IF NOT EXISTS konstitutsiya_score INTEGER NOT NULL DEFAULT 0 CHECK (konstitutsiya_score >= 0 AND konstitutsiya_score <= 100);
+ALTER TABLE IF EXISTS employees ADD COLUMN IF NOT EXISTS kodeks_score INTEGER NOT NULL DEFAULT 0 CHECK (kodeks_score >= 0 AND kodeks_score <= 100);
+ALTER TABLE IF EXISTS employees ADD COLUMN IF NOT EXISTS protsessual_kodeks_score INTEGER NOT NULL DEFAULT 0 CHECK (protsessual_kodeks_score >= 0 AND protsessual_kodeks_score <= 100);
+ALTER TABLE IF EXISTS employees ADD COLUMN IF NOT EXISTS akt_sohasi_score INTEGER NOT NULL DEFAULT 0 CHECK (akt_sohasi_score >= 0 AND akt_sohasi_score <= 100);
+ALTER TABLE IF EXISTS employees ADD COLUMN IF NOT EXISTS odob_axloq_score INTEGER NOT NULL DEFAULT 0 CHECK (odob_axloq_score >= 0 AND odob_axloq_score <= 100);
+ALTER TABLE IF EXISTS employees ADD COLUMN IF NOT EXISTS konstitutsiya_status TEXT NOT NULL DEFAULT 'topshirmadi' CHECK (konstitutsiya_status IN ('topshirdi', 'topshirmadi'));
+ALTER TABLE IF EXISTS employees ADD COLUMN IF NOT EXISTS kodeks_status TEXT NOT NULL DEFAULT 'topshirmadi' CHECK (kodeks_status IN ('topshirdi', 'topshirmadi'));
+ALTER TABLE IF EXISTS employees ADD COLUMN IF NOT EXISTS protsessual_kodeks_status TEXT NOT NULL DEFAULT 'topshirmadi' CHECK (protsessual_kodeks_status IN ('topshirdi', 'topshirmadi'));
+ALTER TABLE IF EXISTS employees ADD COLUMN IF NOT EXISTS akt_sohasi_status TEXT NOT NULL DEFAULT 'topshirmadi' CHECK (akt_sohasi_status IN ('topshirdi', 'topshirmadi'));
+ALTER TABLE IF EXISTS employees ADD COLUMN IF NOT EXISTS odob_axloq_status TEXT NOT NULL DEFAULT 'topshirmadi' CHECK (odob_axloq_status IN ('topshirdi', 'topshirmadi'));
 
 ALTER TABLE IF EXISTS employees DROP CONSTRAINT IF EXISTS employees_district_id_fkey;
 ALTER TABLE IF EXISTS employees ADD CONSTRAINT employees_district_id_fkey FOREIGN KEY (district_id) REFERENCES districts(id) ON DELETE CASCADE;
@@ -80,20 +101,40 @@ VALUES
   ('Sudya')
 ON CONFLICT DO NOTHING;
 
-INSERT INTO employees (full_name, position, region_id, district_id, score)
+INSERT INTO employees (
+  full_name,
+  position,
+  region_id,
+  district_id,
+  score,
+  konstitutsiya_score,
+  kodeks_score,
+  protsessual_kodeks_score,
+  akt_sohasi_score,
+  odob_axloq_score,
+  konstitutsiya_status,
+  kodeks_status,
+  protsessual_kodeks_status,
+  akt_sohasi_status,
+  odob_axloq_status
+)
 VALUES
   (
     'Abdulla Axmedov',
     'Yuqori sud xodimi',
     (SELECT id FROM regions WHERE name = 'Toshkent viloyati'),
     (SELECT d.id FROM districts d JOIN regions r ON r.id = d.region_id WHERE d.name = 'Shahar' AND r.name = 'Toshkent viloyati' LIMIT 1),
-    92
+    92,
+    95, 90, 91, 0, 92,
+    'topshirdi', 'topshirdi', 'topshirdi', 'topshirmadi', 'topshirdi'
   ),
   (
     'Dilshod Mirzaev',
     'Yuridik mutaxassis',
     (SELECT id FROM regions WHERE name = 'Samarqand viloyati'),
     (SELECT d.id FROM districts d JOIN regions r ON r.id = d.region_id WHERE d.name = 'Samarqand shahar' AND r.name = 'Samarqand viloyati' LIMIT 1),
-    78
+    78,
+    80, 76, 79, 0, 77,
+    'topshirdi', 'topshirdi', 'topshirdi', 'topshirmadi', 'topshirdi'
   )
 ON CONFLICT DO NOTHING;

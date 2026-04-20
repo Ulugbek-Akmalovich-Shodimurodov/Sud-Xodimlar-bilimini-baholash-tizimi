@@ -1,6 +1,34 @@
 import { useEffect, useMemo, useState } from 'react';
-import { fetchEmployees, fetchRegions, fetchDistricts, fetchPositions, createEmployee, updateEmployee, deleteEmployee } from '../api.js';
+import {
+  fetchEmployees,
+  fetchRegions,
+  fetchDistricts,
+  fetchPositions,
+  createEmployee,
+  updateEmployee,
+  deleteEmployee,
+} from '../api.js';
 import { scoreColorClass } from '../utils/scoreColor.js';
+
+const examFields = [
+  { key: 'konstitutsiya_score', label: 'Konstitutsiya (%)' },
+  { key: 'kodeks_score', label: 'Kodeks (%)' },
+  { key: 'protsessual_kodeks_score', label: 'Protsessual kodeks (%)' },
+  { key: 'akt_sohasi_score', label: 'AKT sohasi (%)' },
+  { key: 'odob_axloq_score', label: 'Odob-axloq (%)' },
+];
+
+const emptyForm = {
+  full_name: '',
+  position: '',
+  region_id: '',
+  district_id: '',
+  konstitutsiya_score: '',
+  kodeks_score: '',
+  protsessual_kodeks_score: '',
+  akt_sohasi_score: '',
+  odob_axloq_score: '',
+};
 
 function EmployeeManager({ user }) {
   const [employees, setEmployees] = useState([]);
@@ -16,7 +44,7 @@ function EmployeeManager({ user }) {
   const [loading, setLoading] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [editing, setEditing] = useState(null);
-  const [formState, setFormState] = useState({ full_name: '', position: '', region_id: '', district_id: '', score: '' });
+  const [formState, setFormState] = useState(emptyForm);
   const [error, setError] = useState('');
 
   useEffect(() => {
@@ -36,7 +64,13 @@ function EmployeeManager({ user }) {
 
   const fetchData = () => {
     setLoading(true);
-    fetchEmployees({ page, limit, search: search || undefined, region_id: selectedRegion || undefined, district_id: selectedDistrict || undefined })
+    fetchEmployees({
+      page,
+      limit,
+      search: search || undefined,
+      region_id: selectedRegion || undefined,
+      district_id: selectedDistrict || undefined,
+    })
       .then((data) => {
         setEmployees(data.data);
         setTotal(data.total);
@@ -63,12 +97,16 @@ function EmployeeManager({ user }) {
         position: employee.position,
         region_id: employee.region_id,
         district_id: employee.district_id,
-        score: employee.score,
+        konstitutsiya_score: employee.konstitutsiya_score > 0 ? String(employee.konstitutsiya_score) : '',
+        kodeks_score: employee.kodeks_score > 0 ? String(employee.kodeks_score) : '',
+        protsessual_kodeks_score: employee.protsessual_kodeks_score > 0 ? String(employee.protsessual_kodeks_score) : '',
+        akt_sohasi_score: employee.akt_sohasi_score > 0 ? String(employee.akt_sohasi_score) : '',
+        odob_axloq_score: employee.odob_axloq_score > 0 ? String(employee.odob_axloq_score) : '',
       });
       setSelectedRegion(employee.region_id);
     } else {
       setEditing(null);
-      setFormState({ full_name: '', position: '', region_id: '', district_id: '', score: '' });
+      setFormState(emptyForm);
       setSelectedRegion('');
       setSelectedDistrict('');
     }
@@ -78,12 +116,17 @@ function EmployeeManager({ user }) {
   const handleSave = async () => {
     try {
       setError('');
+
       const payload = {
         full_name: formState.full_name,
         position: formState.position,
         region_id: Number(formState.region_id),
         district_id: Number(formState.district_id),
-        score: Number(formState.score),
+        konstitutsiya_score: formState.konstitutsiya_score === '' ? 0 : Number(formState.konstitutsiya_score),
+        kodeks_score: formState.kodeks_score === '' ? 0 : Number(formState.kodeks_score),
+        protsessual_kodeks_score: formState.protsessual_kodeks_score === '' ? 0 : Number(formState.protsessual_kodeks_score),
+        akt_sohasi_score: formState.akt_sohasi_score === '' ? 0 : Number(formState.akt_sohasi_score),
+        odob_axloq_score: formState.odob_axloq_score === '' ? 0 : Number(formState.odob_axloq_score),
       };
 
       if (editing) {
@@ -100,7 +143,7 @@ function EmployeeManager({ user }) {
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm('Xodimni o‘chirishni xohlaysizmi?')) return;
+    if (!window.confirm("Xodimni o'chirishni xohlaysizmi?")) return;
     await deleteEmployee(id);
     fetchData();
   };
@@ -113,7 +156,7 @@ function EmployeeManager({ user }) {
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div>
             <h1 className="text-2xl font-semibold">Xodimlarni boshqarish</h1>
-            <p className="mt-2 text-slate-600">Hududingiz bo‘yicha xodimlar ma'lumotlarini boshqarish.</p>
+            <p className="mt-2 text-slate-600">Hududingiz bo'yicha xodimlar ma'lumotlarini boshqarish.</p>
           </div>
           <button onClick={() => handleOpenModal()} className="rounded-2xl bg-slate-900 px-5 py-3 text-white">Yangi xodim</button>
         </div>
@@ -130,7 +173,7 @@ function EmployeeManager({ user }) {
             onChange={(e) => setSelectedRegion(e.target.value)}
             className="rounded-2xl border border-slate-200 bg-slate-50 p-3"
           >
-            <option value="">Viloyat bo‘yicha filtr</option>
+            <option value="">Viloyat bo'yicha filtr</option>
             {regions.map((region) => (
               <option key={region.id} value={region.id}>{region.name}</option>
             ))}
@@ -140,7 +183,7 @@ function EmployeeManager({ user }) {
             onChange={(e) => setSelectedDistrict(e.target.value)}
             className="rounded-2xl border border-slate-200 bg-slate-50 p-3"
           >
-            <option value="">Tuman bo‘yicha filtr</option>
+            <option value="">Tuman bo'yicha filtr</option>
             {districts.map((district) => (
               <option key={district.id} value={district.id}>{district.name}</option>
             ))}
@@ -186,7 +229,7 @@ function EmployeeManager({ user }) {
                       </button>
                       <button
                         onClick={() => handleDelete(employee.id)}
-                        aria-label="O‘chirish"
+                        aria-label="O'chirish"
                         className="rounded-xl bg-rose-100 p-2 text-rose-700 hover:bg-rose-200"
                       >
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4">
@@ -213,21 +256,35 @@ function EmployeeManager({ user }) {
 
       {modalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 p-4">
-          <div className="w-full max-w-2xl rounded-3xl bg-white p-6 shadow-xl">
+          <div className="w-full max-w-3xl rounded-3xl bg-white p-6 shadow-xl">
             <div className="flex items-center justify-between">
-              <h2 className="text-xl font-semibold">{editing ? 'Xodimni tahrirlash' : 'Yangi xodim qo‘shish'}</h2>
+              <h2 className="text-xl font-semibold">{editing ? 'Xodimni tahrirlash' : 'Yangi xodim qo\'shish'}</h2>
               <button onClick={() => setModalOpen(false)} className="text-slate-500 hover:text-slate-900">Bekor qilish</button>
             </div>
 
             <div className="mt-6 grid gap-4 md:grid-cols-2">
-              <input value={formState.full_name} onChange={(e) => setFormState({ ...formState, full_name: e.target.value })} placeholder="F.I.O" pattern="[A-Za-z'\\- ]+" title="Faqat lotin harflari, bo‘shliq, tire va apostrofdan foydalaning" className="rounded-2xl border border-slate-200 bg-slate-50 p-3" />
+              <input
+                value={formState.full_name}
+                onChange={(e) => setFormState({ ...formState, full_name: e.target.value })}
+                placeholder="F.I.O"
+                pattern="[A-Za-z'\\- ]+"
+                title="Faqat lotin harflari, boshliq, tire va apostrof"
+                className="rounded-2xl border border-slate-200 bg-slate-50 p-3"
+              />
               <select value={formState.position} onChange={(e) => setFormState({ ...formState, position: e.target.value })} className="rounded-2xl border border-slate-200 bg-slate-50 p-3">
                 <option value="">Lavozim tanlang</option>
                 {positions.map((position) => (
                   <option key={position.id} value={position.name}>{position.name}</option>
                 ))}
               </select>
-              <select value={formState.region_id} onChange={(e) => { setFormState({ ...formState, region_id: e.target.value }); setSelectedRegion(e.target.value); }} className="rounded-2xl border border-slate-200 bg-slate-50 p-3">
+              <select
+                value={formState.region_id}
+                onChange={(e) => {
+                  setFormState({ ...formState, region_id: e.target.value, district_id: '' });
+                  setSelectedRegion(e.target.value);
+                }}
+                className="rounded-2xl border border-slate-200 bg-slate-50 p-3"
+              >
                 <option value="">Viloyat tanlang</option>
                 {regions.map((region) => (<option key={region.id} value={region.id}>{region.name}</option>))}
               </select>
@@ -235,7 +292,19 @@ function EmployeeManager({ user }) {
                 <option value="">Tuman tanlang</option>
                 {districts.map((district) => (<option key={district.id} value={district.id}>{district.name}</option>))}
               </select>
-              <input type="number" value={formState.score} onChange={(e) => setFormState({ ...formState, score: e.target.value })} placeholder="Natija (%)" className="rounded-2xl border border-slate-200 bg-slate-50 p-3" />
+
+              {examFields.map((field) => (
+                <input
+                  key={field.key}
+                  type="number"
+                  min="0"
+                  max="100"
+                  value={formState[field.key]}
+                  onChange={(e) => setFormState({ ...formState, [field.key]: e.target.value })}
+                  placeholder={field.label}
+                  className="rounded-2xl border border-slate-200 bg-slate-50 p-3"
+                />
+              ))}
             </div>
 
             {error && <div className="mt-4 rounded-2xl bg-red-100 p-4 text-red-700">{error}</div>}

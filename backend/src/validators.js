@@ -56,5 +56,9 @@ export const employeeSchema = Joi.object({
   }),
   region_id: Joi.number().integer().required(),
   district_id: Joi.number().integer().required(),
-  score: Joi.number().integer().min(0).max(100).required(),
+  konstitutsiya_score: Joi.number().integer().min(0).max(100).allow(null, '').optional(),
+  kodeks_score: Joi.number().integer().min(0).max(100).allow(null, '').optional(),
+  protsessual_kodeks_score: Joi.number().integer().min(0).max(100).allow(null, '').optional(),
+  akt_sohasi_score: Joi.number().integer().min(0).max(100).allow(null, '').optional(),
+  odob_axloq_score: Joi.number().integer().min(0).max(100).allow(null, '').optional(),
 });
