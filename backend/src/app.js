@@ -249,6 +249,52 @@ function loadMockRoutes() {
     res.json({ total_employees: total, average_score: avgScore });
   });
 
+  app.get('/api/stats/regions', (req, res) => {
+    const regionStats = regions.map(region => {
+      const regionEmployees = employees.filter(emp => emp.region_id === region.id);
+      const avgScore = regionEmployees.length > 0
+        ? Math.round(regionEmployees.reduce((sum, emp) => sum + emp.score, 0) / regionEmployees.length)
+        : 0;
+      
+      return {
+        region_name: region.name,
+        total_employees: regionEmployees.length,
+        average_score: avgScore
+      };
+    });
+    res.json(regionStats);
+  });
+
+  app.get('/api/stats/districts', (req, res) => {
+    const districtStats = districts.map(district => {
+      const districtEmployees = employees.filter(emp => emp.district_id === district.id);
+      const avgScore = districtEmployees.length > 0
+        ? Math.round(districtEmployees.reduce((sum, emp) => sum + emp.score, 0) / districtEmployees.length)
+        : 0;
+      
+      return {
+        district_name: district.name,
+        total_employees: districtEmployees.length,
+        average_score: avgScore
+      };
+    });
+    res.json(districtStats);
+  });
+
+  app.get('/api/stats/top', (req, res) => {
+    const topEmployees = employees
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 10)
+      .map(emp => ({
+        full_name: emp.full_name,
+        position: emp.position,
+        region_name: regions.find(r => r.id === emp.region_id)?.name || 'Unknown',
+        district_name: districts.find(d => d.id === emp.district_id)?.name || 'Unknown',
+        score: emp.score
+      }));
+    res.json(topEmployees);
+  });
+
   // Logs
   let logs = [];
   let nextLogId = 1;
