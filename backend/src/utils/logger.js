@@ -1,4 +1,4 @@
-// Safe logging function that won't break deployment
+// Temporary disabled logging to isolate deployment issues
 export async function logAdminAction({
   adminId,
   adminUsername,
@@ -11,32 +11,15 @@ export async function logAdminAction({
   ipAddress,
   userAgent,
 }) {
-  try {
-    // Import query dynamically to avoid circular dependencies
-    const { query } = await import('../db.js');
-    
-    await query(
-      `INSERT INTO admin_logs (
-        admin_id, admin_username, action, entity_type, entity_id, 
-        entity_name, old_data, new_data, ip_address, user_agent
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`,
-      [
-        adminId,
-        adminUsername,
-        action,
-        entityType,
-        entityId,
-        entityName,
-        oldData ? JSON.stringify(oldData) : null,
-        newData ? JSON.stringify(newData) : null,
-        ipAddress,
-        userAgent,
-      ]
-    );
-  } catch (error) {
-    console.error('Failed to log admin action:', error);
-    // Don't throw error - logging shouldn't break the main operation
-  }
+  // Temporarily disabled to isolate deployment issues
+  console.log('Logging disabled temporarily:', {
+    adminId,
+    adminUsername,
+    action,
+    entityType,
+    entityId,
+    entityName,
+  });
 }
 
 export function getEntityName(entityType, data) {
