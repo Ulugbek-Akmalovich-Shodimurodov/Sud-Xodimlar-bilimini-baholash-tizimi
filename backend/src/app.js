@@ -20,18 +20,36 @@ const allowedOrigins = (process.env.CORS_ORIGIN || '')
 
 // Add the frontend URL to allowed origins
 const frontendUrl = 'https://sud-xodimlar-bilimini-baholash-tizi.vercel.app';
-if (!allowedOrigins.includes(frontendUrl)) {
-  allowedOrigins.push(frontendUrl);
-}
+const localhostUrls = ['http://localhost:5173', 'http://localhost:3000', 'http://localhost:4173'];
 
+[frontendUrl, ...localhostUrls].forEach(url => {
+  if (!allowedOrigins.includes(url)) {
+    allowedOrigins.push(url);
+  }
+});
+
+// Comprehensive CORS configuration
 app.use(cors({
-  origin(origin, callback) {
-    if (!origin || allowedOrigins.length === 0 || allowedOrigins.includes(origin)) {
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    
+    // Allow any origin in development
+    if (process.env.NODE_ENV !== 'production') {
       return callback(null, true);
     }
+    
+    // Check if origin is in allowed list
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+    
     return callback(new Error('CORS ruxsati yo`q'));
   },
   credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+  exposedHeaders: ['X-Total-Count'],
 }));
 app.use(express.json());
 app.use(morgan('tiny'));
