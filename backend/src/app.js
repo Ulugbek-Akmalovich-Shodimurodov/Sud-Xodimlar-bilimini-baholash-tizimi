@@ -90,23 +90,102 @@ app.get('/api/regions', (req, res) => {
   ]);
 });
 
-// Simple employees test
+// Employee CRUD routes with mock data
+let employees = [
+  {
+    id: 1,
+    full_name: 'Test Employee',
+    position: 'Test Position',
+    region_id: 1,
+    district_id: 1,
+    region_name: 'Test Region',
+    district_name: 'Test District',
+    score: 85,
+    konstitutsiya_score: 90,
+    kodeks_score: 80,
+    protsessual_kodeks_score: 85,
+    akt_sohasi_score: 88,
+    odob_axloq_score: 82,
+    konstitutsiya_status: 'topshirdi',
+    kodeks_status: 'topshirdi',
+    protsessual_kodeks_status: 'topshirdi',
+    akt_sohasi_status: 'topshirdi',
+    odob_axloq_status: 'topshirdi'
+  }
+];
+
+let nextEmployeeId = 2;
+
+// GET employees with pagination
 app.get('/api/employees', (req, res) => {
+  const page = parseInt(req.query.page, 10) || 1;
+  const limit = parseInt(req.query.limit, 10) || 10;
+  const offset = (page - 1) * limit;
+
+  const paginatedData = employees.slice(offset, offset + limit);
+
   res.json({
-    data: [
-      {
-        id: 1,
-        full_name: 'Test Employee',
-        position: 'Test Position',
-        region_name: 'Test Region',
-        district_name: 'Test District',
-        score: 85
-      }
-    ],
-    total: 1,
-    page: 1,
-    limit: 10
+    data: paginatedData,
+    total: employees.length,
+    page,
+    limit
   });
+});
+
+// POST create employee
+app.post('/api/employees', (req, res) => {
+  try {
+    const newEmployee = {
+      id: nextEmployeeId++,
+      ...req.body,
+      score: Math.round((req.body.konstitutsiya_score + req.body.kodeks_score + req.body.protsessual_kodeks_score + req.body.akt_sohasi_score + req.body.odob_axloq_score) / 5)
+    };
+
+    employees.push(newEmployee);
+    res.status(201).json(newEmployee);
+  } catch (error) {
+    res.status(400).json({ error: 'Xodim yaratishda xatolik' });
+  }
+});
+
+// PUT update employee
+app.put('/api/employees/:id', (req, res) => {
+  try {
+    const employeeId = parseInt(req.params.id, 10);
+    const employeeIndex = employees.findIndex(emp => emp.id === employeeId);
+
+    if (employeeIndex === -1) {
+      return res.status(404).json({ error: 'Xodim topilmadi' });
+    }
+
+    const updatedEmployee = {
+      ...employees[employeeIndex],
+      ...req.body,
+      score: Math.round((req.body.konstitutsiya_score + req.body.kodeks_score + req.body.protsessual_kodeks_score + req.body.akt_sohasi_score + req.body.odob_axloq_score) / 5)
+    };
+
+    employees[employeeIndex] = updatedEmployee;
+    res.json(updatedEmployee);
+  } catch (error) {
+    res.status(400).json({ error: 'Xodim yangilashda xatolik' });
+  }
+});
+
+// DELETE employee
+app.delete('/api/employees/:id', (req, res) => {
+  try {
+    const employeeId = parseInt(req.params.id, 10);
+    const employeeIndex = employees.findIndex(emp => emp.id === employeeId);
+
+    if (employeeIndex === -1) {
+      return res.status(404).json({ error: 'Xodim topilmadi' });
+    }
+
+    employees.splice(employeeIndex, 1);
+    res.status(204).end();
+  } catch (error) {
+    res.status(400).json({ error: 'Xodim o\'chirishda xatolik' });
+  }
 });
 
 export default app;
