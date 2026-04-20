@@ -13,43 +13,17 @@ import errorHandler from './middleware/errorHandler.js';
 
 const app = express();
 
-const allowedOrigins = (process.env.CORS_ORIGIN || '')
-  .split(',')
-  .map((item) => item.trim())
-  .filter(Boolean);
-
-// Add the frontend URL to allowed origins
-const frontendUrl = 'https://sud-xodimlar-bilimini-baholash-tizi.vercel.app';
-const localhostUrls = ['http://localhost:5173', 'http://localhost:3000', 'http://localhost:4173'];
-
-[frontendUrl, ...localhostUrls].forEach(url => {
-  if (!allowedOrigins.includes(url)) {
-    allowedOrigins.push(url);
-  }
-});
-
-// Comprehensive CORS configuration
+// Simple and direct CORS configuration for Vercel
 app.use(cors({
-  origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps or curl requests)
-    if (!origin) return callback(null, true);
-    
-    // Allow any origin in development
-    if (process.env.NODE_ENV !== 'production') {
-      return callback(null, true);
-    }
-    
-    // Check if origin is in allowed list
-    if (allowedOrigins.includes(origin)) {
-      return callback(null, true);
-    }
-    
-    return callback(new Error('CORS ruxsati yo`q'));
-  },
+  origin: [
+    'https://sud-xodimlar-bilimini-baholash-tizi.vercel.app',
+    'http://localhost:5173',
+    'http://localhost:3000',
+    'http://localhost:4173'
+  ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
-  exposedHeaders: ['X-Total-Count'],
 }));
 app.use(express.json());
 app.use(morgan('tiny'));
