@@ -333,6 +333,20 @@ app.post('/api/employees', (req, res) => {
     };
 
     employees.push(newEmployee);
+
+    // Log the action
+    addLog({
+      adminId: 1,
+      adminUsername: 'superadmin',
+      action: 'CREATE',
+      entityType: 'employee',
+      entityId: newEmployee.id,
+      entityName: newEmployee.full_name,
+      newData: newEmployee,
+      ipAddress: req.ip,
+      userAgent: req.headers['user-agent']
+    });
+
     res.status(201).json(newEmployee);
   } catch (error) {
     res.status(400).json({ error: 'Xodim yaratishda xatolik' });
@@ -349,6 +363,7 @@ app.put('/api/employees/:id', (req, res) => {
       return res.status(404).json({ error: 'Xodim topilmadi' });
     }
 
+    const oldData = { ...employees[employeeIndex] };
     const updatedEmployee = {
       ...employees[employeeIndex],
       ...req.body,
@@ -356,6 +371,21 @@ app.put('/api/employees/:id', (req, res) => {
     };
 
     employees[employeeIndex] = updatedEmployee;
+
+    // Log the action
+    addLog({
+      adminId: 1,
+      adminUsername: 'superadmin',
+      action: 'UPDATE',
+      entityType: 'employee',
+      entityId: updatedEmployee.id,
+      entityName: updatedEmployee.full_name,
+      oldData,
+      newData: updatedEmployee,
+      ipAddress: req.ip,
+      userAgent: req.headers['user-agent']
+    });
+
     res.json(updatedEmployee);
   } catch (error) {
     res.status(400).json({ error: 'Xodim yangilashda xatolik' });
@@ -372,7 +402,22 @@ app.delete('/api/employees/:id', (req, res) => {
       return res.status(404).json({ error: 'Xodim topilmadi' });
     }
 
+    const deletedEmployee = employees[employeeIndex];
     employees.splice(employeeIndex, 1);
+
+    // Log the action
+    addLog({
+      adminId: 1,
+      adminUsername: 'superadmin',
+      action: 'DELETE',
+      entityType: 'employee',
+      entityId: deletedEmployee.id,
+      entityName: deletedEmployee.full_name,
+      oldData: deletedEmployee,
+      ipAddress: req.ip,
+      userAgent: req.headers['user-agent']
+    });
+
     res.status(204).end();
   } catch (error) {
     res.status(400).json({ error: 'Xodim o\'chirishda xatolik' });
@@ -439,6 +484,154 @@ app.get('/api/stats/top', (req, res) => {
     }));
 
   res.json(topEmployees);
+});
+
+// Logs API endpoints with mock data
+let logs = [
+  {
+    id: 1,
+    admin_id: 1,
+    admin_username: 'superadmin',
+    action: 'CREATE',
+    entity_type: 'employee',
+    entity_id: 1,
+    entity_name: 'Test Employee',
+    old_data: null,
+    new_data: { full_name: 'Test Employee', position: 'Test Position' },
+    ip_address: '127.0.0.1',
+    user_agent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+    created_at: new Date().toISOString()
+  },
+  {
+    id: 2,
+    admin_id: 1,
+    admin_username: 'superadmin',
+    action: 'UPDATE',
+    entity_type: 'employee',
+    entity_id: 1,
+    entity_name: 'Test Employee',
+    old_data: { score: 80 },
+    new_data: { score: 85 },
+    ip_address: '127.0.0.1',
+    user_agent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+    created_at: new Date(Date.now() - 3600000).toISOString()
+  }
+];
+
+let nextLogId = 3;
+
+// Simple logging function
+function addLog({
+  adminId,
+  adminUsername,
+  action,
+  entityType,
+  entityId,
+  entityName,
+  oldData,
+  newData,
+  ipAddress,
+  userAgent
+}) {
+  const newLog = {
+    id: nextLogId++,
+    admin_id: adminId,
+    admin_username: adminUsername,
+    action,
+    entity_type: entityType,
+    entity_id: entityId,
+    entity_name: entityName,
+    old_data: oldData,
+    new_data: newData,
+    ip_address: ipAddress || '127.0.0.1',
+    user_agent: userAgent || 'Unknown',
+    created_at: new Date().toISOString()
+  };
+  logs.push(newLog);
+}
+
+// GET logs with pagination and filters
+app.get('/api/logs', (req, res) => {
+  const page = parseInt(req.query.page, 10) || 1;
+  const limit = parseInt(req.query.limit, 10) || 20;
+  const offset = (page - 1) * limit;
+  
+  let filteredLogs = [...logs];
+
+  // Apply filters
+  if (req.query.action) {
+    filteredLogs = filteredLogs.filter(log => log.action === req.query.action);
+  }
+  if (req.query.entity_type) {
+    filteredLogs = filteredLogs.filter(log => log.entity_type === req.query.entity_type);
+  }
+  if (req.query.admin_username) {
+    filteredLogs = filteredLogs.filter(log => 
+      log.admin_username.toLowerCase().includes(req.query.admin_username.toLowerCase())
+    );
+  }
+  if (req.query.date_from) {
+    const dateFrom = new Date(req.query.date_from);
+    filteredLogs = filteredLogs.filter(log => new Date(log.created_at) >= dateFrom);
+  }
+  if (req.query.date_to) {
+    const dateTo = new Date(req.query.date_to);
+    dateTo.setHours(23, 59, 59, 999);
+    filteredLogs = filteredLogs.filter(log => new Date(log.created_at) <= dateTo);
+  }
+
+  // Sort by created_at descending
+  filteredLogs.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+
+  const paginatedLogs = filteredLogs.slice(offset, offset + limit);
+
+  res.json({
+    data: paginatedLogs,
+    total: filteredLogs.length,
+    page,
+    limit
+  });
+});
+
+// GET logs stats
+app.get('/api/logs/stats', (req, res) => {
+  const totalLogs = logs.length;
+  
+  const actionStats = [
+    { action: 'CREATE', count: logs.filter(l => l.action === 'CREATE').length },
+    { action: 'UPDATE', count: logs.filter(l => l.action === 'UPDATE').length },
+    { action: 'DELETE', count: logs.filter(l => l.action === 'DELETE').length }
+  ];
+
+  const entityStats = [
+    { entity_type: 'employee', count: logs.filter(l => l.entity_type === 'employee').length },
+    { entity_type: 'admin', count: logs.filter(l => l.entity_type === 'admin').length },
+    { entity_type: 'region', count: logs.filter(l => l.entity_type === 'region').length },
+    { entity_type: 'district', count: logs.filter(l => l.entity_type === 'district').length },
+    { entity_type: 'position', count: logs.filter(l => l.entity_type === 'position').length }
+  ];
+
+  const topAdmins = [
+    { admin_username: 'superadmin', count: logs.filter(l => l.admin_username === 'superadmin').length }
+  ];
+
+  // Weekly activity (last 7 days)
+  const weeklyActivity = [];
+  for (let i = 6; i >= 0; i--) {
+    const date = new Date();
+    date.setDate(date.getDate() - i);
+    const dateStr = date.toISOString().split('T')[0];
+    const count = logs.filter(l => l.created_at.startsWith(dateStr)).length;
+    weeklyActivity.push({ date: dateStr, count });
+  }
+
+  res.json({
+    total_logs: totalLogs,
+    actions: actionStats,
+    entities: entityStats,
+    top_admins: topAdmins,
+    weekly_activity: weeklyActivity
+  });
 });
 
 export default app;
