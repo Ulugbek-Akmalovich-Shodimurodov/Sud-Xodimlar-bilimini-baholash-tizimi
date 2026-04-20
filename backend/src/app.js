@@ -520,7 +520,55 @@ let logs = [
 
 let nextLogId = 3;
 
-// Simple logging function
+// Function to detect specific changes
+function detectChanges(oldData, newData) {
+  const changes = [];
+  
+  const fieldLabels = {
+    full_name: 'F.I.O',
+    position: 'Lavozimi',
+    region_id: 'Viloyati',
+    district_id: 'Tumani',
+    konstitutsiya_score: 'Konstitutsiya natijasi',
+    kodeks_score: 'Kodeks natijasi',
+    protsessual_kodeks_score: 'Protsessual kodeks natijasi',
+    akt_sohasi_score: 'AKT natijasi',
+    odob_axloq_score: 'Odob-axloq natijasi',
+    konstitutsiya_status: 'Konstitutsiya holati',
+    kodeks_status: 'Kodeks holati',
+    protsessual_kodeks_status: 'Protsessual kodeks holati',
+    akt_sohasi_status: 'AKT holati',
+    odob_axloq_status: 'Odob-axloq holati',
+    score: 'Umumiy natija'
+  };
+
+  if (!oldData || !newData) return changes;
+
+  for (const [key, newValue] of Object.entries(newData)) {
+    const oldValue = oldData[key];
+    if (oldValue !== newValue) {
+      const label = fieldLabels[key] || key;
+      
+      if (key.includes('_score') && typeof oldValue === 'number' && typeof newValue === 'number') {
+        // Handle score changes
+        changes.push(`${label}: ${oldValue}% dan ${newValue}% ga o'zgartirildi`);
+      } else if (key.includes('_status')) {
+        // Handle status changes
+        changes.push(`${label}: ${oldValue} dan ${newValue} ga o'zgartirildi`);
+      } else if (key === 'region_id' || key === 'district_id') {
+        // Handle region/district changes
+        changes.push(`${label}: o'zgartirildi`);
+      } else {
+        // Handle other changes
+        changes.push(`${label}: "${oldValue}" dan "${newValue}" ga o'zgartirildi`);
+      }
+    }
+  }
+
+  return changes;
+}
+
+// Enhanced logging function
 function addLog({
   adminId,
   adminUsername,
@@ -533,6 +581,21 @@ function addLog({
   ipAddress,
   userAgent
 }) {
+  let changeDescription = '';
+  
+  if (action === 'UPDATE' && oldData && newData) {
+    const changes = detectChanges(oldData, newData);
+    if (changes.length > 0) {
+      changeDescription = changes.join('; ');
+    } else {
+      changeDescription = 'O\'zgarishlar topilmadi';
+    }
+  } else if (action === 'CREATE') {
+    changeDescription = `${entityName} yaratildi`;
+  } else if (action === 'DELETE') {
+    changeDescription = `${entityName} o\'chirildi`;
+  }
+
   const newLog = {
     id: nextLogId++,
     admin_id: adminId,
@@ -541,6 +604,7 @@ function addLog({
     entity_type: entityType,
     entity_id: entityId,
     entity_name: entityName,
+    change_description: changeDescription,
     old_data: oldData,
     new_data: newData,
     ip_address: ipAddress || '127.0.0.1',

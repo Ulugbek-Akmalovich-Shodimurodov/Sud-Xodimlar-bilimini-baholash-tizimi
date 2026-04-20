@@ -203,6 +203,7 @@ function LogsManager({ user }) {
                   <th className="px-4 py-3">Amal</th>
                   <th className="px-4 py-3">Obyekt</th>
                   <th className="px-4 py-3">Obyekt nomi</th>
+                  <th className="px-4 py-3">O'zgarishlar</th>
                   <th className="px-4 py-3">IP manzil</th>
                 </tr>
               </thead>
@@ -220,6 +221,15 @@ function LogsManager({ user }) {
                       {entityTypeLabels[log.entity_type] || log.entity_type}
                     </td>
                     <td className="px-4 py-3">{log.entity_name || '-'}</td>
+                    <td className="px-4 py-3 max-w-xs">
+                      <div className="text-xs text-slate-600" title={log.change_description}>
+                        {log.change_description ? (
+                          <span className="line-clamp-2">{log.change_description}</span>
+                        ) : (
+                          <span className="text-slate-400">O'zgarishlar yo'q</span>
+                        )}
+                      </div>
+                    </td>
                     <td className="px-4 py-3 text-slate-500">{log.ip_address || '-'}</td>
                   </tr>
                 ))}
