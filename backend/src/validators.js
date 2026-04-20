@@ -56,9 +56,29 @@ export const employeeSchema = Joi.object({
   }),
   region_id: Joi.number().integer().required(),
   district_id: Joi.number().integer().required(),
-  konstitutsiya_score: Joi.number().integer().min(0).max(100).allow(null, '').optional(),
-  kodeks_score: Joi.number().integer().min(0).max(100).allow(null, '').optional(),
-  protsessual_kodeks_score: Joi.number().integer().min(0).max(100).allow(null, '').optional(),
-  akt_sohasi_score: Joi.number().integer().min(0).max(100).allow(null, '').optional(),
-  odob_axloq_score: Joi.number().integer().min(0).max(100).allow(null, '').optional(),
+  konstitutsiya_score: Joi.alternatives().try(
+    Joi.number().integer().min(0).max(100),
+    Joi.string().allow(''),
+    Joi.allow(null)
+  ).optional(),
+  kodeks_score: Joi.alternatives().try(
+    Joi.number().integer().min(0).max(100),
+    Joi.string().allow(''),
+    Joi.allow(null)
+  ).optional(),
+  protsessual_kodeks_score: Joi.alternatives().try(
+    Joi.number().integer().min(0).max(100),
+    Joi.string().allow(''),
+    Joi.allow(null)
+  ).optional(),
+  akt_sohasi_score: Joi.alternatives().try(
+    Joi.number().integer().min(0).max(100),
+    Joi.string().allow(''),
+    Joi.allow(null)
+  ).optional(),
+  odob_axloq_score: Joi.alternatives().try(
+    Joi.number().integer().min(0).max(100),
+    Joi.string().allow(''),
+    Joi.allow(null)
+  ).optional(),
 });

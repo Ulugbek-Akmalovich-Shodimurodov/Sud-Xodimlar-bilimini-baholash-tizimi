@@ -13,8 +13,10 @@ const examScoreKeys = [
 ];
 
 function normalizeScore(value) {
+  // Handle empty string, null, or undefined as "not taken"
+  if (value === '' || value === null || value === undefined) return 0;
   const score = Number(value);
-  if (!Number.isFinite(score) || score <= 0) return 0;
+  if (!Number.isFinite(score) || score < 0) return 0;
   return Math.round(score);
 }
 
