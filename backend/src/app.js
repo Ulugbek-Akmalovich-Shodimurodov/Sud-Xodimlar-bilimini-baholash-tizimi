@@ -1,19 +1,9 @@
 import express from 'express';
 import cors from 'cors';
-import morgan from 'morgan';
-import authRoutes from './routes/auth.js';
-import adminRoutes from './routes/admins.js';
-import regionRoutes from './routes/regions.js';
-import districtRoutes from './routes/districts.js';
-import employeeRoutes from './routes/employees.js';
-import statsRoutes from './routes/stats.js';
-import positionRoutes from './routes/positions.js';
-import logsRoutes from './routes/logs.js';
-import errorHandler from './middleware/errorHandler.js';
 
 const app = express();
 
-// Simple and direct CORS configuration for Vercel
+// Simple CORS configuration
 app.use(cors({
   origin: [
     'https://sud-xodimlar-bilimini-baholash-tizi.vercel.app',
@@ -25,33 +15,40 @@ app.use(cors({
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
 }));
+
 app.use(express.json());
-app.use(morgan('tiny'));
 
-app.use('/api/auth', authRoutes);
-app.use('/api/admins', adminRoutes);
-app.use('/api/regions', regionRoutes);
-app.use('/api/districts', districtRoutes);
-app.use('/api/positions', positionRoutes);
-app.use('/api/employees', employeeRoutes);
-app.use('/api/stats', statsRoutes);
-app.use('/api/logs', logsRoutes);
-
+// Basic test route
 app.get('/', (req, res) => {
-  res.json({ message: 'Supreme Court xodim baholash API' });
+  res.json({ message: 'Supreme Court xodim baholash API - Test Version' });
 });
 
-app.post('/api/init-db', async (req, res) => {
-  try {
-    const { initializeDatabase } = await import('./initDb.js');
-    await initializeDatabase();
-    res.json({ message: 'Database initialized successfully' });
-  } catch (error) {
-    console.error('Database initialization failed:', error);
-    res.status(500).json({ error: 'Database initialization failed' });
-  }
+// Simple regions test
+app.get('/api/regions', (req, res) => {
+  res.json([
+    { id: 1, name: 'Toshkent viloyati' },
+    { id: 2, name: 'Samarqand viloyati' },
+    { id: 3, name: 'Farg\'ona viloyati' }
+  ]);
 });
 
-app.use(errorHandler);
+// Simple employees test
+app.get('/api/employees', (req, res) => {
+  res.json({
+    data: [
+      {
+        id: 1,
+        full_name: 'Test Employee',
+        position: 'Test Position',
+        region_name: 'Test Region',
+        district_name: 'Test District',
+        score: 85
+      }
+    ],
+    total: 1,
+    page: 1,
+    limit: 10
+  });
+});
 
 export default app;
