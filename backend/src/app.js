@@ -40,6 +40,17 @@ app.get('/', (req, res) => {
   res.json({ message: 'Supreme Court xodim baholash API' });
 });
 
+app.post('/api/init-db', async (req, res) => {
+  try {
+    const { initializeDatabase } = await import('./initDb.js');
+    await initializeDatabase();
+    res.json({ message: 'Database initialized successfully' });
+  } catch (error) {
+    console.error('Database initialization failed:', error);
+    res.status(500).json({ error: 'Database initialization failed' });
+  }
+});
+
 app.use(errorHandler);
 
 export default app;

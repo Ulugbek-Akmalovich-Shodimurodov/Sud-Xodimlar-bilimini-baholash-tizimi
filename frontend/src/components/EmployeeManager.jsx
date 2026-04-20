@@ -294,16 +294,22 @@ function EmployeeManager({ user }) {
               </select>
 
               {examFields.map((field) => (
-                <input
-                  key={field.key}
-                  type="number"
-                  min="0"
-                  max="100"
-                  value={formState[field.key]}
-                  onChange={(e) => setFormState({ ...formState, [field.key]: e.target.value })}
-                  placeholder={field.label}
-                  className="rounded-2xl border border-slate-200 bg-slate-50 p-3"
-                />
+                <div key={field.key} className="relative">
+                  <input
+                    type="number"
+                    min="0"
+                    max="100"
+                    value={formState[field.key]}
+                    onChange={(e) => setFormState({ ...formState, [field.key]: e.target.value })}
+                    placeholder={field.label}
+                    className="rounded-2xl border border-slate-200 bg-slate-50 p-3 pr-24 w-full"
+                  />
+                  {!formState[field.key] && (
+                    <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 pointer-events-none">
+                      Topshirmadi
+                    </div>
+                  )}
+                </div>
               ))}
             </div>
 
