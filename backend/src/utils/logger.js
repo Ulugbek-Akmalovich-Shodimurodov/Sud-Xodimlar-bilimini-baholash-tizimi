@@ -1,5 +1,4 @@
-import { query } from '../db.js';
-
+// Safe logging function that won't break deployment
 export async function logAdminAction({
   adminId,
   adminUsername,
@@ -13,6 +12,9 @@ export async function logAdminAction({
   userAgent,
 }) {
   try {
+    // Import query dynamically to avoid circular dependencies
+    const { query } = await import('../db.js');
+    
     await query(
       `INSERT INTO admin_logs (
         admin_id, admin_username, action, entity_type, entity_id, 
