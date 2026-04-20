@@ -18,6 +18,12 @@ const allowedOrigins = (process.env.CORS_ORIGIN || '')
   .map((item) => item.trim())
   .filter(Boolean);
 
+// Add the frontend URL to allowed origins
+const frontendUrl = 'https://sud-xodimlar-bilimini-baholash-tizi.vercel.app';
+if (!allowedOrigins.includes(frontendUrl)) {
+  allowedOrigins.push(frontendUrl);
+}
+
 app.use(cors({
   origin(origin, callback) {
     if (!origin || allowedOrigins.length === 0 || allowedOrigins.includes(origin)) {
@@ -25,6 +31,7 @@ app.use(cors({
     }
     return callback(new Error('CORS ruxsati yo`q'));
   },
+  credentials: true,
 }));
 app.use(express.json());
 app.use(morgan('tiny'));
