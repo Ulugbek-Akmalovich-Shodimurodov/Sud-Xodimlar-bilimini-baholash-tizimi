@@ -10,7 +10,8 @@
     "setup-db": "node scripts/setup-local-db.js",
     "init-db": "node -e \"import('./src/initDb.js').then(m => m.initializeDatabase())\"",
     "test-db": "node -e \"import('./src/db.js').then(m => m.query('SELECT 1')).then(() => console.log('Database connection successful')).catch(e => console.error('Database connection failed:', e.message))\"",
-    "create-sample-data": "node scripts/create-sample-data.js"
+    "create-sample-data": "node scripts/create-sample-data.js",
+    "force-reset-db": "node scripts/force-reset-db.js"
   },
   "dependencies": {
     "bcrypt": "^5.1.0",
