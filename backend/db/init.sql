@@ -105,14 +105,55 @@ INSERT INTO regions (name)
 VALUES
   ('Toshkent viloyati'),
   ('Samarqand viloyati'),
-  ('Farg''ona viloyati')
+  ('Farg''ona viloyati'),
+  ('Buxoro viloyati'),
+  ('Xorazm viloyati'),
+  ('Qashqadaryo viloyati'),
+  ('Jizzax viloyati'),
+  ('Navoiy viloyati'),
+  ('Andijon viloyati'),
+  ('Namangan viloyati'),
+  ('Sirdaryo viloyati')
 ON CONFLICT DO NOTHING;
 
 INSERT INTO districts (name, region_id)
 VALUES
-  ('Shahar', (SELECT id FROM regions WHERE name = 'Toshkent viloyati')),
+  ('Toshkent shahar', (SELECT id FROM regions WHERE name = 'Toshkent viloyati')),
+  ('Chirchiq', (SELECT id FROM regions WHERE name = 'Toshkent viloyati')),
   ('Qibray', (SELECT id FROM regions WHERE name = 'Toshkent viloyati')),
-  ('Samarqand shahar', (SELECT id FROM regions WHERE name = 'Samarqand viloyati'))
+  ('Angren', (SELECT id FROM regions WHERE name = 'Toshkent viloyati')),
+  ('Bekobod', (SELECT id FROM regions WHERE name = 'Toshkent viloyati')),
+  ('Samarqand shahar', (SELECT id FROM regions WHERE name = 'Samarqand viloyati')),
+  ('Bulung\'ur', (SELECT id FROM regions WHERE name = 'Samarqand viloyati')),
+  ('Kattaqo\'rg\'on', (SELECT id FROM regions WHERE name = 'Samarqand viloyati')),
+  ('Urgut', (SELECT id FROM regions WHERE name = 'Samarqand viloyati')),
+  ('Farg\'ona shahar', (SELECT id FROM regions WHERE name = 'Farg\'ona viloyati')),
+  ('Kokand', (SELECT id FROM regions WHERE name = 'Farg\'ona viloyati')),
+  ('Quva', (SELECT id FROM regions WHERE name = 'Farg\'ona viloyati')),
+  ('Buxoro shahar', (SELECT id FROM regions WHERE name = 'Buxoro viloyati')),
+  ('Gijduvon', (SELECT id FROM regions WHERE name = 'Buxoro viloyati')),
+  ('Kogon', (SELECT id FROM regions WHERE name = 'Buxoro viloyati')),
+  ('Urganch', (SELECT id FROM regions WHERE name = 'Xorazm viloyati')),
+  ('Xiva', (SELECT id FROM regions WHERE name = 'Xorazm viloyati')),
+  ('Shovot', (SELECT id FROM regions WHERE name = 'Xorazm viloyati')),
+  ('Qarshi', (SELECT id FROM regions WHERE name = 'Qashqadaryo viloyati')),
+  ('Shahrisabz', (SELECT id FROM regions WHERE name = 'Qashqadaryo viloyati')),
+  ('Kitob', (SELECT id FROM regions WHERE name = 'Qashqadaryo viloyati')),
+  ('Jizzax shahar', (SELECT id FROM regions WHERE name = 'Jizzax viloyati')),
+  ('Zarafshon', (SELECT id FROM regions WHERE name = 'Jizzax viloyati')),
+  ('Gallaorol', (SELECT id FROM regions WHERE name = 'Jizzax viloyati')),
+  ('Navoiy shahar', (SELECT id FROM regions WHERE name = 'Navoiy viloyati')),
+  ('Qiziltepa', (SELECT id FROM regions WHERE name = 'Navoiy viloyati')),
+  ('Nurota', (SELECT id FROM regions WHERE name = 'Navoiy viloyati')),
+  ('Andijon shahar', (SELECT id FROM regions WHERE name = 'Andijon viloyati')),
+  ('Xonobod', (SELECT id FROM regions WHERE name = 'Andijon viloyati')),
+  ('Shahrixon', (SELECT id FROM regions WHERE name = 'Andijon viloyati')),
+  ('Namangan shahar', (SELECT id FROM regions WHERE name = 'Namangan viloyati')),
+  ('Chust', (SELECT id FROM regions WHERE name = 'Namangan viloyati')),
+  ('Pop', (SELECT id FROM regions WHERE name = 'Namangan viloyati')),
+  ('Guliston', (SELECT id FROM regions WHERE name = 'Sirdaryo viloyati')),
+  ('Boyovut', (SELECT id FROM regions WHERE name = 'Sirdaryo viloyati')),
+  ('Sirdaryo', (SELECT id FROM regions WHERE name = 'Sirdaryo viloyati'))
 ON CONFLICT DO NOTHING;
 
 INSERT INTO admins (username, password, role, assigned_regions)
@@ -122,11 +163,18 @@ ON CONFLICT (username) DO NOTHING;
 
 INSERT INTO positions (name)
 VALUES
+  ('Sud raisi'),
+  ('Sudya'),
   ('Yuqori sud xodimi'),
   ('Yuridik mutaxassis'),
-  ('Ma’muriyat xodimi'),
-  ('Sud raisi'),
-  ('Sudya')
+  ('Ma\'muriyat xodimi'),
+  ('Prokuror'),
+  ('Kotib'),
+  ('Arxiv boshlig\'i'),
+  ('Yuridik maslahatchi'),
+  ('Ishchi kengash a\'zosi'),
+  ('Sud majlisining kotibyati'),
+  ('Sud ijrochisi')
 ON CONFLICT DO NOTHING;
 
 INSERT INTO employees (
@@ -151,10 +199,10 @@ VALUES
     'Abdulla Axmedov',
     'Yuqori sud xodimi',
     (SELECT id FROM regions WHERE name = 'Toshkent viloyati'),
-    (SELECT d.id FROM districts d JOIN regions r ON r.id = d.region_id WHERE d.name = 'Shahar' AND r.name = 'Toshkent viloyati' LIMIT 1),
+    (SELECT d.id FROM districts d JOIN regions r ON r.id = d.region_id WHERE d.name = 'Toshkent shahar' AND r.name = 'Toshkent viloyati' LIMIT 1),
     92,
-    95, 90, 91, 0, 92,
-    'topshirdi', 'topshirdi', 'topshirdi', 'topshirmadi', 'topshirdi'
+    95, 90, 91, 88, 92,
+    'topshirdi', 'topshirdi', 'topshirdi', 'topshirdi', 'topshirdi'
   ),
   (
     'Dilshod Mirzaev',
@@ -162,7 +210,79 @@ VALUES
     (SELECT id FROM regions WHERE name = 'Samarqand viloyati'),
     (SELECT d.id FROM districts d JOIN regions r ON r.id = d.region_id WHERE d.name = 'Samarqand shahar' AND r.name = 'Samarqand viloyati' LIMIT 1),
     78,
-    80, 76, 79, 0, 77,
+    80, 76, 79, 75, 77,
+    'topshirdi', 'topshirdi', 'topshirdi', 'topshirmadi', 'topshirdi'
+  ),
+  (
+    'Gulnora Karimova',
+    'Sud raisi',
+    (SELECT id FROM regions WHERE name = 'Farg\'ona viloyati'),
+    (SELECT d.id FROM districts d JOIN regions r ON r.id = d.region_id WHERE d.name = 'Farg\'ona shahar' AND r.name = 'Farg\'ona viloyati' LIMIT 1),
+    88,
+    90, 85, 87, 89, 86,
+    'topshirdi', 'topshirdi', 'topshirdi', 'topshirdi', 'topshirdi'
+  ),
+  (
+    'Bobur Rahimov',
+    'Sudya',
+    (SELECT id FROM regions WHERE name = 'Buxoro viloyati'),
+    (SELECT d.id FROM districts d JOIN regions r ON r.id = d.region_id WHERE d.name = 'Buxoro shahar' AND r.name = 'Buxoro viloyati' LIMIT 1),
+    85,
+    88, 82, 84, 86, 83,
+    'topshirdi', 'topshirdi', 'topshirdi', 'topshirdi', 'topshirdi'
+  ),
+  (
+    'Zarina Toshpulatova',
+    'Prokuror',
+    (SELECT id FROM regions WHERE name = 'Xorazm viloyati'),
+    (SELECT d.id FROM districts d JOIN regions r ON r.id = d.region_id WHERE d.name = 'Urganch' AND r.name = 'Xorazm viloyati' LIMIT 1),
+    91,
+    93, 89, 90, 92, 91,
+    'topshirdi', 'topshirdi', 'topshirdi', 'topshirdi', 'topshirdi'
+  ),
+  (
+    'Jamshid Yusupov',
+    'Ma\'muriyat xodimi',
+    (SELECT id FROM regions WHERE name = 'Qashqadaryo viloyati'),
+    (SELECT d.id FROM districts d JOIN regions r ON r.id = d.region_id WHERE d.name = 'Qarshi' AND r.name = 'Qashqadaryo viloyati' LIMIT 1),
+    76,
+    78, 74, 77, 75, 76,
+    'topshirmadi', 'topshirmadi', 'topshirdi', 'topshirmadi', 'topshirmadi'
+  ),
+  (
+    'Mavzuna Aliyeva',
+    'Yuridik maslahatchi',
+    (SELECT id FROM regions WHERE name = 'Andijon viloyati'),
+    (SELECT d.id FROM districts d JOIN regions r ON r.id = d.region_id WHERE d.name = 'Andijon shahar' AND r.name = 'Andijon viloyati' LIMIT 1),
+    87,
+    89, 85, 86, 88, 87,
+    'topshirdi', 'topshirdi', 'topshirdi', 'topshirdi', 'topshirdi'
+  ),
+  (
+    'Sardor Qodirov',
+    'Arxiv boshlig\'i',
+    (SELECT id FROM regions WHERE name = 'Namangan viloyati'),
+    (SELECT d.id FROM districts d JOIN regions r ON r.id = d.region_id WHERE d.name = 'Namangan shahar' AND r.name = 'Namangan viloyati' LIMIT 1),
+    82,
+    84, 80, 83, 81, 82,
+    'topshirdi', 'topshirmadi', 'topshirdi', 'topshirmadi', 'topshirdi'
+  ),
+  (
+    'Nigora Azimova',
+    'Kotib',
+    (SELECT id FROM regions WHERE name = 'Jizzax viloyati'),
+    (SELECT d.id FROM districts d JOIN regions r ON r.id = d.region_id WHERE d.name = 'Jizzax shahar' AND r.name = 'Jizzax viloyati' LIMIT 1),
+    79,
+    81, 77, 80, 78, 79,
+    'topshirmadi', 'topshirdi', 'topshirmadi', 'topshirdi', 'topshirmadi'
+  ),
+  (
+    'Rustam Sobirov',
+    'Sud majlisining kotibyati',
+    (SELECT id FROM regions WHERE name = 'Navoiy viloyati'),
+    (SELECT d.id FROM districts d JOIN regions r ON r.id = d.region_id WHERE d.name = 'Navoiy shahar' AND r.name = 'Navoiy viloyati' LIMIT 1),
+    84,
+    86, 82, 85, 83, 84,
     'topshirdi', 'topshirdi', 'topshirdi', 'topshirmadi', 'topshirdi'
   )
 ON CONFLICT DO NOTHING;
