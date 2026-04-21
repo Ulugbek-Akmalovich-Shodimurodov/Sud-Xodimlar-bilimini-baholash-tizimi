@@ -54,29 +54,29 @@ function App() {
   const userInitial = userName.charAt(0).toUpperCase();
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900">
-      <header className="bg-white border-b border-slate-200">
+    <div className="min-h-screen bg-[#f2f5fc] text-slate-900">
+      <header className="border-b border-slate-200 bg-white">
         <div className="mx-auto flex max-w-7xl flex-col gap-3 px-4 py-4 sm:px-6 lg:px-8 md:flex-row md:items-center md:justify-between">
           <div className="flex items-center gap-3">
             <img
               src="/assets/images/SUD-01.png"
               alt="Oliy sud logotipi"
-              className="h-12 w-12 rounded-full object-contain"
+              className="h-16 w-16 object-contain"
             />
             <div>
-              <Link to="/" className="block text-2xl font-semibold text-slate-900">Oliy sud</Link>
-              <p className="text-sm text-slate-600">Xodimlar bilimini baholash tizimi</p>
+              <Link to="/" className="block text-2xl font-semibold tracking-tight text-[#0f2d74] sm:text-3xl">Oliy sud</Link>
+              <p className="text-sm text-slate-600 sm:text-lg">Xodimlar bilimini baholash tizimi</p>
             </div>
           </div>
-          <nav className="flex items-center gap-3 text-sm text-slate-700">
-            <Link to="/" className="hover:text-slate-900">Jamoat</Link>
-            {token ? <Link to="/admin" className="hover:text-slate-900">Dashboard</Link> : <Link to="/login" className="hover:text-slate-900">Kirish</Link>}
+          <nav className="flex items-center gap-6 text-sm text-slate-700 sm:text-xl">
+            <Link to="/" className="font-medium hover:text-slate-900">Jamoat</Link>
+            {token ? <Link to="/admin" className="font-medium hover:text-slate-900">Dashboard</Link> : <Link to="/login" className="font-medium hover:text-slate-900">Kirish</Link>}
             {token && user && (
               <div className="relative" ref={profileRef}>
                 <button
                   type="button"
                   onClick={() => setProfileMenuOpen((prev) => !prev)}
-                  className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-900 text-sm font-semibold text-white"
+                  className="flex h-12 w-12 items-center justify-center rounded-full bg-[#122f7a] text-lg font-semibold text-white"
                   aria-label="Profil menyusi"
                 >
                   {userInitial}
