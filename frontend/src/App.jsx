@@ -59,7 +59,7 @@ function App() {
         <div className="mx-auto flex max-w-7xl flex-col gap-3 px-4 py-4 sm:px-6 lg:px-8 md:flex-row md:items-center md:justify-between">
           <div className="flex items-center gap-3">
             <img
-              src="/assets/images/DUS-01.png"
+              src="/assets/images/SUD-01.png"
               alt="Oliy sud logotipi"
               className="h-12 w-12 rounded-full object-contain"
             />
