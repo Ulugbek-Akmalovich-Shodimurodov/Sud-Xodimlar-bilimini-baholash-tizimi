@@ -193,15 +193,16 @@ router.post('/', authenticateToken, permit('super_admin', 'admin'), async (req, 
 });
 
 router.put('/:id', authenticateToken, permit('super_admin', 'admin'), async (req, res, next) => {
-  // Get old data for logging
-  const oldEmployeeResult = await query('SELECT * FROM employees WHERE id = $1', [req.params.id]);
-  const oldData = oldEmployeeResult.rows[0];
+  try {
+    // Get old data for logging
+    const oldEmployeeResult = await query('SELECT * FROM employees WHERE id = $1', [req.params.id]);
+    const oldData = oldEmployeeResult.rows[0] || null;
 
-  const employeeResult = await query('SELECT region_id FROM employees WHERE id = $1', [req.params.id]);
-  if (!employeeResult.rows.length) return res.status(404).json({ error: 'Xodim topilmadi' });
+    const employeeResult = await query('SELECT region_id FROM employees WHERE id = $1', [req.params.id]);
+    if (!employeeResult.rows.length) return res.status(404).json({ error: 'Xodim topilmadi' });
 
-  const currentRegion = employeeResult.rows[0].region_id;
-  const newRegion = req.body.region_id;
+    const currentRegion = employeeResult.rows[0].region_id;
+    const newRegion = req.body.region_id;
 
     if (req.user.role === 'admin') {
       const assigned = Array.isArray(req.user.assigned_regions) ? req.user.assigned_regions : [];
