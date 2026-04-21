@@ -122,7 +122,7 @@ function Dashboard({ user }) {
                   <path d="M5 3h3v18H5V3zm5 6h3v12h-3V9zm5-4h3v16h-3V5z" />
                 </svg>
               </div>
-              <h2 className="text-3xl font-semibold tracking-tight text-[#0f2d74]">Viloyatlar bo'yicha o'rtacha natijalar</h2>
+              <h2 className="text-2xl font-semibold tracking-tight text-[#0f2d74]">Viloyatlar bo'yicha o'rtacha natijalar</h2>
             </div>
             <select className="rounded-2xl border border-slate-200 bg-white px-4 py-2 text-slate-600">
               <option>Ustunlik</option>
@@ -164,7 +164,7 @@ function Dashboard({ user }) {
                   <path d="M5 10h3v11H5V10zm5-7h3v18h-3V3zm5 4h3v14h-3V7z" />
                 </svg>
               </div>
-              <h2 className="text-3xl font-semibold tracking-tight text-[#0f2d74]">Tumanlar bo'yicha o'rtacha natijalar</h2>
+              <h2 className="text-2xl font-semibold tracking-tight text-[#0f2d74]">Tumanlar bo'yicha o'rtacha natijalar</h2>
             </div>
             <select className="rounded-2xl border border-slate-200 bg-white px-4 py-2 text-slate-600">
               <option>Ustunlik</option>
@@ -199,6 +199,96 @@ function Dashboard({ user }) {
         </div>
       </section>
 
+      <section className="grid gap-6 lg:grid-cols-2">
+        <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+          <div className="mb-4 flex items-center gap-3">
+            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-700">
+              <svg viewBox="0 0 24 24" className="h-7 w-7" fill="currentColor">
+                <path d="M12 2l7 3v6c0 5-3.5 9-7 11-3.5-2-7-6-7-11V5l7-3zm0 4l-1.2 2.4L8 9l2 1.9-.5 2.8 2.5-1.3 2.5 1.3-.5-2.8 2-1.9-2.8-.6L12 6z" />
+              </svg>
+            </div>
+            <h2 className="text-2xl font-semibold tracking-tight text-[#0f2d74]">Yuqori natijali xodimlar</h2>
+          </div>
+          <div className="space-y-3">
+            {stats?.top?.best?.length > 0 ? (
+              stats.top.best.map((employee, idx) => (
+                <div key={idx} className="flex items-center justify-between rounded-2xl bg-emerald-50 p-4">
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-600 text-white font-semibold">
+                      {idx + 1}
+                    </div>
+                    <div>
+                      <p className="font-semibold text-slate-900">{employee.full_name}</p>
+                      <p className="text-sm text-slate-600">{employee.position}</p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-2xl font-bold text-emerald-600">{employee.score}%</p>
+                    <p className="text-xs text-slate-500">Natija</p>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="rounded-2xl bg-slate-50 p-8 text-center text-slate-500">
+                <p>Ma'lumot mavjud emas</p>
+              </div>
+            )}
+          </div>
+          <div className="mt-4">
+            <Link to="/admin/employees" className="inline-flex items-center gap-2 rounded-2xl bg-emerald-600 px-4 py-2 text-white hover:bg-emerald-700">
+              <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor">
+                <path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14l-5-5 1.41-1.41L12 14.17l3.59-3.58L17 12l-5 5z" />
+              </svg>
+              Barcha xodimlar
+            </Link>
+          </div>
+        </div>
+
+        <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+          <div className="mb-4 flex items-center gap-3">
+            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-red-100 text-red-700">
+              <svg viewBox="0 0 24 24" className="h-7 w-7" fill="currentColor">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+              </svg>
+            </div>
+            <h2 className="text-2xl font-semibold tracking-tight text-[#0f2d74]">Past natijali xodimlar</h2>
+          </div>
+          <div className="space-y-3">
+            {stats?.top?.worst?.length > 0 ? (
+              stats.top.worst.map((employee, idx) => (
+                <div key={idx} className="flex items-center justify-between rounded-2xl bg-red-50 p-4">
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-red-600 text-white font-semibold">
+                      {idx + 1}
+                    </div>
+                    <div>
+                      <p className="font-semibold text-slate-900">{employee.full_name}</p>
+                      <p className="text-sm text-slate-600">{employee.position}</p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-2xl font-bold text-red-600">{employee.score}%</p>
+                    <p className="text-xs text-slate-500">Natija</p>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="rounded-2xl bg-slate-50 p-8 text-center text-slate-500">
+                <p>Ma'lumot mavjud emas</p>
+              </div>
+            )}
+          </div>
+          <div className="mt-4">
+            <Link to="/admin/employees" className="inline-flex items-center gap-2 rounded-2xl bg-red-600 px-4 py-2 text-white hover:bg-red-700">
+              <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor">
+                <path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14l-5-5 1.41-1.41L12 14.17l3.59-3.58L17 12l-5 5z" />
+              </svg>
+              Barcha xodimlar
+            </Link>
+          </div>
+        </div>
+      </section>
+
       <section className="relative overflow-hidden rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
         <div className="pointer-events-none absolute -right-20 bottom-0 h-44 w-96 rounded-tl-[120px] bg-blue-100/70" />
         <div className="relative flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
@@ -209,7 +299,7 @@ function Dashboard({ user }) {
               </svg>
             </div>
             <div>
-              <h3 className="text-3xl font-semibold tracking-tight text-[#0f2d74]">Umumiy tahlil</h3>
+              <h3 className="text-2xl font-semibold tracking-tight text-[#0f2d74]">Umumiy tahlil</h3>
               <p className="mt-2 text-lg text-slate-700">
                 Tizimdagi o'rtacha natija {avgScore}% ni tashkil etmoqda. {topRegion ? `${topRegion.name} viloyati` : 'Eng yaxshi hudud'} va{' '}
                 {topDistrict ? `${topDistrict.name}` : 'yetakchi tuman'} eng yaxshi natijalarni ko'rsatmoqda.

@@ -64,8 +64,8 @@ function App() {
               className="h-16 w-16 object-contain"
             />
             <div>
-              <Link to="/" className="block text-2xl font-semibold tracking-tight text-[#0f2d74] sm:text-3xl">Oliy sud</Link>
-              <p className="text-sm text-slate-600 sm:text-lg">Xodimlar bilimini baholash tizimi</p>
+              <Link to="/" className="block text-xl font-semibold tracking-tight text-[#0f2d74] sm:text-2xl">Oliy sud</Link>
+              <p className="text-xs text-slate-600 sm:text-sm">Xodimlar bilimini baholash tizimi</p>
             </div>
           </div>
           <nav className="flex items-center gap-6 text-sm text-slate-700 sm:text-xl">
