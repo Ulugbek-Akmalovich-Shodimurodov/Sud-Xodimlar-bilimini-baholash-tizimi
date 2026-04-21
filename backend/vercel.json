@@ -9,5 +9,17 @@
       "src": "/",
       "dest": "/api/[...path].js"
     }
-  ]
+  ],
+  "env": {
+    "DATABASE_URL": "postgresql://sud-xodim-baholash:/Z#/fMfRG94R?4V@zslinmaugbpqrwqnnoso.supabase.co:5432/postgres",
+    "DB_HOST": "zslinmaugbpqrwqnnoso.supabase.co",
+    "DB_PORT": "5432",
+    "DB_NAME": "postgres",
+    "DB_USER": "sud-xodim-baholash",
+    "DB_PASSWORD": "/Z#/fMfRG94R?4V",
+    "JWT_SECRET": "super_secure_jwt_secret_key_for_production_2024",
+    "CORS_ORIGIN": "https://sud-xodimlar-bilimini-baholash-tizi.vercel.app",
+    "AUTO_INIT_DB": "true",
+    "DB_SSL": "true"
+  }
 }
