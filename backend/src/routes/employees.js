@@ -194,6 +194,9 @@ router.post('/', authenticateToken, permit('super_admin', 'admin'), async (req, 
 
 router.put('/:id', authenticateToken, permit('super_admin', 'admin'), async (req, res, next) => {
   try {
+    const { error, value } = employeeSchema.validate(req.body);
+    if (error) return res.status(400).json({ error: error.message });
+
     // Get old data for logging
     const oldEmployeeResult = await query('SELECT * FROM employees WHERE id = $1', [req.params.id]);
     const oldData = oldEmployeeResult.rows[0] || null;
@@ -202,7 +205,7 @@ router.put('/:id', authenticateToken, permit('super_admin', 'admin'), async (req
     if (!employeeResult.rows.length) return res.status(404).json({ error: 'Xodim topilmadi' });
 
     const currentRegion = employeeResult.rows[0].region_id;
-    const newRegion = req.body.region_id;
+    const newRegion = Number(value.region_id);
 
     if (req.user.role === 'admin') {
       const assigned = Array.isArray(req.user.assigned_regions) ? req.user.assigned_regions : [];
