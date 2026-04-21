@@ -6,7 +6,10 @@
   "type": "module",
   "scripts": {
     "start": "node src/index.js",
-    "dev": "nodemon src/index.js"
+    "dev": "nodemon src/index.js",
+    "setup-db": "node scripts/setup-local-db.js",
+    "init-db": "node -e \"import('./src/initDb.js').then(m => m.initializeDatabase())\"",
+    "test-db": "node -e \"import('./src/db.js').then(m => m.query('SELECT 1')).then(() => console.log('Database connection successful')).catch(e => console.error('Database connection failed:', e.message))\""
   },
   "dependencies": {
     "bcrypt": "^5.1.0",
