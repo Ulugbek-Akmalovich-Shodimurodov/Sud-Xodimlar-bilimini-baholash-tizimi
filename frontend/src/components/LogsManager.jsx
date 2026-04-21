@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import * as XLSX from 'xlsx';
 import { fetchLogs, fetchLogsStats } from '../api.js';
 
 const actionLabels = {
@@ -22,6 +23,7 @@ function LogsManager({ user }) {
   const [page, setPage] = useState(1);
   const [limit] = useState(20);
   const [total, setTotal] = useState(0);
+  const [exporting, setExporting] = useState(false);
   const [filters, setFilters] = useState({
     action: '',
     entity_type: '',
@@ -72,6 +74,62 @@ function LogsManager({ user }) {
   const handleFilterChange = (key, value) => {
     setFilters(prev => ({ ...prev, [key]: value }));
     setPage(1);
+  };
+
+  const buildFilterParams = (extra = {}) => ({
+    ...extra,
+    ...Object.fromEntries(
+      Object.entries(filters).filter(([_, value]) => value !== '')
+    ),
+  });
+
+  const handleExportExcel = async () => {
+    try {
+      setExporting(true);
+
+      const exportLimit = 1000;
+      let exportPage = 1;
+      let totalItems = 0;
+      const allLogs = [];
+
+      while (true) {
+        const response = await fetchLogs(buildFilterParams({ page: exportPage, limit: exportLimit }));
+        const batch = response?.data || [];
+        totalItems = Number(response?.total || 0);
+        allLogs.push(...batch);
+
+        if (!batch.length || allLogs.length >= totalItems) break;
+        exportPage += 1;
+      }
+
+      if (!allLogs.length) {
+        window.alert('Eksport uchun log topilmadi.');
+        return;
+      }
+
+      const rows = allLogs.map((log, index) => ({
+        'T/r': index + 1,
+        'Sana': formatDate(log.created_at),
+        'Admin': log.admin_username || '-',
+        'Amal': actionLabels[log.action] || log.action || '-',
+        'Obyekt turi': entityTypeLabels[log.entity_type] || log.entity_type || '-',
+        'Obyekt nomi': log.entity_name || '-',
+        "O'zgarishlar": log.change_description || '-',
+        'IP manzil': log.ip_address || '-',
+      }));
+
+      const workbook = XLSX.utils.book_new();
+      const worksheet = XLSX.utils.json_to_sheet(rows);
+      XLSX.utils.book_append_sheet(workbook, worksheet, 'Loglar');
+
+      const datePart = new Date().toISOString().slice(0, 10);
+      XLSX.writeFile(workbook, `admin_loglar_${datePart}.xlsx`);
+    } catch (error) {
+      console.error('Failed to export logs:', error);
+      window.alert('Excel fayl yaratishda xatolik yuz berdi.');
+    } finally {
+      setExporting(false);
+    }
   };
 
   const formatDate = (dateString) => {
@@ -186,6 +244,17 @@ function LogsManager({ user }) {
             onChange={(e) => handleFilterChange('date_to', e.target.value)}
             className="rounded-xl border border-slate-200 bg-slate-50 p-3"
           />
+        </div>
+
+        <div className="mt-4 flex justify-end">
+          <button
+            type="button"
+            onClick={handleExportExcel}
+            disabled={exporting || loading}
+            className="rounded-xl bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            {exporting ? 'Excel tayyorlanmoqda...' : 'Loglarni Excelga yuklash'}
+          </button>
         </div>
       </section>
 

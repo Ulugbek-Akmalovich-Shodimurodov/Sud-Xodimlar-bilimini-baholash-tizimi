@@ -57,9 +57,16 @@ function App() {
     <div className="min-h-screen bg-slate-50 text-slate-900">
       <header className="bg-white border-b border-slate-200">
         <div className="mx-auto flex max-w-7xl flex-col gap-3 px-4 py-4 sm:px-6 lg:px-8 md:flex-row md:items-center md:justify-between">
-          <div>
-            <Link to="/" className="block text-2xl font-semibold text-slate-900">Oliy sud</Link>
-            <p className="text-sm text-slate-600">Xodimlar bilimini baholash tizimi</p>
+          <div className="flex items-center gap-3">
+            <img
+              src="/assets/images/DUS-01.png"
+              alt="Oliy sud logotipi"
+              className="h-12 w-12 rounded-full object-contain"
+            />
+            <div>
+              <Link to="/" className="block text-2xl font-semibold text-slate-900">Oliy sud</Link>
+              <p className="text-sm text-slate-600">Xodimlar bilimini baholash tizimi</p>
+            </div>
           </div>
           <nav className="flex items-center gap-3 text-sm text-slate-700">
             <Link to="/" className="hover:text-slate-900">Jamoat</Link>
