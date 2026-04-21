@@ -157,7 +157,7 @@ function LogsManager({ user }) {
 
   if (user?.role !== 'super_admin') {
     return (
-      <div className="rounded-2xl bg-white p-6 shadow-sm">
+      <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
         <div className="text-center text-slate-500">
           Loglarni faqat super admin ko'rishi mumkin
         </div>
@@ -170,23 +170,23 @@ function LogsManager({ user }) {
       {/* Stats Cards */}
       {stats && (
         <div className="grid gap-4 md:grid-cols-4">
-          <div className="rounded-2xl bg-white p-6 shadow-sm">
+          <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
             <div className="text-2xl font-bold text-slate-900">{stats.total_logs}</div>
             <div className="text-sm text-slate-600">Jami operatsiyalar</div>
           </div>
-          <div className="rounded-2xl bg-white p-6 shadow-sm">
+          <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
             <div className="text-lg font-bold text-slate-900">
               {stats.actions.find(a => a.action === 'CREATE')?.count || 0}
             </div>
             <div className="text-sm text-slate-600">Yaratish</div>
           </div>
-          <div className="rounded-2xl bg-white p-6 shadow-sm">
+          <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
             <div className="text-lg font-bold text-slate-900">
               {stats.actions.find(a => a.action === 'UPDATE')?.count || 0}
             </div>
             <div className="text-sm text-slate-600">Tahrirlash</div>
           </div>
-          <div className="rounded-2xl bg-white p-6 shadow-sm">
+          <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
             <div className="text-lg font-bold text-slate-900">
               {stats.actions.find(a => a.action === 'DELETE')?.count || 0}
             </div>
@@ -196,15 +196,15 @@ function LogsManager({ user }) {
       )}
 
       {/* Filters */}
-      <section className="rounded-2xl bg-white p-6 shadow-sm">
-        <h1 className="text-2xl font-semibold">Admin loglari</h1>
+      <section className="p-6">
+        <h1 className="text-3xl font-semibold tracking-tight text-[#0f2d74]">Admin loglari</h1>
         <p className="mt-2 text-slate-600">Barcha admin operatsiyalari tarixi.</p>
 
         <div className="mt-6 grid gap-4 md:grid-cols-5">
           <select
             value={filters.action}
             onChange={(e) => handleFilterChange('action', e.target.value)}
-            className="rounded-xl border border-slate-200 bg-slate-50 p-3"
+            className="rounded-2xl p-3"
           >
             <option value="">Barcha amallar</option>
             {Object.entries(actionLabels).map(([value, label]) => (
@@ -215,7 +215,7 @@ function LogsManager({ user }) {
           <select
             value={filters.entity_type}
             onChange={(e) => handleFilterChange('entity_type', e.target.value)}
-            className="rounded-xl border border-slate-200 bg-slate-50 p-3"
+            className="rounded-2xl p-3"
           >
             <option value="">Barcha obyektlar</option>
             {Object.entries(entityTypeLabels).map(([value, label]) => (
@@ -228,21 +228,21 @@ function LogsManager({ user }) {
             value={filters.admin_username}
             onChange={(e) => handleFilterChange('admin_username', e.target.value)}
             placeholder="Admin username"
-            className="rounded-xl border border-slate-200 bg-slate-50 p-3"
+            className="rounded-2xl p-3"
           />
 
           <input
             type="date"
             value={filters.date_from}
             onChange={(e) => handleFilterChange('date_from', e.target.value)}
-            className="rounded-xl border border-slate-200 bg-slate-50 p-3"
+            className="rounded-2xl p-3"
           />
 
           <input
             type="date"
             value={filters.date_to}
             onChange={(e) => handleFilterChange('date_to', e.target.value)}
-            className="rounded-xl border border-slate-200 bg-slate-50 p-3"
+            className="rounded-2xl p-3"
           />
         </div>
 
@@ -251,7 +251,7 @@ function LogsManager({ user }) {
             type="button"
             onClick={handleExportExcel}
             disabled={exporting || loading}
-            className="rounded-xl bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60"
+            className="rounded-2xl bg-[#173f9f] px-4 py-2 text-sm font-medium text-white hover:bg-[#1f4ebf] disabled:cursor-not-allowed disabled:opacity-60"
           >
             {exporting ? 'Excel tayyorlanmoqda...' : 'Loglarni Excelga yuklash'}
           </button>
@@ -259,7 +259,7 @@ function LogsManager({ user }) {
       </section>
 
       {/* Logs Table */}
-      <section className="rounded-2xl bg-white p-6 shadow-sm">
+      <section className="p-6">
         {loading ? (
           <div className="text-center text-slate-500">Yuklanmoqda...</div>
         ) : (

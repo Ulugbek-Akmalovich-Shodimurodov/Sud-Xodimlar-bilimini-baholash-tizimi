@@ -122,7 +122,7 @@ function PublicPage() {
 
   return (
     <div className="space-y-6">
-      <section className="rounded-2xl bg-white p-6 shadow-sm">
+      <section className="p-6">
         <h1 className="text-2xl font-semibold">Xodimlar ro‘yxati</h1>
         <p className="mt-2 text-slate-600">Baholash natijalarini filtrlash va qidirish.</p>
 
@@ -131,13 +131,13 @@ function PublicPage() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="F.I.O bo‘yicha qidiruv"
-            className="rounded-xl border border-slate-200 bg-slate-50 p-3"
+            className="rounded-2xl p-3"
           />
 
           <select
             value={selectedRegion}
             onChange={(e) => setSelectedRegion(e.target.value)}
-            className="rounded-xl border border-slate-200 bg-slate-50 p-3"
+            className="rounded-2xl p-3"
           >
             <option value="">Hammasi viloyatlar</option>
             {regions.map((region) => (
@@ -148,7 +148,7 @@ function PublicPage() {
           <select
             value={selectedDistrict}
             onChange={(e) => setSelectedDistrict(e.target.value)}
-            className="rounded-xl border border-slate-200 bg-slate-50 p-3"
+            className="rounded-2xl p-3"
             disabled={!districts.length}
           >
             <option value="">Hammasi tumanlar</option>
@@ -160,7 +160,7 @@ function PublicPage() {
           <select
             value={selectedScore.label}
             onChange={(e) => setSelectedScore(scoreRanges.find((range) => range.label === e.target.value))}
-            className="rounded-xl border border-slate-200 bg-slate-50 p-3"
+            className="rounded-2xl p-3"
           >
             {scoreRanges.map((range) => (
               <option key={range.label} value={range.label}>{range.label}</option>
@@ -173,14 +173,14 @@ function PublicPage() {
             type="button"
             onClick={handleExportExcel}
             disabled={exporting || loading}
-            className="rounded-xl bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60"
+            className="rounded-2xl bg-[#173f9f] px-4 py-2 text-sm font-medium text-white hover:bg-[#1f4ebf] disabled:cursor-not-allowed disabled:opacity-60"
           >
             {exporting ? 'Excel tayyorlanmoqda...' : 'Excelga yuklash'}
           </button>
         </div>
       </section>
 
-      <section className="rounded-2xl bg-white p-6 shadow-sm">
+      <section className="p-6">
         <h2 className="text-lg font-semibold">Natijalar</h2>
         {loading ? (
           <div className="mt-6 text-center text-slate-500">Yuklanmoqda...</div>

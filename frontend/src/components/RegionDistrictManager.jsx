@@ -148,10 +148,10 @@ function RegionDistrictManager({ view, user }) {
 
   return (
     <div className="space-y-6">
-      <section className="rounded-3xl bg-white p-6 shadow-sm">
+      <section className="p-6">
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div>
-            <h1 className="text-2xl font-semibold">
+            <h1 className="text-3xl font-semibold tracking-tight text-[#0f2d74]">
               {view === 'regions' ? 'Viloyatlarni boshqarish' : view === 'districts' ? 'Tumanlarni boshqarish' : 'Lavozimlarni boshqarish'}
             </h1>
             <p className="mt-2 text-slate-600">
@@ -176,17 +176,17 @@ function RegionDistrictManager({ view, user }) {
             placeholder={view === 'regions' ? 'Viloyat nomi' : view === 'districts' ? 'Tuman nomi' : 'Lavozim nomi'}
             pattern="[A-Za-z'\\- ]+"
             title="Faqat lotin harflari, bo‘shliq, tire va apostrofdan foydalaning"
-            className="rounded-2xl border border-slate-200 bg-slate-50 p-3"
+            className="rounded-2xl p-3"
           />
           {view === 'districts' && (
-            <select value={regionId} onChange={(e) => setRegionId(e.target.value)} className="rounded-2xl border border-slate-200 bg-slate-50 p-3">
+            <select value={regionId} onChange={(e) => setRegionId(e.target.value)} className="rounded-2xl p-3">
               <option value="">Viloyat tanlang</option>
               {regions.map((region) => (
                 <option key={region.id} value={region.id}>{region.name}</option>
               ))}
             </select>
           )}
-          <button className="rounded-2xl bg-slate-900 px-5 py-3 text-white">
+          <button className="rounded-2xl bg-[#173f9f] px-5 py-3 text-white hover:bg-[#1f4ebf]">
             {editing ? 'Saqlash' : 'Saqlash'}
           </button>
         </form>
@@ -195,7 +195,7 @@ function RegionDistrictManager({ view, user }) {
         {success && <div className="mt-4 rounded-2xl bg-emerald-100 p-4 text-emerald-700">{success}</div>}
       </section>
 
-      <section className="rounded-3xl bg-white p-6 shadow-sm">
+      <section className="p-6">
         <h2 className="text-lg font-semibold">Ro‘yxat</h2>
         <div className="mt-4 grid gap-3 md:grid-cols-2">
           {view === 'regions' ? (

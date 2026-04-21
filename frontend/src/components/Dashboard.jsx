@@ -32,18 +32,18 @@ function Dashboard({ user }) {
 
   return (
     <div className="space-y-6">
-      <section className="rounded-3xl bg-white p-6 shadow-sm">
+      <section className="p-6">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h1 className="text-2xl font-semibold">Admin Dashboard</h1>
+            <h1 className="text-3xl font-semibold tracking-tight text-[#0f2d74]">Admin Dashboard</h1>
             <p className="mt-2 text-slate-600">Xodim natijalari va statistikani boshqarish.</p>
           </div>
           <div className="flex flex-wrap gap-3">
-            <Link to="/admin/employees" className="rounded-2xl bg-slate-900 px-5 py-3 text-white">Xodimlarni boshqarish</Link>
-            {user.role === 'super_admin' && <Link to="/admin/regions" className="rounded-2xl bg-slate-700 px-5 py-3 text-white">Viloyatlar</Link>}
-            {user.role === 'super_admin' && <Link to="/admin/districts" className="rounded-2xl bg-slate-700 px-5 py-3 text-white">Tumanlar</Link>}
-            {user.role === 'super_admin' && <Link to="/admin/positions" className="rounded-2xl bg-slate-700 px-5 py-3 text-white">Lavozimlar</Link>}
-            {user.role === 'super_admin' && <Link to="/admin/admins" className="rounded-2xl bg-slate-700 px-5 py-3 text-white">Adminlar</Link>}
+            <Link to="/admin/employees" className="rounded-2xl bg-[#173f9f] px-5 py-3 text-white">Xodimlarni boshqarish</Link>
+            {user.role === 'super_admin' && <Link to="/admin/regions" className="rounded-2xl bg-[#1f4ebf] px-5 py-3 text-white">Viloyatlar</Link>}
+            {user.role === 'super_admin' && <Link to="/admin/districts" className="rounded-2xl bg-[#1f4ebf] px-5 py-3 text-white">Tumanlar</Link>}
+            {user.role === 'super_admin' && <Link to="/admin/positions" className="rounded-2xl bg-[#1f4ebf] px-5 py-3 text-white">Lavozimlar</Link>}
+            {user.role === 'super_admin' && <Link to="/admin/admins" className="rounded-2xl bg-[#1f4ebf] px-5 py-3 text-white">Adminlar</Link>}
             {user.role === 'super_admin' && <Link to="/admin/logs" className="rounded-2xl bg-red-600 px-5 py-3 text-white">Loglar</Link>}
           </div>
         </div>
@@ -52,22 +52,22 @@ function Dashboard({ user }) {
       {error && <div className="rounded-2xl bg-red-100 p-4 text-red-700">{error}</div>}
 
       <section className="grid gap-4 md:grid-cols-3">
-        <div className="rounded-3xl bg-white p-6 shadow-sm">
+        <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
           <p className="text-sm uppercase text-slate-500">Umumiy xodimlar</p>
           <p className="mt-4 text-3xl font-semibold">{stats ? stats.summary.total_employees : '...'}</p>
         </div>
-        <div className="rounded-3xl bg-white p-6 shadow-sm">
+        <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
           <p className="text-sm uppercase text-slate-500">Ortacha natija</p>
           <p className="mt-4 text-3xl font-semibold">{stats ? `${stats.summary.average_score}%` : '...'}</p>
         </div>
-        <div className="rounded-3xl bg-white p-6 shadow-sm">
+        <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
           <p className="text-sm uppercase text-slate-500">Rol</p>
           <p className="mt-4 text-3xl font-semibold">{user.role === 'super_admin' ? 'Super Admin' : 'Admin'}</p>
         </div>
       </section>
 
       <section className="grid gap-6 xl:grid-cols-2">
-        <div className="rounded-3xl bg-white p-6 shadow-sm">
+        <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
           <h2 className="text-lg font-semibold">Viloyatlar boyicha ortacha natijalar</h2>
           <div className="mt-4 h-80">
             {stats ? (
@@ -83,7 +83,7 @@ function Dashboard({ user }) {
           </div>
         </div>
 
-        <div className="rounded-3xl bg-white p-6 shadow-sm">
+        <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
           <h2 className="text-lg font-semibold">Tumanlar boyicha ortacha natijalar</h2>
           <div className="mt-4 h-80">
             {stats ? (
@@ -101,7 +101,7 @@ function Dashboard({ user }) {
       </section>
 
       <section className={`grid gap-6 ${stats?.top?.worst?.length ? 'lg:grid-cols-2' : 'lg:grid-cols-1'}`}>
-        <div className="rounded-3xl bg-white p-6 shadow-sm">
+        <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
           <h2 className="text-lg font-semibold">Eng yaxshi natijalar</h2>
           <div className="mt-4 space-y-3">
             {stats?.top?.best?.map((employee, index) => (
@@ -114,7 +114,7 @@ function Dashboard({ user }) {
         </div>
 
         {stats?.top?.worst?.length > 0 && (
-          <div className="rounded-3xl bg-white p-6 shadow-sm">
+          <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
             <h2 className="text-lg font-semibold">Eng yomon natijalar</h2>
             <div className="mt-4 space-y-3">
               {stats.top.worst.map((employee, index) => (

@@ -152,13 +152,13 @@ function EmployeeManager({ user }) {
 
   return (
     <div className="space-y-6">
-      <section className="rounded-3xl bg-white p-6 shadow-sm">
+      <section className="p-6">
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div>
-            <h1 className="text-2xl font-semibold">Xodimlarni boshqarish</h1>
+            <h1 className="text-3xl font-semibold tracking-tight text-[#0f2d74]">Xodimlarni boshqarish</h1>
             <p className="mt-2 text-slate-600">Hududingiz bo'yicha xodimlar ma'lumotlarini boshqarish.</p>
           </div>
-          <button onClick={() => handleOpenModal()} className="rounded-2xl bg-slate-900 px-5 py-3 text-white">Yangi xodim</button>
+          <button onClick={() => handleOpenModal()} className="rounded-2xl bg-[#173f9f] px-5 py-3 text-white hover:bg-[#1f4ebf]">Yangi xodim</button>
         </div>
 
         <div className="mt-6 grid gap-4 md:grid-cols-3">
@@ -166,12 +166,12 @@ function EmployeeManager({ user }) {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Qidiruv..."
-            className="rounded-2xl border border-slate-200 bg-slate-50 p-3"
+            className="rounded-2xl p-3"
           />
           <select
             value={selectedRegion}
             onChange={(e) => setSelectedRegion(e.target.value)}
-            className="rounded-2xl border border-slate-200 bg-slate-50 p-3"
+            className="rounded-2xl p-3"
           >
             <option value="">Viloyat bo'yicha filtr</option>
             {regions.map((region) => (
@@ -181,7 +181,7 @@ function EmployeeManager({ user }) {
           <select
             value={selectedDistrict}
             onChange={(e) => setSelectedDistrict(e.target.value)}
-            className="rounded-2xl border border-slate-200 bg-slate-50 p-3"
+            className="rounded-2xl p-3"
           >
             <option value="">Tuman bo'yicha filtr</option>
             {districts.map((district) => (
@@ -193,7 +193,7 @@ function EmployeeManager({ user }) {
 
       {error && <div className="rounded-2xl bg-red-100 p-4 text-red-700">{error}</div>}
 
-      <section className="rounded-3xl bg-white p-6 shadow-sm">
+      <section className="p-6">
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-slate-200 text-left text-sm">
             <thead className="bg-slate-50 text-slate-600">
@@ -269,9 +269,9 @@ function EmployeeManager({ user }) {
                 placeholder="F.I.O"
                 pattern="[A-Za-z'\\- ]+"
                 title="Faqat lotin harflari, boshliq, tire va apostrof"
-                className="rounded-2xl border border-slate-200 bg-slate-50 p-3"
+                className="rounded-2xl p-3"
               />
-              <select value={formState.position} onChange={(e) => setFormState({ ...formState, position: e.target.value })} className="rounded-2xl border border-slate-200 bg-slate-50 p-3">
+              <select value={formState.position} onChange={(e) => setFormState({ ...formState, position: e.target.value })} className="rounded-2xl p-3">
                 <option value="">Lavozim tanlang</option>
                 {positions.map((position) => (
                   <option key={position.id} value={position.name}>{position.name}</option>
@@ -283,12 +283,12 @@ function EmployeeManager({ user }) {
                   setFormState({ ...formState, region_id: e.target.value, district_id: '' });
                   setSelectedRegion(e.target.value);
                 }}
-                className="rounded-2xl border border-slate-200 bg-slate-50 p-3"
+                className="rounded-2xl p-3"
               >
                 <option value="">Viloyat tanlang</option>
                 {regions.map((region) => (<option key={region.id} value={region.id}>{region.name}</option>))}
               </select>
-              <select value={formState.district_id} onChange={(e) => setFormState({ ...formState, district_id: e.target.value })} className="rounded-2xl border border-slate-200 bg-slate-50 p-3">
+              <select value={formState.district_id} onChange={(e) => setFormState({ ...formState, district_id: e.target.value })} className="rounded-2xl p-3">
                 <option value="">Tuman tanlang</option>
                 {districts.map((district) => (<option key={district.id} value={district.id}>{district.name}</option>))}
               </select>
@@ -302,7 +302,7 @@ function EmployeeManager({ user }) {
                     value={formState[field.key]}
                     onChange={(e) => setFormState({ ...formState, [field.key]: e.target.value })}
                     placeholder={field.label}
-                    className="rounded-2xl border border-slate-200 bg-slate-50 p-3 pr-24 w-full"
+                    className="rounded-2xl p-3 pr-24 w-full"
                   />
                   {!formState[field.key] && (
                     <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 pointer-events-none">
@@ -317,7 +317,7 @@ function EmployeeManager({ user }) {
 
             <div className="mt-6 flex justify-end gap-3">
               <button onClick={() => setModalOpen(false)} className="rounded-2xl border border-slate-300 bg-white px-5 py-3">Bekor qilish</button>
-              <button onClick={handleSave} className="rounded-2xl bg-slate-900 px-5 py-3 text-white">Saqlash</button>
+              <button onClick={handleSave} className="rounded-2xl bg-[#173f9f] px-5 py-3 text-white hover:bg-[#1f4ebf]">Saqlash</button>
             </div>
           </div>
         </div>
