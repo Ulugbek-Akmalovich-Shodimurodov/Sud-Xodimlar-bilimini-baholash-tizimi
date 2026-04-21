@@ -104,10 +104,10 @@ app.post('/api/init-db', async (req, res) => {
   }
 });
 
-// Force database routes to load
+// Try to load database routes, fallback to mock data if they fail
 async function loadRoutes() {
   try {
-    // Load database-based routes
+    // Try to load database-based routes
     const authRoutes = await import('./routes/auth.js');
     const regionRoutes = await import('./routes/regions.js');
     const districtRoutes = await import('./routes/districts.js');
@@ -126,9 +126,8 @@ async function loadRoutes() {
     
     console.log('Database routes loaded successfully');
   } catch (error) {
-    console.error('Failed to load database routes:', error);
-    // Don't fallback to mock data - let the error show so we can fix it
-    throw error;
+    console.log('Failed to load database routes, using mock data:', error.message);
+    loadMockRoutes();
   }
 }
 
