@@ -26,6 +26,22 @@ CREATE TABLE IF NOT EXISTS admins (
 
 CREATE TABLE IF NOT EXISTS admin_logs (
   id SERIAL PRIMARY KEY,
+  admin_id INTEGER,
+  admin_username TEXT NOT NULL,
+  action TEXT NOT NULL,
+  entity_type TEXT NOT NULL,
+  entity_id INTEGER,
+  entity_name TEXT,
+  change_description TEXT,
+  old_data JSONB,
+  new_data JSONB,
+  ip_address TEXT,
+  user_agent TEXT,
+  created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS admin_logs (
+  id SERIAL PRIMARY KEY,
   admin_id INTEGER NOT NULL REFERENCES admins(id) ON DELETE CASCADE,
   admin_username TEXT NOT NULL,
   action TEXT NOT NULL CHECK (action IN ('CREATE', 'UPDATE', 'DELETE')),
