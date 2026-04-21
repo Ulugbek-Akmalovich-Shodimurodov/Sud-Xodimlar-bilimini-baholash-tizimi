@@ -31,13 +31,13 @@ async function setupLocalDatabase() {
         fs.copyFileSync(envExamplePath, envPath);
         console.log('   .env file created from .env.example');
       } else {
-        const envContent = `DATABASE_URL=postgresql://sud_user:admin123@localhost:5432/sud_xodimlar
+        const envContent = `DATABASE_URL=postgresql://admin:admin@localhost:5432/sud_xodimlar
 JWT_SECRET=your_jwt_secret_key_here
 DB_HOST=localhost
 DB_PORT=5432
 DB_NAME=sud_xodimlar
-DB_USER=sud_user
-DB_PASSWORD=admin123`;
+DB_USER=admin
+DB_PASSWORD=admin`;
         fs.writeFileSync(envPath, envContent);
         console.log('   .env file created with default values');
       }
@@ -49,27 +49,22 @@ DB_PASSWORD=admin123`;
     console.log('3. Creating database and user...');
     try {
       // Connect to postgres database to create our database
-      const createDbCommand = `psql -U postgres -c "CREATE DATABASE sud_xodimlar;"`;
-      const createUserCommand = `psql -U postgres -c "CREATE USER sud_user WITH PASSWORD 'admin123';"`;
-      const grantCommand = `psql -U postgres -c "GRANT ALL PRIVILEGES ON DATABASE sud_xodimlar TO sud_user;"`;
+      const createDbCommand = `psql -U admin -c "CREATE DATABASE sud_xodimlar;"`;
+      const grantCommand = `psql -U admin -c "GRANT ALL PRIVILEGES ON DATABASE sud_xodimlar TO admin;"`;
 
       execSync(createDbCommand, { stdio: 'pipe' });
       console.log('   Database "sud_xodimlar" created');
 
-      execSync(createUserCommand, { stdio: 'pipe' });
-      console.log('   User "sud_user" created');
-
       execSync(grantCommand, { stdio: 'pipe' });
-      console.log('   Privileges granted');
+      console.log('   Privileges granted to admin user');
     } catch (error) {
       if (error.message.includes('already exists')) {
-        console.log('   Database and user already exist');
+        console.log('   Database already exists');
       } else {
         console.log('   Error creating database:', error.message);
         console.log('   Please run these commands manually:');
-        console.log('   psql -U postgres -c "CREATE DATABASE sud_xodimlar;"');
-        console.log('   psql -U postgres -c "CREATE USER sud_user WITH PASSWORD \'admin123\';"');
-        console.log('   psql -U postgres -c "GRANT ALL PRIVILEGES ON DATABASE sud_xodimlar TO sud_user;"');
+        console.log('   psql -U admin -c "CREATE DATABASE sud_xodimlar;"');
+        console.log('   psql -U admin -c "GRANT ALL PRIVILEGES ON DATABASE sud_xodimlar TO admin;"');
       }
     }
 
