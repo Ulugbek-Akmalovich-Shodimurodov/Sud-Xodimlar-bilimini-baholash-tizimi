@@ -179,7 +179,16 @@ function AdminManager({ user }) {
                     className="px-4 text-slate-500 hover:text-slate-700"
                     aria-label="Parolni korsatish yoki yashirish"
                   >
-                    {showPassword ? 'Yop' : 'Kor'}
+                    {showPassword ? (
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5">
+                        <path d="M3.53 2.47a.75.75 0 10-1.06 1.06l2.04 2.04A12.24 12.24 0 001.75 12c1.5 3.3 4.8 6 10.25 6 2.25 0 4.15-.46 5.76-1.24l2.71 2.71a.75.75 0 101.06-1.06L3.53 2.47zM12 15.25A3.25 3.25 0 018.75 12c0-.54.13-1.05.35-1.5l4.4 4.4c-.45.22-.96.35-1.5.35z" />
+                        <path d="M12 6c5.45 0 8.75 2.7 10.25 6a11.84 11.84 0 01-3.43 4.26l-1.09-1.09A10.4 10.4 0 0020.59 12c-1.3-2.48-3.86-4.5-8.59-4.5-1.8 0-3.33.3-4.63.85L6.2 7.18A13.2 13.2 0 0112 6z" />
+                      </svg>
+                    ) : (
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5">
+                        <path d="M12 5.25c5.45 0 8.75 2.7 10.25 6.75-1.5 4.05-4.8 6.75-10.25 6.75S3.25 16.05 1.75 12C3.25 7.95 6.55 5.25 12 5.25zm0 2.25A4.5 4.5 0 1012 16.5 4.5 4.5 0 0012 7.5zm0 2.25A2.25 2.25 0 1112 14.25 2.25 2.25 0 0112 9.75z" />
+                      </svg>
+                    )}
                   </button>
                 </div>
               </label>
