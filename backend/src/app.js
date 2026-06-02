@@ -9,6 +9,7 @@ import employeeRoutes from './routes/employees.js';
 import statsRoutes from './routes/stats.js';
 import positionRoutes from './routes/positions.js';
 import logsRoutes from './routes/logs.js';
+import criteriaRoutes from './routes/criteria.js';
 import errorHandler from './middleware/errorHandler.js';
 
 const app = express();
@@ -39,6 +40,7 @@ app.use('/api/positions', positionRoutes);
 app.use('/api/employees', employeeRoutes);
 app.use('/api/stats', statsRoutes);
 app.use('/api/logs', logsRoutes);
+app.use('/api/criteria', criteriaRoutes);
 
 app.get('/', (req, res) => {
   res.json({ message: 'Supreme Court xodim baholash API' });

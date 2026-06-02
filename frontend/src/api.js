@@ -37,6 +37,11 @@ export async function fetchRegions() {
   return response.data;
 }
 
+export async function fetchCriteria() {
+  const response = await api.get('/criteria');
+  return response.data;
+}
+
 export async function fetchDistricts(params) {
   const response = await api.get('/districts', { params });
   return response.data;

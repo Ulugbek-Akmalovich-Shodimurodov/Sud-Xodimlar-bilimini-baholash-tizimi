@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import * as XLSX from 'xlsx';
-import { fetchEmployees, fetchRegions, fetchDistricts } from '../api.js';
+import { fetchEmployees, fetchRegions, fetchDistricts, fetchCriteria } from '../api.js';
 import { scoreColorClass } from '../utils/scoreColor.js';
 
 const scoreRanges = [
@@ -19,6 +19,7 @@ function PublicPage() {
   const [selectedDistrict, setSelectedDistrict] = useState('');
   const [selectedScore, setSelectedScore] = useState(scoreRanges[0]);
   const [employees, setEmployees] = useState([]);
+  const [criteria, setCriteria] = useState([]);
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
   const [limit] = useState(10);
@@ -36,6 +37,15 @@ function PublicPage() {
 
   useEffect(() => {
     fetchRegions().then(setRegions).catch(console.error);
+  }, []);
+
+  useEffect(() => {
+    fetchCriteria()
+      .then((list) => setCriteria(list || []))
+      .catch((err) => {
+        console.error('Failed to load criteria, falling back to defaults', err);
+        setCriteria([]);
+      });
   }, []);
 
   useEffect(() => {
@@ -87,24 +97,30 @@ function PublicPage() {
         return;
       }
 
-      const rows = allEmployees.map((employee, index) => ({
-        'T/r': index + 1,
-        'F.I.O': employee.full_name,
-        'Lavozimi': employee.position,
-        'Viloyat': employee.region_name,
-        'Tuman': employee.district_name,
-        'Konstitutsiya (%)': employee.konstitutsiya_score || 0,
-        'Konstitutsiya holati': employee.konstitutsiya_status || 'topshirmadi',
-        'Kodeks (%)': employee.kodeks_score || 0,
-        'Kodeks holati': employee.kodeks_status || 'topshirmadi',
-        'Protsessual kodeks (%)': employee.protsessual_kodeks_score || 0,
-        'Protsessual kodeks holati': employee.protsessual_kodeks_status || 'topshirmadi',
-        'AKT sohasi (%)': employee.akt_sohasi_score || 0,
-        'AKT sohasi holati': employee.akt_sohasi_status || 'topshirmadi',
-        'Odob-axloq (%)': employee.odob_axloq_score || 0,
-        'Odob-axloq holati': employee.odob_axloq_status || 'topshirmadi',
-        'Umumiy natija (%)': employee.score,
-      }));
+      const rows = allEmployees.map((employee, index) => {
+        const base = {
+          'T/r': index + 1,
+          'F.I.O': employee.full_name,
+          'Lavozimi': employee.position,
+          'Viloyat': employee.region_name,
+          'Tuman': employee.district_name,
+          'Umumiy natija (%)': employee.score,
+        };
+
+        // Attach dynamic criteria values (score + status)
+        (criteria.length ? criteria : [
+          { scoreField: 'konstitutsiya_score', statusField: 'konstitutsiya_status', label: 'Konstitutsiya' },
+          { scoreField: 'kodeks_score', statusField: 'kodeks_status', label: 'Kodeks' },
+          { scoreField: 'protsessual_kodeks_score', statusField: 'protsessual_kodeks_status', label: 'Protsessual kodeks' },
+          { scoreField: 'akt_sohasi_score', statusField: 'akt_sohasi_status', label: 'AKT sohasi' },
+          { scoreField: 'odob_axloq_score', statusField: 'odob_axloq_status', label: 'Odob-axloq' },
+        ]).forEach((c) => {
+          base[`${c.label || c.key} (%)`] = employee[c.scoreField] || 0;
+          base[`${c.label || c.key} holati`] = employee[c.statusField] || 'topshirmadi';
+        });
+
+        return base;
+      });
 
       const workbook = XLSX.utils.book_new();
       const worksheet = XLSX.utils.json_to_sheet(rows);
@@ -194,11 +210,19 @@ function PublicPage() {
                   <th className="px-4 py-3">Lavozimi</th>
                   <th className="px-4 py-3">Viloyat</th>
                   <th className="px-4 py-3">Tuman</th>
-                  <th className="px-4 py-3">Konst.</th>
-                  <th className="px-4 py-3">Kodeks</th>
-                  <th className="px-4 py-3">Prot.</th>
-                  <th className="px-4 py-3">AKT</th>
-                  <th className="px-4 py-3">Odob</th>
+                  {criteria.length ? (
+                    criteria.map((c) => (
+                      <th key={c.key} className="px-4 py-3">{c.short}</th>
+                    ))
+                  ) : (
+                    <>
+                      <th className="px-4 py-3">Konst.</th>
+                      <th className="px-4 py-3">Kodeks</th>
+                      <th className="px-4 py-3">Prot.</th>
+                      <th className="px-4 py-3">AKT</th>
+                      <th className="px-4 py-3">Odob</th>
+                    </>
+                  )}
                   <th className="px-4 py-3">Umumiy</th>
                 </tr>
               </thead>
@@ -210,21 +234,31 @@ function PublicPage() {
                     <td className="px-4 py-3">{employee.position}</td>
                     <td className="px-4 py-3">{employee.region_name}</td>
                     <td className="px-4 py-3">{employee.district_name}</td>
-                    <td className={`px-4 py-3 text-center ${employee.konstitutsiya_score > 0 ? scoreColorClass(employee.konstitutsiya_score) : 'text-slate-400'}`}>
-                      {employee.konstitutsiya_score > 0 ? `${employee.konstitutsiya_score}%` : 'Topshirmadi'}
-                    </td>
-                    <td className={`px-4 py-3 text-center ${employee.kodeks_score > 0 ? scoreColorClass(employee.kodeks_score) : 'text-slate-400'}`}>
-                      {employee.kodeks_score > 0 ? `${employee.kodeks_score}%` : 'Topshirmadi'}
-                    </td>
-                    <td className={`px-4 py-3 text-center ${employee.protsessual_kodeks_score > 0 ? scoreColorClass(employee.protsessual_kodeks_score) : 'text-slate-400'}`}>
-                      {employee.protsessual_kodeks_score > 0 ? `${employee.protsessual_kodeks_score}%` : 'Topshirmadi'}
-                    </td>
-                    <td className={`px-4 py-3 text-center ${employee.akt_sohasi_score > 0 ? scoreColorClass(employee.akt_sohasi_score) : 'text-slate-400'}`}>
-                      {employee.akt_sohasi_score > 0 ? `${employee.akt_sohasi_score}%` : 'Topshirmadi'}
-                    </td>
-                    <td className={`px-4 py-3 text-center ${employee.odob_axloq_score > 0 ? scoreColorClass(employee.odob_axloq_score) : 'text-slate-400'}`}>
-                      {employee.odob_axloq_score > 0 ? `${employee.odob_axloq_score}%` : 'Topshirmadi'}
-                    </td>
+                    {criteria.length ? (
+                      criteria.map((c) => (
+                        <td key={c.key} className={`px-4 py-3 text-center ${(employee[c.scoreField] || 0) > 0 ? scoreColorClass(employee[c.scoreField] || 0) : 'text-slate-400'}`}>
+                          {(employee[c.scoreField] || 0) > 0 ? `${employee[c.scoreField]}%` : 'Topshirmadi'}
+                        </td>
+                      ))
+                    ) : (
+                      <>
+                        <td className={`px-4 py-3 text-center ${employee.konstitutsiya_score > 0 ? scoreColorClass(employee.konstitutsiya_score) : 'text-slate-400'}`}>
+                          {employee.konstitutsiya_score > 0 ? `${employee.konstitutsiya_score}%` : 'Topshirmadi'}
+                        </td>
+                        <td className={`px-4 py-3 text-center ${employee.kodeks_score > 0 ? scoreColorClass(employee.kodeks_score) : 'text-slate-400'}`}>
+                          {employee.kodeks_score > 0 ? `${employee.kodeks_score}%` : 'Topshirmadi'}
+                        </td>
+                        <td className={`px-4 py-3 text-center ${employee.protsessual_kodeks_score > 0 ? scoreColorClass(employee.protsessual_kodeks_score) : 'text-slate-400'}`}>
+                          {employee.protsessual_kodeks_score > 0 ? `${employee.protsessual_kodeks_score}%` : 'Topshirmadi'}
+                        </td>
+                        <td className={`px-4 py-3 text-center ${employee.akt_sohasi_score > 0 ? scoreColorClass(employee.akt_sohasi_score) : 'text-slate-400'}`}>
+                          {employee.akt_sohasi_score > 0 ? `${employee.akt_sohasi_score}%` : 'Topshirmadi'}
+                        </td>
+                        <td className={`px-4 py-3 text-center ${employee.odob_axloq_score > 0 ? scoreColorClass(employee.odob_axloq_score) : 'text-slate-400'}`}>
+                          {employee.odob_axloq_score > 0 ? `${employee.odob_axloq_score}%` : 'Topshirmadi'}
+                        </td>
+                      </>
+                    )}
                     <td className={`px-4 py-3 text-center ${scoreColorClass(employee.score)}`}>{employee.score}%</td>
                   </tr>
                 ))}
