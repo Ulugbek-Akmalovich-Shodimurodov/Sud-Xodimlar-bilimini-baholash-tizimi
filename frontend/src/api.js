@@ -42,6 +42,20 @@ export async function fetchCriteria() {
   return response.data;
 }
 
+export async function createCriteria(values) {
+  const response = await api.post('/criteria', values);
+  return response.data;
+}
+
+export async function updateCriteria(id, values) {
+  const response = await api.put(`/criteria/${id}`, values);
+  return response.data;
+}
+
+export async function deleteCriteria(id) {
+  await api.delete(`/criteria/${id}`);
+}
+
 export async function fetchDistricts(params) {
   const response = await api.get('/districts', { params });
   return response.data;

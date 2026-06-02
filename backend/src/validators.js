@@ -45,6 +45,13 @@ export const positionSchema = Joi.object({
   name: latinText,
 });
 
+export const criteriaSchema = Joi.object({
+  key: latinIdentifier,
+  label: Joi.string().min(2).required(),
+  short_label: Joi.string().min(1).required(),
+  sort_order: Joi.number().integer().min(0).default(0),
+});
+
 export const employeeSchema = Joi.object({
   full_name: Joi.string().pattern(latinTextPattern).min(3).required().messages({
     'string.pattern.base': 'F.I.O faqat lotin harflari va bo‘shliqdan iborat bo‘lishi kerak',
@@ -56,6 +63,14 @@ export const employeeSchema = Joi.object({
   }),
   region_id: Joi.number().integer().required(),
   district_id: Joi.number().integer().required(),
+  scores: Joi.object().pattern(
+    Joi.string().pattern(latinIdentifierPattern),
+    Joi.alternatives().try(
+      Joi.number().integer().min(0).max(100),
+      Joi.string().allow(''),
+      Joi.allow(null)
+    )
+  ).optional(),
   konstitutsiya_score: Joi.alternatives().try(
     Joi.number().integer().min(0).max(100),
     Joi.string().allow(''),

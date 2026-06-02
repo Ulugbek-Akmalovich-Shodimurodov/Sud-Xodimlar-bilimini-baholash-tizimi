@@ -98,6 +98,7 @@ function PublicPage() {
       }
 
       const rows = allEmployees.map((employee, index) => {
+        const scores = employee.scores || {};
         const base = {
           'T/r': index + 1,
           'F.I.O': employee.full_name,
@@ -107,16 +108,18 @@ function PublicPage() {
           'Umumiy natija (%)': employee.score,
         };
 
-        // Attach dynamic criteria values (score + status)
-        (criteria.length ? criteria : [
-          { scoreField: 'konstitutsiya_score', statusField: 'konstitutsiya_status', label: 'Konstitutsiya' },
-          { scoreField: 'kodeks_score', statusField: 'kodeks_status', label: 'Kodeks' },
-          { scoreField: 'protsessual_kodeks_score', statusField: 'protsessual_kodeks_status', label: 'Protsessual kodeks' },
-          { scoreField: 'akt_sohasi_score', statusField: 'akt_sohasi_status', label: 'AKT sohasi' },
-          { scoreField: 'odob_axloq_score', statusField: 'odob_axloq_status', label: 'Odob-axloq' },
-        ]).forEach((c) => {
-          base[`${c.label || c.key} (%)`] = employee[c.scoreField] || 0;
-          base[`${c.label || c.key} holati`] = employee[c.statusField] || 'topshirmadi';
+        const columns = criteria.length ? criteria : [
+          { key: 'konstitutsiya', label: 'Konstitutsiya' },
+          { key: 'kodeks', label: 'Kodeks' },
+          { key: 'protsessual_kodeks', label: 'Protsessual kodeks' },
+          { key: 'akt_sohasi', label: 'AKT sohasi' },
+          { key: 'odob_axloq', label: 'Odob-axloq' },
+        ];
+
+        columns.forEach((c) => {
+          const score = scores[c.key] || 0;
+          base[`${c.label} (%)`] = score;
+          base[`${c.label} holati`] = score > 0 ? 'Topshirdi' : 'Topshirmadi';
         });
 
         return base;
@@ -212,7 +215,7 @@ function PublicPage() {
                   <th className="px-4 py-3">Tuman</th>
                   {criteria.length ? (
                     criteria.map((c) => (
-                      <th key={c.key} className="px-4 py-3">{c.short}</th>
+                      <th key={c.key} className="px-4 py-3">{c.short_label}</th>
                     ))
                   ) : (
                     <>
@@ -235,11 +238,14 @@ function PublicPage() {
                     <td className="px-4 py-3">{employee.region_name}</td>
                     <td className="px-4 py-3">{employee.district_name}</td>
                     {criteria.length ? (
-                      criteria.map((c) => (
-                        <td key={c.key} className={`px-4 py-3 text-center ${(employee[c.scoreField] || 0) > 0 ? scoreColorClass(employee[c.scoreField] || 0) : 'text-slate-400'}`}>
-                          {(employee[c.scoreField] || 0) > 0 ? `${employee[c.scoreField]}%` : 'Topshirmadi'}
-                        </td>
-                      ))
+                      criteria.map((c) => {
+                        const score = (employee.scores && employee.scores[c.key]) || 0;
+                        return (
+                          <td key={c.key} className={`px-4 py-3 text-center ${score > 0 ? scoreColorClass(score) : 'text-slate-400'}`}>
+                            {score > 0 ? `${score}%` : 'Topshirmadi'}
+                          </td>
+                        );
+                      })
                     ) : (
                       <>
                         <td className={`px-4 py-3 text-center ${employee.konstitutsiya_score > 0 ? scoreColorClass(employee.konstitutsiya_score) : 'text-slate-400'}`}>

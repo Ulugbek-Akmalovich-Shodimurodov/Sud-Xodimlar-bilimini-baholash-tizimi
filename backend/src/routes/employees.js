@@ -22,16 +22,31 @@ function normalizeScore(value) {
 }
 
 function buildExamPayload(value) {
-  const payload = {};
+  const payload = {
+    scores: {},
+    legacyScores: {},
+  };
   const activeScores = [];
 
-  examScoreKeys.forEach((key) => {
-    const score = normalizeScore(value[key]);
-    const statusKey = key.replace('_score', '_status');
-    payload[key] = score;
-    payload[statusKey] = score > 0 ? 'topshirdi' : 'topshirmadi';
-    if (score > 0) activeScores.push(score);
-  });
+  if (value.scores && typeof value.scores === 'object') {
+    Object.entries(value.scores).forEach(([key, raw]) => {
+      const score = normalizeScore(raw);
+      payload.scores[key] = score;
+      payload.legacyScores[`${key}_score`] = score;
+      payload.legacyScores[`${key}_status`] = score > 0 ? 'topshirdi' : 'topshirmadi';
+      if (score > 0) activeScores.push(score);
+    });
+  } else {
+    examScoreKeys.forEach((key) => {
+      const score = normalizeScore(value[key]);
+      const scoreKey = key.replace('_score', '');
+      payload.scores[scoreKey] = score;
+      payload.legacyScores[key] = score;
+      const statusKey = `${scoreKey}_status`;
+      payload.legacyScores[statusKey] = score > 0 ? 'topshirdi' : 'topshirmadi';
+      if (score > 0) activeScores.push(score);
+    });
+  }
 
   payload.score = activeScores.length
     ? Math.round(activeScores.reduce((sum, current) => sum + current, 0) / activeScores.length)
@@ -148,11 +163,9 @@ router.post('/', authenticateToken, permit('super_admin', 'admin'), async (req, 
 
     const insert = await query(
       `INSERT INTO employees (
-         full_name, position, region_id, district_id, score,
-         konstitutsiya_score, kodeks_score, protsessual_kodeks_score, akt_sohasi_score, odob_axloq_score,
-         konstitutsiya_status, kodeks_status, protsessual_kodeks_status, akt_sohasi_status, odob_axloq_status
+         full_name, position, region_id, district_id, score, scores
        )
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
+       VALUES ($1, $2, $3, $4, $5, $6)
        RETURNING *`,
       [
         value.full_name,
@@ -160,16 +173,7 @@ router.post('/', authenticateToken, permit('super_admin', 'admin'), async (req, 
         value.region_id,
         value.district_id,
         examPayload.score,
-        examPayload.konstitutsiya_score,
-        examPayload.kodeks_score,
-        examPayload.protsessual_kodeks_score,
-        examPayload.akt_sohasi_score,
-        examPayload.odob_axloq_score,
-        examPayload.konstitutsiya_status,
-        examPayload.kodeks_status,
-        examPayload.protsessual_kodeks_status,
-        examPayload.akt_sohasi_status,
-        examPayload.odob_axloq_status,
+        JSON.stringify(examPayload.scores),
       ]
     );
 
@@ -221,11 +225,9 @@ router.put('/:id', authenticateToken, permit('super_admin', 'admin'), async (req
 
     const update = await query(
       `UPDATE employees
-       SET full_name = $1, position = $2, region_id = $3, district_id = $4, score = $5,
-           konstitutsiya_score = $6, kodeks_score = $7, protsessual_kodeks_score = $8, akt_sohasi_score = $9, odob_axloq_score = $10,
-           konstitutsiya_status = $11, kodeks_status = $12, protsessual_kodeks_status = $13, akt_sohasi_status = $14, odob_axloq_status = $15,
+       SET full_name = $1, position = $2, region_id = $3, district_id = $4, score = $5, scores = $6,
            updated_at = NOW()
-       WHERE id = $16
+       WHERE id = $7
        RETURNING *`,
       [
         value.full_name,
@@ -233,16 +235,7 @@ router.put('/:id', authenticateToken, permit('super_admin', 'admin'), async (req
         value.region_id,
         value.district_id,
         examPayload.score,
-        examPayload.konstitutsiya_score,
-        examPayload.kodeks_score,
-        examPayload.protsessual_kodeks_score,
-        examPayload.akt_sohasi_score,
-        examPayload.odob_axloq_score,
-        examPayload.konstitutsiya_status,
-        examPayload.kodeks_status,
-        examPayload.protsessual_kodeks_status,
-        examPayload.akt_sohasi_status,
-        examPayload.odob_axloq_status,
+        JSON.stringify(examPayload.scores),
         req.params.id,
       ]
     );

@@ -6,6 +6,7 @@ import Dashboard from './components/Dashboard.jsx';
 import AdminManager from './components/AdminManager.jsx';
 import RegionDistrictManager from './components/RegionDistrictManager.jsx';
 import EmployeeManager from './components/EmployeeManager.jsx';
+import CriteriaManager from './components/CriteriaManager.jsx';
 import LogsManager from './components/LogsManager.jsx';
 import { getToken, logout } from './api.js';
 
@@ -110,6 +111,7 @@ function App() {
           <Route path="/admin/districts" element={<RegionDistrictManager view="districts" user={user} />} />
           <Route path="/admin/positions" element={<RegionDistrictManager view="positions" user={user} />} />
           <Route path="/admin/admins" element={<AdminManager user={user} />} />
+          <Route path="/admin/criteria" element={<CriteriaManager user={user} />} />
           <Route path="/admin/logs" element={<LogsManager user={user} />} />
         </Routes>
       </main>

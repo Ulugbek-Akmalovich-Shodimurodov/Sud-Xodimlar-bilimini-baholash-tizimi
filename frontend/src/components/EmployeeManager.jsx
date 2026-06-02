@@ -4,6 +4,7 @@ import {
   fetchRegions,
   fetchDistricts,
   fetchPositions,
+  fetchCriteria,
   createEmployee,
   updateEmployee,
   deleteEmployee,
@@ -11,11 +12,11 @@ import {
 import { scoreColorClass } from '../utils/scoreColor.js';
 
 const examFields = [
-  { key: 'konstitutsiya_score', label: 'Konstitutsiya (%)' },
-  { key: 'kodeks_score', label: 'Kodeks (%)' },
-  { key: 'protsessual_kodeks_score', label: 'Protsessual kodeks (%)' },
-  { key: 'akt_sohasi_score', label: 'AKT sohasi (%)' },
-  { key: 'odob_axloq_score', label: 'Odob-axloq (%)' },
+  { key: 'konstitutsiya', label: 'Konstitutsiya (%)' },
+  { key: 'kodeks', label: 'Kodeks (%)' },
+  { key: 'protsessual_kodeks', label: 'Protsessual kodeks (%)' },
+  { key: 'akt_sohasi', label: 'AKT sohasi (%)' },
+  { key: 'odob_axloq', label: 'Odob-axloq (%)' },
 ];
 
 const emptyForm = {
@@ -23,11 +24,7 @@ const emptyForm = {
   position: '',
   region_id: '',
   district_id: '',
-  konstitutsiya_score: '',
-  kodeks_score: '',
-  protsessual_kodeks_score: '',
-  akt_sohasi_score: '',
-  odob_axloq_score: '',
+  scores: {},
 };
 
 function EmployeeManager({ user }) {
@@ -35,6 +32,7 @@ function EmployeeManager({ user }) {
   const [regions, setRegions] = useState([]);
   const [districts, setDistricts] = useState([]);
   const [positions, setPositions] = useState([]);
+  const [criteria, setCriteria] = useState([]);
   const [selectedRegion, setSelectedRegion] = useState('');
   const [selectedDistrict, setSelectedDistrict] = useState('');
   const [search, setSearch] = useState('');
@@ -50,6 +48,7 @@ function EmployeeManager({ user }) {
   useEffect(() => {
     fetchRegions().then(setRegions).catch(console.error);
     fetchPositions().then(setPositions).catch(console.error);
+    fetchCriteria().then(setCriteria).catch(console.error);
   }, []);
 
   useEffect(() => {
@@ -91,17 +90,23 @@ function EmployeeManager({ user }) {
 
   const handleOpenModal = (employee = null) => {
     if (employee) {
+      const scoresFromEmployee = employee.scores && typeof employee.scores === 'object'
+        ? employee.scores
+        : {
+          konstitutsiya: employee.konstitutsiya_score || 0,
+          kodeks: employee.kodeks_score || 0,
+          protsessual_kodeks: employee.protsessual_kodeks_score || 0,
+          akt_sohasi: employee.akt_sohasi_score || 0,
+          odob_axloq: employee.odob_axloq_score || 0,
+        };
+
       setEditing(employee);
       setFormState({
         full_name: employee.full_name,
         position: employee.position,
         region_id: employee.region_id,
         district_id: employee.district_id,
-        konstitutsiya_score: employee.konstitutsiya_score > 0 ? String(employee.konstitutsiya_score) : '',
-        kodeks_score: employee.kodeks_score > 0 ? String(employee.kodeks_score) : '',
-        protsessual_kodeks_score: employee.protsessual_kodeks_score > 0 ? String(employee.protsessual_kodeks_score) : '',
-        akt_sohasi_score: employee.akt_sohasi_score > 0 ? String(employee.akt_sohasi_score) : '',
-        odob_axloq_score: employee.odob_axloq_score > 0 ? String(employee.odob_axloq_score) : '',
+        scores: scoresFromEmployee,
       });
       setSelectedRegion(employee.region_id);
     } else {
@@ -122,11 +127,9 @@ function EmployeeManager({ user }) {
         position: formState.position,
         region_id: Number(formState.region_id),
         district_id: Number(formState.district_id),
-        konstitutsiya_score: formState.konstitutsiya_score === '' ? 0 : Number(formState.konstitutsiya_score),
-        kodeks_score: formState.kodeks_score === '' ? 0 : Number(formState.kodeks_score),
-        protsessual_kodeks_score: formState.protsessual_kodeks_score === '' ? 0 : Number(formState.protsessual_kodeks_score),
-        akt_sohasi_score: formState.akt_sohasi_score === '' ? 0 : Number(formState.akt_sohasi_score),
-        odob_axloq_score: formState.odob_axloq_score === '' ? 0 : Number(formState.odob_axloq_score),
+        scores: Object.fromEntries(
+          Object.entries(formState.scores || {}).map(([key, value]) => [key, value === '' ? 0 : Number(value)])
+        ),
       };
 
       if (editing) {
@@ -293,24 +296,33 @@ function EmployeeManager({ user }) {
                 {districts.map((district) => (<option key={district.id} value={district.id}>{district.name}</option>))}
               </select>
 
-              {examFields.map((field) => (
-                <div key={field.key} className="relative">
-                  <input
-                    type="number"
-                    min="0"
-                    max="100"
-                    value={formState[field.key]}
-                    onChange={(e) => setFormState({ ...formState, [field.key]: e.target.value })}
-                    placeholder={field.label}
-                    className="rounded-2xl p-3 pr-24 w-full"
-                  />
-                  {!formState[field.key] && (
-                    <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 pointer-events-none">
-                      Topshirmadi
-                    </div>
-                  )}
-                </div>
-              ))}
+              {(criteria.length ? criteria : examFields).map((field) => {
+                const value = formState.scores?.[field.key] ?? '';
+                return (
+                  <div key={field.key} className="relative">
+                    <input
+                      type="number"
+                      min="0"
+                      max="100"
+                      value={value}
+                      onChange={(e) => setFormState({
+                        ...formState,
+                        scores: {
+                          ...(formState.scores || {}),
+                          [field.key]: e.target.value,
+                        },
+                      })}
+                      placeholder={field.label}
+                      className="rounded-2xl p-3 pr-24 w-full"
+                    />
+                    {!value && (
+                      <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 pointer-events-none">
+                        Topshirmadi
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
             </div>
 
             {error && <div className="mt-4 rounded-2xl bg-red-100 p-4 text-red-700">{error}</div>}

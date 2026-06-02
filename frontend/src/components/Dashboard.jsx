@@ -170,6 +170,20 @@ function Dashboard({ user }) {
           </div>
         </Link>
 
+        <Link to="/admin/criteria" className="group rounded-3xl border border-slate-200 bg-white p-5 shadow-sm transition hover:border-blue-300 hover:shadow-md">
+          <div className="flex items-center gap-3">
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-sky-100 text-sky-700 transition group-hover:bg-sky-600 group-hover:text-white">
+              <svg viewBox="0 0 24 24" className="h-6 w-6" fill="currentColor">
+                <path d="M3 5h18v2H3V5zm0 6h18v2H3v-2zm0 6h18v2H3v-2z" />
+              </svg>
+            </div>
+            <div>
+              <p className="text-sm font-semibold text-slate-900">Kriteriyalar</p>
+              <p className="text-xs text-slate-500">Baholash mezonlarini boshqarish</p>
+            </div>
+          </div>
+        </Link>
+
         <Link to="/admin/admins" className="group rounded-3xl border border-slate-200 bg-white p-5 shadow-sm transition hover:border-blue-300 hover:shadow-md">
           <div className="flex items-center gap-3">
             <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-rose-100 text-rose-700 transition group-hover:bg-rose-600 group-hover:text-white">
