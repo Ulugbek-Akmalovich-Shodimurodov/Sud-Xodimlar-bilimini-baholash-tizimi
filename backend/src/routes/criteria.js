@@ -5,8 +5,27 @@ import { criteriaSchema } from '../validators.js';
 
 const router = express.Router();
 
+async function ensureCriteriaTable() {
+  await query(`
+    CREATE TABLE IF NOT EXISTS criteria (
+      id SERIAL PRIMARY KEY,
+      key TEXT NOT NULL UNIQUE,
+      label TEXT NOT NULL,
+      short_label TEXT NOT NULL,
+      sort_order INTEGER NOT NULL DEFAULT 0,
+      created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW(),
+      updated_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW()
+    )
+  `);
+}
+
 router.get('/', async (req, res, next) => {
   try {
+    const tableCheck = await query("SELECT to_regclass('public.criteria') AS exists");
+    if (!tableCheck.rows[0]?.exists) {
+      return res.json([]);
+    }
+
     const result = await query('SELECT id, key, label, short_label, sort_order FROM criteria ORDER BY sort_order, id');
     res.json(result.rows);
   } catch (err) {
@@ -18,6 +37,8 @@ router.post('/', authenticateToken, permit('super_admin'), async (req, res, next
   try {
     const { error, value } = criteriaSchema.validate(req.body);
     if (error) return res.status(400).json({ error: error.message });
+
+    await ensureCriteriaTable();
 
     const insert = await query(
       'INSERT INTO criteria (key, label, short_label, sort_order) VALUES ($1, $2, $3, $4) RETURNING *',
@@ -35,6 +56,8 @@ router.put('/:id', authenticateToken, permit('super_admin'), async (req, res, ne
     const { error, value } = criteriaSchema.validate(req.body);
     if (error) return res.status(400).json({ error: error.message });
 
+    await ensureCriteriaTable();
+
     const update = await query(
       `UPDATE criteria SET key = $1, label = $2, short_label = $3, sort_order = $4, updated_at = NOW()
        WHERE id = $5 RETURNING *`,
@@ -50,6 +73,7 @@ router.put('/:id', authenticateToken, permit('super_admin'), async (req, res, ne
 
 router.delete('/:id', authenticateToken, permit('super_admin'), async (req, res, next) => {
   try {
+    await ensureCriteriaTable();
     const del = await query('DELETE FROM criteria WHERE id = $1 RETURNING *', [req.params.id]);
     if (!del.rows.length) return res.status(404).json({ error: 'Kriteriya topilmadi' });
     res.status(204).end();

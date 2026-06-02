@@ -108,19 +108,13 @@ function PublicPage() {
           'Umumiy natija (%)': employee.score,
         };
 
-        const columns = criteria.length ? criteria : [
-          { key: 'konstitutsiya', label: 'Konstitutsiya' },
-          { key: 'kodeks', label: 'Kodeks' },
-          { key: 'protsessual_kodeks', label: 'Protsessual kodeks' },
-          { key: 'akt_sohasi', label: 'AKT sohasi' },
-          { key: 'odob_axloq', label: 'Odob-axloq' },
-        ];
-
-        columns.forEach((c) => {
-          const score = scores[c.key] || 0;
-          base[`${c.label} (%)`] = score;
-          base[`${c.label} holati`] = score > 0 ? 'Topshirdi' : 'Topshirmadi';
-        });
+        if (criteria.length) {
+          criteria.forEach((c) => {
+            const score = scores[c.key] || 0;
+            base[`${c.label} (%)`] = score;
+            base[`${c.label} holati`] = score > 0 ? 'Topshirdi' : 'Topshirmadi';
+          });
+        }
 
         return base;
       });
@@ -217,15 +211,7 @@ function PublicPage() {
                     criteria.map((c) => (
                       <th key={c.key} className="px-4 py-3">{c.short_label}</th>
                     ))
-                  ) : (
-                    <>
-                      <th className="px-4 py-3">Konst.</th>
-                      <th className="px-4 py-3">Kodeks</th>
-                      <th className="px-4 py-3">Prot.</th>
-                      <th className="px-4 py-3">AKT</th>
-                      <th className="px-4 py-3">Odob</th>
-                    </>
-                  )}
+                  ) : null}
                   <th className="px-4 py-3">Umumiy</th>
                 </tr>
               </thead>
@@ -246,25 +232,7 @@ function PublicPage() {
                           </td>
                         );
                       })
-                    ) : (
-                      <>
-                        <td className={`px-4 py-3 text-center ${employee.konstitutsiya_score > 0 ? scoreColorClass(employee.konstitutsiya_score) : 'text-slate-400'}`}>
-                          {employee.konstitutsiya_score > 0 ? `${employee.konstitutsiya_score}%` : 'Topshirmadi'}
-                        </td>
-                        <td className={`px-4 py-3 text-center ${employee.kodeks_score > 0 ? scoreColorClass(employee.kodeks_score) : 'text-slate-400'}`}>
-                          {employee.kodeks_score > 0 ? `${employee.kodeks_score}%` : 'Topshirmadi'}
-                        </td>
-                        <td className={`px-4 py-3 text-center ${employee.protsessual_kodeks_score > 0 ? scoreColorClass(employee.protsessual_kodeks_score) : 'text-slate-400'}`}>
-                          {employee.protsessual_kodeks_score > 0 ? `${employee.protsessual_kodeks_score}%` : 'Topshirmadi'}
-                        </td>
-                        <td className={`px-4 py-3 text-center ${employee.akt_sohasi_score > 0 ? scoreColorClass(employee.akt_sohasi_score) : 'text-slate-400'}`}>
-                          {employee.akt_sohasi_score > 0 ? `${employee.akt_sohasi_score}%` : 'Topshirmadi'}
-                        </td>
-                        <td className={`px-4 py-3 text-center ${employee.odob_axloq_score > 0 ? scoreColorClass(employee.odob_axloq_score) : 'text-slate-400'}`}>
-                          {employee.odob_axloq_score > 0 ? `${employee.odob_axloq_score}%` : 'Topshirmadi'}
-                        </td>
-                      </>
-                    )}
+                    ) : null}
                     <td className={`px-4 py-3 text-center ${scoreColorClass(employee.score)}`}>{employee.score}%</td>
                   </tr>
                 ))}

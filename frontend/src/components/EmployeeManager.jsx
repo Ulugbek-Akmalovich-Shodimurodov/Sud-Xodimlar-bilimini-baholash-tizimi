@@ -296,33 +296,39 @@ function EmployeeManager({ user }) {
                 {districts.map((district) => (<option key={district.id} value={district.id}>{district.name}</option>))}
               </select>
 
-              {(criteria.length ? criteria : examFields).map((field) => {
-                const value = formState.scores?.[field.key] ?? '';
-                return (
-                  <div key={field.key} className="relative">
-                    <input
-                      type="number"
-                      min="0"
-                      max="100"
-                      value={value}
-                      onChange={(e) => setFormState({
-                        ...formState,
-                        scores: {
-                          ...(formState.scores || {}),
-                          [field.key]: e.target.value,
-                        },
-                      })}
-                      placeholder={field.label}
-                      className="rounded-2xl p-3 pr-24 w-full"
-                    />
-                    {!value && (
-                      <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 pointer-events-none">
-                        Topshirmadi
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
+              {criteria.length ? (
+                criteria.map((field) => {
+                  const value = formState.scores?.[field.key] ?? '';
+                  return (
+                    <div key={field.key} className="relative">
+                      <input
+                        type="number"
+                        min="0"
+                        max="100"
+                        value={value}
+                        onChange={(e) => setFormState({
+                          ...formState,
+                          scores: {
+                            ...(formState.scores || {}),
+                            [field.key]: e.target.value,
+                          },
+                        })}
+                        placeholder={field.label}
+                        className="rounded-2xl p-3 pr-24 w-full"
+                      />
+                      {!value && (
+                        <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 pointer-events-none">
+                          Topshirmadi
+                        </div>
+                      )}
+                    </div>
+                  );
+                })
+              ) : (
+                <div className="col-span-2 rounded-2xl bg-slate-50 p-4 text-slate-500">
+                  Hozircha kriteriyalar o‘rnatilmagan. Kriteriyalar bo‘limidan avval kriteriyalarni qo‘shing.
+                </div>
+              )}
             </div>
 
             {error && <div className="mt-4 rounded-2xl bg-red-100 p-4 text-red-700">{error}</div>}

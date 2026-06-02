@@ -3,6 +3,7 @@ import { Routes, Route, Link, useNavigate } from 'react-router-dom';
 import PublicPage from './components/PublicPage.jsx';
 import LoginPage from './components/LoginPage.jsx';
 import Dashboard from './components/Dashboard.jsx';
+import AdminLayout from './components/AdminLayout.jsx';
 import AdminManager from './components/AdminManager.jsx';
 import RegionDistrictManager from './components/RegionDistrictManager.jsx';
 import EmployeeManager from './components/EmployeeManager.jsx';
@@ -105,14 +106,16 @@ function App() {
         <Routes>
           <Route path="/" element={<PublicPage />} />
           <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
-          <Route path="/admin" element={<Dashboard user={user} />} />
-          <Route path="/admin/employees" element={<EmployeeManager user={user} />} />
-          <Route path="/admin/regions" element={<RegionDistrictManager view="regions" user={user} />} />
-          <Route path="/admin/districts" element={<RegionDistrictManager view="districts" user={user} />} />
-          <Route path="/admin/positions" element={<RegionDistrictManager view="positions" user={user} />} />
-          <Route path="/admin/admins" element={<AdminManager user={user} />} />
-          <Route path="/admin/criteria" element={<CriteriaManager user={user} />} />
-          <Route path="/admin/logs" element={<LogsManager user={user} />} />
+          <Route path="/admin" element={<AdminLayout user={user} />}>
+            <Route index element={<Dashboard user={user} />} />
+            <Route path="employees" element={<EmployeeManager user={user} />} />
+            <Route path="regions" element={<RegionDistrictManager view="regions" user={user} />} />
+            <Route path="districts" element={<RegionDistrictManager view="districts" user={user} />} />
+            <Route path="positions" element={<RegionDistrictManager view="positions" user={user} />} />
+            <Route path="admins" element={<AdminManager user={user} />} />
+            <Route path="criteria" element={<CriteriaManager user={user} />} />
+            <Route path="logs" element={<LogsManager user={user} />} />
+          </Route>
         </Routes>
       </main>
     </div>
