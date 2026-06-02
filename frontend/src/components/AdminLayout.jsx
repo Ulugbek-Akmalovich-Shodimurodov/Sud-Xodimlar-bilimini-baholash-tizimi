@@ -31,7 +31,6 @@ function AdminLayout({ user }) {
       <aside className="sticky top-6 self-start rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
         <div className="mb-8">
           <h2 className="text-xl font-semibold text-slate-900">Admin menyu</h2>
-          <p className="mt-2 text-sm text-slate-600">Chap tomonda doim ko'rinadigan bo'lim.</p>
         </div>
         <nav className="space-y-3">
           {navItems.map((item) => {

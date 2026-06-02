@@ -1,5 +1,6 @@
 import express from 'express';
 import { query } from '../db.js';
+import { initializeDatabase } from '../initDb.js';
 import { authenticateToken, optionalAuthenticateToken, permit } from '../middleware/auth.js';
 import { employeeSchema } from '../validators.js';
 import { logAdminAction, getEntityName, getClientInfo } from '../utils/logger.js';
@@ -94,6 +95,24 @@ function buildFilters(queryParams, user) {
   return { clause: filters.length ? `WHERE ${filters.join(' AND ')}` : '', values };
 }
 
+async function safeQuery(text, params) {
+  try {
+    return await query(text, params);
+  } catch (err) {
+    const msg = String(err?.message || err);
+    if (msg.includes("column \"scores\"") || msg.includes("relation \"criteria\"") || msg.includes('does not exist')) {
+      try {
+        console.warn('Detected missing schema element, running initializeDatabase and retrying query');
+        await initializeDatabase();
+        return await query(text, params);
+      } catch (innerErr) {
+        throw innerErr;
+      }
+    }
+    throw err;
+  }
+}
+
 router.get('/', optionalAuthenticateToken, async (req, res, next) => {
   try {
     const page = parseInt(req.query.page, 10) || 1;
@@ -113,8 +132,8 @@ router.get('/', optionalAuthenticateToken, async (req, res, next) => {
 
     const countQuery = `SELECT COUNT(*) AS total FROM employees ${filter.clause}`;
     const [list, count] = await Promise.all([
-      query(listQuery, [...filter.values, limit, offset]),
-      query(countQuery, filter.values),
+      safeQuery(listQuery, [...filter.values, limit, offset]),
+      safeQuery(countQuery, filter.values),
     ]);
 
     res.json({ data: list.rows, total: Number(count.rows[0].total), page, limit });
@@ -135,7 +154,7 @@ router.get('/:id', optionalAuthenticateToken, async (req, res, next) => {
       values.push(assigned);
     }
 
-    const result = await query(
+    const result = await safeQuery(
       `SELECT employees.*, regions.name AS region_name, districts.name AS district_name
        FROM employees
        LEFT JOIN regions ON employees.region_id = regions.id
@@ -161,7 +180,7 @@ router.post('/', authenticateToken, permit('super_admin', 'admin'), async (req, 
 
     const examPayload = buildExamPayload(value);
 
-    const insert = await query(
+    const insert = await safeQuery(
       `INSERT INTO employees (
          full_name, position, region_id, district_id, score, scores
        )
@@ -202,10 +221,10 @@ router.put('/:id', authenticateToken, permit('super_admin', 'admin'), async (req
     if (error) return res.status(400).json({ error: error.message });
 
     // Get old data for logging
-    const oldEmployeeResult = await query('SELECT * FROM employees WHERE id = $1', [req.params.id]);
+    const oldEmployeeResult = await safeQuery('SELECT * FROM employees WHERE id = $1', [req.params.id]);
     const oldData = oldEmployeeResult.rows[0] || null;
 
-    const employeeResult = await query('SELECT region_id FROM employees WHERE id = $1', [req.params.id]);
+    const employeeResult = await safeQuery('SELECT region_id FROM employees WHERE id = $1', [req.params.id]);
     if (!employeeResult.rows.length) return res.status(404).json({ error: 'Xodim topilmadi' });
 
     const currentRegion = employeeResult.rows[0].region_id;
@@ -223,7 +242,7 @@ router.put('/:id', authenticateToken, permit('super_admin', 'admin'), async (req
 
     const examPayload = buildExamPayload(value);
 
-    const update = await query(
+    const update = await safeQuery(
       `UPDATE employees
        SET full_name = $1, position = $2, region_id = $3, district_id = $4, score = $5, scores = $6,
            updated_at = NOW()
@@ -263,7 +282,7 @@ router.put('/:id', authenticateToken, permit('super_admin', 'admin'), async (req
 router.delete('/:id', authenticateToken, permit('super_admin', 'admin'), async (req, res, next) => {
   try {
     // Get employee data for logging before deletion
-    const employeeResult = await query('SELECT * FROM employees WHERE id = $1', [req.params.id]);
+    const employeeResult = await safeQuery('SELECT * FROM employees WHERE id = $1', [req.params.id]);
     if (!employeeResult.rows.length) return res.status(404).json({ error: 'Xodim topilmadi' });
 
     const employeeData = employeeResult.rows[0];
@@ -272,7 +291,7 @@ router.delete('/:id', authenticateToken, permit('super_admin', 'admin'), async (
       return res.status(403).json({ error: 'Siz bu xodimni o\'chira olmaysiz' });
     }
 
-    await query('DELETE FROM employees WHERE id = $1', [req.params.id]);
+    await safeQuery('DELETE FROM employees WHERE id = $1', [req.params.id]);
 
     // Log the action
     const clientInfo = getClientInfo(req);
