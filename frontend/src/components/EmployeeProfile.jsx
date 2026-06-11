@@ -348,7 +348,7 @@ function EmployeeProfile() {
           <div className="flex items-center gap-2 rounded-full border border-indigo-100 bg-white/80 px-4 py-2 backdrop-blur-sm">
             <div className="h-2.5 w-2.5 rounded-full bg-indigo-500 animate-pulse" />
             <span className="text-sm font-semibold text-indigo-600">
-              {totalCriteria} ta nuqta
+              {totalCriteria} ta kriteriya
             </span>
           </div>
         </div>
