@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import * as XLSX from 'xlsx';
+import { Link, useNavigate } from 'react-router-dom';
 import { fetchEmployees, fetchRegions, fetchDistricts, fetchCriteria } from '../api.js';
 import { scoreColorClass } from '../utils/scoreColor.js';
 
@@ -12,6 +13,7 @@ const scoreRanges = [
 ];
 
 function PublicPage() {
+  const navigate = useNavigate();
   const [search, setSearch] = useState('');
   const [regions, setRegions] = useState([]);
   const [districts, setDistricts] = useState([]);
@@ -137,7 +139,7 @@ function PublicPage() {
     <div className="space-y-6">
       <section className="p-6">
         <h1 className="text-2xl font-semibold">Xodimlar ro‘yxati</h1>
-        <p className="mt-2 text-slate-600">Baholash natijalarini filtrlash va qidirish.</p>
+        <p className="mt-2 text-indigo-600">Baholash natijalarini filtrlash va qidirish.</p>
 
         <div className="mt-6 grid gap-4 md:grid-cols-4">
           <input
@@ -186,7 +188,7 @@ function PublicPage() {
             type="button"
             onClick={handleExportExcel}
             disabled={exporting || loading}
-            className="rounded-2xl bg-[#173f9f] px-4 py-2 text-sm font-medium text-white hover:bg-[#1f4ebf] disabled:cursor-not-allowed disabled:opacity-60"
+            className="w-full rounded-2xl bg-indigo-700 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-900 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
           >
             {exporting ? 'Excel tayyorlanmoqda...' : 'Excelga yuklash'}
           </button>
@@ -196,11 +198,11 @@ function PublicPage() {
       <section className="p-6">
         <h2 className="text-lg font-semibold">Natijalar</h2>
         {loading ? (
-          <div className="mt-6 text-center text-slate-500">Yuklanmoqda...</div>
+          <div className="mt-6 text-center text-indigo-500">Yuklanmoqda...</div>
         ) : (
           <div className="mt-6 overflow-x-auto">
             <table className="min-w-full divide-y divide-slate-200 text-left text-sm">
-              <thead className="bg-slate-50 text-slate-600">
+              <thead className="bg-indigo-50 text-indigo-600">
                 <tr>
                   <th className="px-4 py-3">T/r</th>
                   <th className="px-4 py-3">F.I.O</th>
@@ -217,43 +219,73 @@ function PublicPage() {
               </thead>
               <tbody className="divide-y divide-slate-200">
                 {employees.map((employee, index) => (
-                  <tr key={employee.id} className="hover:bg-slate-50">
-                    <td className="px-4 py-3">{(page - 1) * limit + index + 1}</td>
-                    <td className="px-4 py-3 font-medium text-slate-900">{employee.full_name}</td>
-                    <td className="px-4 py-3">{employee.position}</td>
-                    <td className="px-4 py-3">{employee.region_name}</td>
-                    <td className="px-4 py-3">{employee.district_name}</td>
-                    {criteria.length ? (
-                      criteria.map((c) => {
-                        const score = (employee.scores && employee.scores[c.key]) || 0;
-                        return (
-                          <td key={c.key} className={`px-4 py-3 text-center ${score > 0 ? scoreColorClass(score) : 'text-slate-400'}`}>
-                            {score > 0 ? `${score}%` : 'Topshirmadi'}
-                          </td>
-                        );
-                      })
-                    ) : null}
-                    <td className={`px-4 py-3 text-center ${scoreColorClass(employee.score)}`}>{employee.score}%</td>
-                  </tr>
+                  <tr
+                    key={employee.id}
+                    className="cursor-pointer hover:bg-indigo-50"
+                    onClick={() => navigate(`/employee/${employee.id}`)}
+                  >
+                    <td className="px-4 py-3">
+                  <Link to={`/employee/${employee.id}`} className="block">
+                    {(page - 1) * limit + index + 1}
+                  </Link>
+                </td>
+                <td className="px-4 py-3 font-medium text-slate-900">
+                  <Link to={`/employee/${employee.id}`} className="block">
+                    {employee.full_name}
+                  </Link>
+                </td>
+                <td className="px-4 py-3">
+                  <Link to={`/employee/${employee.id}`} className="block">
+                    {employee.position}
+                  </Link>
+                </td>
+                <td className="px-4 py-3">
+                  <Link to={`/employee/${employee.id}`} className="block">
+                    {employee.region_name}
+                  </Link>
+                </td>
+                <td className="px-4 py-3">
+                  <Link to={`/employee/${employee.id}`} className="block">
+                    {employee.district_name}
+                  </Link>
+                </td>
+                {criteria.length ? (
+                  criteria.map((c) => {
+                    const score = (employee.scores && employee.scores[c.key]) || 0;
+                    return (
+                      <td key={c.key} className={`px-4 py-3 text-center ${score > 0 ? scoreColorClass(score) : 'text-slate-400'}`}>
+                        <Link to={`/employee/${employee.id}`} className="block">
+                          {score > 0 ? `${score}%` : 'Topshirmadi'}
+                        </Link>
+                      </td>
+                    );
+                  })
+                ) : null}
+                <td className={`px-4 py-3 text-center ${scoreColorClass(employee.score)}`}>
+                  <Link to={`/employee/${employee.id}`} className="block">
+                    {employee.score}%
+                  </Link>
+                </td>
+              </tr>
                 ))}
               </tbody>
             </table>
           </div>
         )}
 
-        <div className="mt-4 flex items-center justify-between text-sm text-slate-600">
+        <div className="mt-4 flex items-center justify-between text-sm text-indigo-600">
           <div>Jami: {total} xodim</div>
           <div className="flex items-center gap-2">
             <button
               disabled={page <= 1}
               onClick={() => setPage(page - 1)}
-              className="rounded-xl border border-slate-300 bg-white px-4 py-2 disabled:cursor-not-allowed disabled:opacity-50"
+              className="rounded-xl border border-indigo-200 bg-white px-4 py-2 disabled:cursor-not-allowed disabled:opacity-50"
             >Oldingi</button>
             <span>{page}/{pageCount || 1}</span>
             <button
               disabled={page >= pageCount}
               onClick={() => setPage(page + 1)}
-              className="rounded-xl border border-slate-300 bg-white px-4 py-2 disabled:cursor-not-allowed disabled:opacity-50"
+              className="rounded-xl border border-indigo-200 bg-white px-4 py-2 disabled:cursor-not-allowed disabled:opacity-50"
             >Keyingi</button>
           </div>
         </div>
@@ -263,3 +295,4 @@ function PublicPage() {
 }
 
 export default PublicPage;
+

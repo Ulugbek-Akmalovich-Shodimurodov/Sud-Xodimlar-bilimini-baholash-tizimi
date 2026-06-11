@@ -9,16 +9,7 @@ function detectChanges(oldData, newData) {
     position: 'Lavozimi',
     region_id: 'Viloyati',
     district_id: 'Tumani',
-    konstitutsiya_score: 'Konstitutsiya natijasi',
-    kodeks_score: 'Kodeks natijasi',
-    protsessual_kodeks_score: 'Protsessual kodeks natijasi',
-    akt_sohasi_score: 'AKT natijasi',
-    odob_axloq_score: 'Odob-axloq natijasi',
-    konstitutsiya_status: 'Konstitutsiya holati',
-    kodeks_status: 'Kodeks holati',
-    protsessual_kodeks_status: 'Protsessual kodeks holati',
-    akt_sohasi_status: 'AKT holati',
-    odob_axloq_status: 'Odob-axloq holati',
+    scores: 'Kriteriya natijalari',
     score: 'Umumiy natija'
   };
 
@@ -28,18 +19,19 @@ function detectChanges(oldData, newData) {
     const oldValue = oldData[key];
     if (oldValue !== newValue) {
       const label = fieldLabels[key] || key;
-      
-      if (key.includes('_score') && typeof oldValue === 'number' && typeof newValue === 'number') {
-        // Handle score changes
-        changes.push(`${label}: ${oldValue}% dan ${newValue}% ga o'zgartirildi`);
-      } else if (key.includes('_status')) {
-        // Handle status changes
-        changes.push(`${label}: ${oldValue} dan ${newValue} ga o'zgartirildi`);
+
+      if (key === 'scores' && typeof oldValue === 'object' && typeof newValue === 'object') {
+        const allKeys = Array.from(new Set([...Object.keys(oldValue || {}), ...Object.keys(newValue || {})]));
+        allKeys.forEach((scoreKey) => {
+          const oldScore = Number(oldValue?.[scoreKey] || 0);
+          const newScore = Number(newValue?.[scoreKey] || 0);
+          if (oldScore !== newScore) {
+            changes.push(`${scoreKey}: ${oldScore}% dan ${newScore}% ga o'zgartirildi`);
+          }
+        });
       } else if (key === 'region_id' || key === 'district_id') {
-        // Handle region/district changes
         changes.push(`${label}: o'zgartirildi`);
       } else {
-        // Handle other changes
         changes.push(`${label}: "${oldValue}" dan "${newValue}" ga o'zgartirildi`);
       }
     }

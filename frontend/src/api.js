@@ -32,6 +32,11 @@ export async function fetchEmployees(params) {
   return response.data;
 }
 
+export async function fetchEmployee(id) {
+  const response = await api.get(`/employees/${id}`);
+  return response.data;
+}
+
 export async function fetchRegions() {
   const response = await api.get('/regions');
   return response.data;

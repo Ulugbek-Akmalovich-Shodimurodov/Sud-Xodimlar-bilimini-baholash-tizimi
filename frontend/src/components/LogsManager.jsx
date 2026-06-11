@@ -147,7 +147,7 @@ function LogsManager({ user }) {
       case 'CREATE':
         return 'bg-green-100 text-green-800';
       case 'UPDATE':
-        return 'bg-blue-100 text-blue-800';
+        return 'bg-indigo-100 text-slate-800';
       case 'DELETE':
         return 'bg-red-100 text-red-800';
       default:
@@ -157,8 +157,8 @@ function LogsManager({ user }) {
 
   if (user?.role !== 'super_admin') {
     return (
-      <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-        <div className="text-center text-slate-500">
+      <div className="rounded-3xl border border-indigo-100 bg-white p-6 shadow-sm">
+        <div className="text-center text-indigo-500">
           Loglarni faqat super admin ko'rishi mumkin
         </div>
       </div>
@@ -170,41 +170,41 @@ function LogsManager({ user }) {
       {/* Stats Cards */}
       {stats && (
         <div className="grid gap-4 md:grid-cols-4">
-          <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+          <div className="rounded-3xl border border-indigo-100 bg-white p-6 shadow-sm">
             <div className="text-2xl font-bold text-slate-900">{stats.total_logs}</div>
-            <div className="text-sm text-slate-600">Jami operatsiyalar</div>
+            <div className="text-sm text-indigo-600">Jami operatsiyalar</div>
           </div>
-          <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+          <div className="rounded-3xl border border-indigo-100 bg-white p-6 shadow-sm">
             <div className="text-lg font-bold text-slate-900">
               {stats.actions.find(a => a.action === 'CREATE')?.count || 0}
             </div>
-            <div className="text-sm text-slate-600">Yaratish</div>
+            <div className="text-sm text-indigo-600">Yaratish</div>
           </div>
-          <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+          <div className="rounded-3xl border border-indigo-100 bg-white p-6 shadow-sm">
             <div className="text-lg font-bold text-slate-900">
               {stats.actions.find(a => a.action === 'UPDATE')?.count || 0}
             </div>
-            <div className="text-sm text-slate-600">Tahrirlash</div>
+            <div className="text-sm text-indigo-600">Tahrirlash</div>
           </div>
-          <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+          <div className="rounded-3xl border border-indigo-100 bg-white p-6 shadow-sm">
             <div className="text-lg font-bold text-slate-900">
               {stats.actions.find(a => a.action === 'DELETE')?.count || 0}
             </div>
-            <div className="text-sm text-slate-600">O'chirish</div>
+            <div className="text-sm text-indigo-600">O'chirish</div>
           </div>
         </div>
       )}
 
       {/* Filters */}
-      <section className="p-6">
+      <section className="rounded-3xl border border-indigo-100 bg-white p-6 shadow-sm">
         <h1 className="text-3xl font-semibold tracking-tight text-[#0f2d74]">Admin loglari</h1>
-        <p className="mt-2 text-slate-600">Barcha admin operatsiyalari tarixi.</p>
+        <p className="mt-2 text-indigo-600">Barcha admin operatsiyalari tarixi.</p>
 
         <div className="mt-6 grid gap-4 md:grid-cols-5">
           <select
             value={filters.action}
             onChange={(e) => handleFilterChange('action', e.target.value)}
-            className="rounded-2xl p-3"
+            className="rounded-2xl border border-indigo-100 bg-indigo-50 px-4 py-3 text-slate-900 shadow-sm focus:border-slate-700 focus:ring-2 focus:ring-slate-500/20"
           >
             <option value="">Barcha amallar</option>
             {Object.entries(actionLabels).map(([value, label]) => (
@@ -228,21 +228,21 @@ function LogsManager({ user }) {
             value={filters.admin_username}
             onChange={(e) => handleFilterChange('admin_username', e.target.value)}
             placeholder="Admin username"
-            className="rounded-2xl p-3"
+            className="rounded-2xl border border-indigo-100 bg-indigo-50 px-4 py-3 text-slate-900 shadow-sm focus:border-slate-700 focus:ring-2 focus:ring-slate-500/20"
           />
 
           <input
             type="date"
             value={filters.date_from}
             onChange={(e) => handleFilterChange('date_from', e.target.value)}
-            className="rounded-2xl p-3"
+            className="rounded-2xl border border-indigo-100 bg-indigo-50 px-4 py-3 text-slate-900 shadow-sm focus:border-slate-700 focus:ring-2 focus:ring-slate-500/20"
           />
 
           <input
             type="date"
             value={filters.date_to}
             onChange={(e) => handleFilterChange('date_to', e.target.value)}
-            className="rounded-2xl p-3"
+            className="rounded-2xl border border-indigo-100 bg-indigo-50 px-4 py-3 text-slate-900 shadow-sm focus:border-slate-700 focus:ring-2 focus:ring-slate-500/20"
           />
         </div>
 
@@ -251,7 +251,7 @@ function LogsManager({ user }) {
             type="button"
             onClick={handleExportExcel}
             disabled={exporting || loading}
-            className="rounded-2xl bg-[#173f9f] px-4 py-2 text-sm font-medium text-white hover:bg-[#1f4ebf] disabled:cursor-not-allowed disabled:opacity-60"
+            className="rounded-2xl bg-indigo-700 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-900 disabled:cursor-not-allowed disabled:opacity-60"
           >
             {exporting ? 'Excel tayyorlanmoqda...' : 'Loglarni Excelga yuklash'}
           </button>
@@ -259,13 +259,13 @@ function LogsManager({ user }) {
       </section>
 
       {/* Logs Table */}
-      <section className="p-6">
+      <section className="rounded-3xl border border-indigo-100 bg-white p-6 shadow-sm">
         {loading ? (
-          <div className="text-center text-slate-500">Yuklanmoqda...</div>
+          <div className="text-center text-indigo-500">Yuklanmoqda...</div>
         ) : (
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-slate-200 text-left text-sm">
-              <thead className="bg-slate-50 text-slate-600">
+              <thead className="bg-indigo-50 text-indigo-600">
                 <tr>
                   <th className="px-4 py-3">Sana</th>
                   <th className="px-4 py-3">Admin</th>
@@ -278,7 +278,7 @@ function LogsManager({ user }) {
               </thead>
               <tbody className="divide-y divide-slate-200">
                 {logs.map((log) => (
-                  <tr key={log.id} className="hover:bg-slate-50">
+                  <tr key={log.id} className="hover:bg-indigo-50">
                     <td className="px-4 py-3">{formatDate(log.created_at)}</td>
                     <td className="px-4 py-3 font-medium">{log.admin_username}</td>
                     <td className="px-4 py-3">
@@ -291,7 +291,7 @@ function LogsManager({ user }) {
                     </td>
                     <td className="px-4 py-3">{log.entity_name || '-'}</td>
                     <td className="px-4 py-3 max-w-xs">
-                      <div className="text-xs text-slate-600" title={log.change_description}>
+                      <div className="text-xs text-indigo-600" title={log.change_description}>
                         {log.change_description ? (
                           <span className="line-clamp-2">{log.change_description}</span>
                         ) : (
@@ -299,7 +299,7 @@ function LogsManager({ user }) {
                         )}
                       </div>
                     </td>
-                    <td className="px-4 py-3 text-slate-500">{log.ip_address || '-'}</td>
+                    <td className="px-4 py-3 text-indigo-500">{log.ip_address || '-'}</td>
                   </tr>
                 ))}
               </tbody>
@@ -307,13 +307,13 @@ function LogsManager({ user }) {
           </div>
         )}
 
-        <div className="mt-4 flex items-center justify-between text-sm text-slate-600">
+        <div className="mt-4 flex items-center justify-between text-sm text-indigo-600">
           <div>Jami: {total} ta log</div>
           <div className="flex items-center gap-2">
             <button
               disabled={page <= 1}
               onClick={() => setPage(page - 1)}
-              className="rounded-xl border border-slate-300 bg-white px-4 py-2 disabled:cursor-not-allowed disabled:opacity-50"
+              className="rounded-xl border border-indigo-200 bg-white px-4 py-2 disabled:cursor-not-allowed disabled:opacity-50"
             >
               Oldingi
             </button>
@@ -321,7 +321,7 @@ function LogsManager({ user }) {
             <button
               disabled={page >= Math.ceil(total / limit)}
               onClick={() => setPage(page + 1)}
-              className="rounded-xl border border-slate-300 bg-white px-4 py-2 disabled:cursor-not-allowed disabled:opacity-50"
+              className="rounded-xl border border-indigo-200 bg-white px-4 py-2 disabled:cursor-not-allowed disabled:opacity-50"
             >
               Keyingi
             </button>
@@ -333,3 +333,4 @@ function LogsManager({ user }) {
 }
 
 export default LogsManager;
+

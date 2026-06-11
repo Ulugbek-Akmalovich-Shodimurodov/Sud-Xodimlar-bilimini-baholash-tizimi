@@ -6,14 +6,6 @@ import { employeeSchema } from '../validators.js';
 import { logAdminAction, getEntityName, getClientInfo } from '../utils/logger.js';
 
 const router = express.Router();
-const examScoreKeys = [
-  'konstitutsiya_score',
-  'kodeks_score',
-  'protsessual_kodeks_score',
-  'akt_sohasi_score',
-  'odob_axloq_score',
-];
-
 function normalizeScore(value) {
   // Handle empty string, null, or undefined as "not taken"
   if (value === '' || value === null || value === undefined) return 0;
@@ -22,35 +14,82 @@ function normalizeScore(value) {
   return Math.round(score);
 }
 
-function buildExamPayload(value) {
-  const payload = {
-    scores: {},
-    legacyScores: {},
-  };
-  const activeScores = [];
+function distributeWeights(count) {
+  if (!count || count <= 0) return [];
+  const base = Math.floor(100 / count);
+  const remainder = 100 - base * count;
+  return Array.from({ length: count }, (_, index) => base + (index < remainder ? 1 : 0));
+}
 
-  if (value.scores && typeof value.scores === 'object') {
-    Object.entries(value.scores).forEach(([key, raw]) => {
-      const score = normalizeScore(raw);
-      payload.scores[key] = score;
-      payload.legacyScores[`${key}_score`] = score;
-      payload.legacyScores[`${key}_status`] = score > 0 ? 'topshirdi' : 'topshirmadi';
-      if (score > 0) activeScores.push(score);
-    });
-  } else {
-    examScoreKeys.forEach((key) => {
-      const score = normalizeScore(value[key]);
-      const scoreKey = key.replace('_score', '');
-      payload.scores[scoreKey] = score;
-      payload.legacyScores[key] = score;
-      const statusKey = `${scoreKey}_status`;
-      payload.legacyScores[statusKey] = score > 0 ? 'topshirdi' : 'topshirmadi';
-      if (score > 0) activeScores.push(score);
-    });
+async function buildExamPayload(value) {
+  const payload = { scores: {}, chosen_sections: {} };
+  let criteriaRows = [];
+  try {
+    const result = await query(`
+      SELECT c.key AS criterion_key, s.key AS section_key
+      FROM criteria c
+      LEFT JOIN criterion_sections s ON s.criterion_id = c.id
+      ORDER BY c.sort_order, c.id, s.sort_order, s.id
+    `);
+    criteriaRows = result.rows;
+  } catch (e) {
+    // fallback to legacy scoring when sections/criteria table is missing
   }
 
-  payload.score = activeScores.length
-    ? Math.round(activeScores.reduce((sum, current) => sum + current, 0) / activeScores.length)
+  const criteriaMap = new Map();
+  criteriaRows.forEach((row) => {
+    if (!criteriaMap.has(row.criterion_key)) {
+      criteriaMap.set(row.criterion_key, []);
+    }
+    if (row.section_key) {
+      criteriaMap.get(row.criterion_key).push(row.section_key);
+    }
+  });
+
+  if (!criteriaMap.size) {
+    // Legacy behavior when criteria / sections aren't defined yet
+    const criteriaKeys = Object.keys(value.scores || {});
+    const scoreValues = [];
+    criteriaKeys.forEach((key) => {
+      const raw = value.scores && typeof value.scores === 'object' ? value.scores[key] : undefined;
+      const s = normalizeScore(raw);
+      payload.scores[key] = s;
+      scoreValues.push(s);
+    });
+    payload.score = scoreValues.length
+      ? Math.round(scoreValues.reduce((a, b) => a + b, 0) / scoreValues.length)
+      : 0;
+    return payload;
+  }
+
+  const scoreValues = [];
+  criteriaMap.forEach((sections, criterionKey) => {
+    let score = 0;
+    if (sections.length) {
+      const rawSelected = value.chosen_sections && typeof value.chosen_sections === 'object'
+        ? value.chosen_sections[criterionKey]
+        : undefined;
+      const selectedSections = Array.isArray(rawSelected)
+        ? rawSelected
+        : rawSelected ? [rawSelected] : [];
+      const validSelected = selectedSections.filter((item) => typeof item === 'string' && sections.includes(item));
+      const weights = distributeWeights(sections.length);
+      score = validSelected.reduce((sum, sectionKey) => {
+        const index = sections.indexOf(sectionKey);
+        return index >= 0 ? sum + weights[index] : sum;
+      }, 0);
+      payload.chosen_sections[criterionKey] = validSelected;
+      payload.scores[criterionKey] = score;
+    } else {
+      const raw = value.scores && typeof value.scores === 'object' ? value.scores[criterionKey] : undefined;
+      score = normalizeScore(raw);
+      payload.scores[criterionKey] = score;
+    }
+    scoreValues.push(score);
+  });
+
+  payload.score = scoreValues.length
+    ? Math.round(scoreValues.reduce((a, b) => a + b, 0) / scoreValues.length)
     : 0;
 
   return payload;
@@ -178,13 +217,13 @@ router.post('/', authenticateToken, permit('super_admin', 'admin'), async (req, 
       return res.status(403).json({ error: 'Siz faqat belgilangan viloyatlar bo‘yicha xodim qo‘sha olasiz' });
     }
 
-    const examPayload = buildExamPayload(value);
+    const examPayload = await buildExamPayload(value);
 
     const insert = await safeQuery(
       `INSERT INTO employees (
-         full_name, position, region_id, district_id, score, scores
+         full_name, position, region_id, district_id, score, scores, chosen_sections
        )
-       VALUES ($1, $2, $3, $4, $5, $6)
+       VALUES ($1, $2, $3, $4, $5, $6, $7)
        RETURNING *`,
       [
         value.full_name,
@@ -193,6 +232,7 @@ router.post('/', authenticateToken, permit('super_admin', 'admin'), async (req, 
         value.district_id,
         examPayload.score,
         JSON.stringify(examPayload.scores),
+        JSON.stringify(examPayload.chosen_sections),
       ]
     );
 
@@ -240,13 +280,13 @@ router.put('/:id', authenticateToken, permit('super_admin', 'admin'), async (req
       }
     }
 
-    const examPayload = buildExamPayload(value);
+    const examPayload = await buildExamPayload(value);
 
     const update = await safeQuery(
       `UPDATE employees
-       SET full_name = $1, position = $2, region_id = $3, district_id = $4, score = $5, scores = $6,
+       SET full_name = $1, position = $2, region_id = $3, district_id = $4, score = $5, scores = $6, chosen_sections = $7,
            updated_at = NOW()
-       WHERE id = $7
+       WHERE id = $8
        RETURNING *`,
       [
         value.full_name,
@@ -255,6 +295,7 @@ router.put('/:id', authenticateToken, permit('super_admin', 'admin'), async (req
         value.district_id,
         examPayload.score,
         JSON.stringify(examPayload.scores),
+        JSON.stringify(examPayload.chosen_sections),
         req.params.id,
       ]
     );

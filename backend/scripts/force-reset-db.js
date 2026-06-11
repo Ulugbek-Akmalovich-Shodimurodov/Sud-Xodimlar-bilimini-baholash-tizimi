@@ -7,7 +7,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 async function forceResetDatabase() {
-  console.log('Force resetting database with new default data...\n');
+  console.log('Force resetting database to preserve only admin seed...\n');
 
   try {
     // 1. Drop and recreate database completely
@@ -113,7 +113,7 @@ DB_PASSWORD=admin`;
           console.log('\n   Database reset completed successfully!');
           console.log('   You can now test the frontend with real data.');
         } else {
-          console.log('\n   Warning: API shows no employees, check backend logs');
+          console.log('\n   Database reset completed successfully with admin-only seed. No employee data is present by design.');
         }
       } else {
         console.log('   API endpoints not responding correctly');

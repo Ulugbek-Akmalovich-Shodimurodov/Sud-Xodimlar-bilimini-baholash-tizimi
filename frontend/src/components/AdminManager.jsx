@@ -120,51 +120,51 @@ function AdminManager({ user }) {
 
   const roleBadgeClass = (role) =>
     role === 'super_admin'
-      ? 'bg-violet-100 text-violet-700'
-      : 'bg-blue-100 text-blue-700';
+      ? 'bg-indigo-100 text-indigo-700'
+      : 'bg-indigo-100 text-indigo-700';
 
   return (
     <div className="space-y-8">
-      <section className="relative overflow-hidden rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-7">
-        <div className="pointer-events-none absolute -right-16 bottom-0 h-48 w-80 rounded-tl-[120px] bg-indigo-50" />
-        <div className="pointer-events-none absolute right-24 top-10 h-16 w-16 rounded-full border-8 border-indigo-100" />
-        <div className="pointer-events-none absolute right-36 top-14 grid grid-cols-4 gap-1 opacity-50">
+      <section className="relative overflow-hidden rounded-3xl border border-indigo-100 bg-white p-6 shadow-sm sm:p-7">
+        <div className="pointer-events-none hidden lg:block absolute -right-16 bottom-0 h-48 w-80 rounded-tl-[120px] bg-indigo-50" />
+        <div className="pointer-events-none hidden lg:block absolute right-24 top-10 h-16 w-16 rounded-full border-8 border-slate-100" />
+        <div className="pointer-events-none hidden lg:grid absolute right-36 top-14 grid-cols-4 gap-1 opacity-50">
           {Array.from({ length: 16 }).map((_, i) => (
             <span key={i} className="h-1.5 w-1.5 rounded-full bg-indigo-200" />
           ))}
         </div>
 
         <div className="relative">
-          <div className="mb-6 flex items-start gap-4">
-            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-indigo-50 text-indigo-500">
+          <div className="mb-6 flex flex-col gap-4 lg:flex-row lg:items-start">
+            <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-2xl bg-indigo-50 text-indigo-500">
               <svg viewBox="0 0 24 24" className="h-7 w-7" fill="currentColor">
                 <path d="M12 12a4 4 0 100-8 4 4 0 000 8zm0 2c-4.2 0-8 2.1-8 4.8 0 .7.6 1.2 1.3 1.2h13.4c.7 0 1.3-.5 1.3-1.2 0-2.7-3.8-4.8-8-4.8z" />
               </svg>
             </div>
             <div>
               <h1 className="text-3xl font-semibold tracking-tight text-slate-900">Adminlarni boshqarish</h1>
-              <p className="mt-1 text-lg text-slate-600">Super admin uchun administratorlarni qo'shish, tahrirlash va o'chirish.</p>
+              <p className="mt-1 text-lg text-indigo-600">Super admin uchun administratorlarni qo'shish, tahrirlash va o'chirish.</p>
             </div>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-5">
             <div className="grid gap-4 md:grid-cols-2">
               <label className="space-y-2">
-                <span className="text-base text-slate-700">Foydalanuvchi nomi</span>
+                <span className="text-base text-indigo-700">Foydalanuvchi nomi</span>
                 <input
                   value={form.username}
                   onChange={(e) => setForm({ ...form, username: e.target.value })}
                   placeholder="superadmin"
                   pattern="[A-Za-z0-9_]+"
                   title="Foydalanuvchi nomi faqat lotin harflari, raqamlar va pastki chiziqdan iborat bo'lishi kerak"
-                  className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-lg"
+                  className="w-full rounded-2xl border border-indigo-100 bg-indigo-50 px-4 py-3 text-lg"
                   required
                 />
               </label>
 
               <label className="space-y-2">
-                <span className="text-base text-slate-700">Parol</span>
-                <div className="flex items-center rounded-2xl border border-slate-200 bg-slate-50">
+                <span className="text-base text-indigo-700">Parol</span>
+                <div className="flex items-center rounded-2xl border border-indigo-100 bg-indigo-50">
                   <input
                     type={showPassword ? 'text' : 'password'}
                     value={form.password}
@@ -176,7 +176,7 @@ function AdminManager({ user }) {
                   <button
                     type="button"
                     onClick={() => setShowPassword((prev) => !prev)}
-                    className="px-4 text-slate-500 hover:text-slate-700"
+                    className="px-4 text-indigo-500 hover:text-indigo-700"
                     aria-label="Parolni korsatish yoki yashirish"
                   >
                     {showPassword ? (
@@ -196,11 +196,11 @@ function AdminManager({ user }) {
 
             <div className="grid gap-4 md:grid-cols-[1fr_1fr_auto]">
               <label className="space-y-2">
-                <span className="text-base text-slate-700">Rol</span>
+                <span className="text-base text-indigo-700">Rol</span>
                 <select
                   value={form.role}
                   onChange={(e) => setForm({ ...form, role: e.target.value })}
-                  className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-lg"
+                  className="w-full rounded-2xl border border-indigo-100 bg-indigo-50 px-4 py-3 text-lg"
                 >
                   <option value="admin">Admin</option>
                   <option value="super_admin">Super Admin</option>
@@ -208,11 +208,11 @@ function AdminManager({ user }) {
               </label>
 
               <label className="space-y-2">
-                <span className="text-base text-slate-700">Viloyatni bittalab qo'shish</span>
+                <span className="text-base text-indigo-700">Viloyatni bittalab qo'shish</span>
                 <select
                   value={selectedRegionId}
                   onChange={(e) => setSelectedRegionId(e.target.value)}
-                  className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-lg"
+                  className="w-full rounded-2xl border border-indigo-100 bg-indigo-50 px-4 py-3 text-lg"
                 >
                   <option value="">Viloyatni tanlang</option>
                   {regions.map((region) => (
@@ -227,7 +227,7 @@ function AdminManager({ user }) {
                 <button
                   type="button"
                   onClick={addRegion}
-                  className="h-[52px] w-full rounded-2xl bg-[#0d2a7a] px-6 text-lg font-semibold text-white hover:bg-[#123596] md:w-auto"
+                  className="h-[52px] w-full rounded-2xl bg-indigo-700 px-6 text-lg font-semibold text-white hover:bg-indigo-900 md:w-auto"
                 >
                   Qo'shish
                 </button>
@@ -236,7 +236,7 @@ function AdminManager({ user }) {
 
             <div className="flex flex-wrap gap-2">
               {normalizeRegions(form.assigned_regions).length === 0 && (
-                <span className="text-base text-slate-500">Hech qanday viloyat tanlanmagan.</span>
+                <span className="text-base text-indigo-500">Hech qanday viloyat tanlanmagan.</span>
               )}
               {normalizeRegions(form.assigned_regions).map((regionId) => {
                 const region = regions.find((item) => item.id === regionId);
@@ -245,24 +245,24 @@ function AdminManager({ user }) {
                     key={regionId}
                     type="button"
                     onClick={() => removeRegion(regionId)}
-                    className="inline-flex items-center gap-2 rounded-full bg-blue-100 px-3 py-1.5 text-sm font-medium text-blue-700"
+                    className="inline-flex items-center gap-2 rounded-full bg-indigo-100 px-3 py-1.5 text-sm font-medium text-indigo-700"
                   >
                     {region?.name || `ID ${regionId}`}
-                    <span className="rounded-full bg-blue-200 px-2 text-xs">x</span>
+                    <span className="rounded-full bg-indigo-200 px-2 text-xs">x</span>
                   </button>
                 );
               })}
             </div>
 
             <div className="flex flex-wrap gap-3">
-              <button className="flex h-12 w-full items-center justify-center rounded-2xl bg-[#173f9f] px-6 text-xl font-semibold text-white hover:bg-[#1e4dbc] md:w-auto md:min-w-[300px]">
+              <button className="flex h-12 w-full items-center justify-center rounded-2xl bg-indigo-700 px-6 text-xl font-semibold text-white hover:bg-indigo-900 md:w-auto md:min-w-[300px]">
                 {editingAdminId ? 'Yangilash' : 'Saqlash'}
               </button>
               {editingAdminId && (
                 <button
                   type="button"
                   onClick={resetForm}
-                  className="h-12 rounded-2xl border border-slate-200 bg-white px-6 text-base font-medium text-slate-700 hover:bg-slate-50"
+                  className="h-12 rounded-2xl border border-indigo-100 bg-white px-6 text-base font-medium text-indigo-700 hover:bg-indigo-50"
                 >
                   Bekor qilish
                 </button>
@@ -270,12 +270,12 @@ function AdminManager({ user }) {
             </div>
           </form>
 
-          {message && <div className="mt-4 rounded-2xl bg-emerald-100 p-4 text-emerald-700">{message}</div>}
+          {message && <div className="mt-4 rounded-2xl bg-indigo-100 p-4 text-slate-900">{message}</div>}
           {error && <div className="mt-4 rounded-2xl bg-red-100 p-4 text-red-700">{error}</div>}
         </div>
       </section>
 
-      <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-7">
+      <section className="rounded-3xl border border-indigo-100 bg-white p-6 shadow-sm sm:p-7">
         <div className="mb-5 flex items-center gap-4">
           <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-indigo-50 text-indigo-500">
             <svg viewBox="0 0 24 24" className="h-7 w-7" fill="currentColor">
@@ -284,14 +284,14 @@ function AdminManager({ user }) {
           </div>
           <div>
             <h2 className="text-3xl font-semibold tracking-tight text-slate-900">Adminlar ro'yxati</h2>
-            <p className="mt-1 text-lg text-slate-600">Tizimdagi barcha administratorlar</p>
+            <p className="mt-1 text-lg text-indigo-600">Tizimdagi barcha administratorlar</p>
           </div>
         </div>
 
         <div className="overflow-x-auto">
           <table className="min-w-full text-left">
             <thead>
-              <tr className="border-b border-slate-200 text-sm text-slate-500">
+              <tr className="border-b border-indigo-100 text-sm text-indigo-500">
                 <th className="px-2 py-3 font-medium">№</th>
                 <th className="px-2 py-3 font-medium">Foydalanuvchi</th>
                 <th className="px-2 py-3 font-medium">Rol</th>
@@ -302,13 +302,13 @@ function AdminManager({ user }) {
             <tbody>
               {admins.map((admin, index) => {
                 const firstLetter = (admin.username || 'A').charAt(0).toUpperCase();
-                const palette = ['bg-blue-900', 'bg-emerald-600', 'bg-orange-500', 'bg-purple-600', 'bg-cyan-600'];
+                const palette = ['bg-indigo-900', 'bg-indigo-700', 'bg-indigo-600', 'bg-indigo-500', 'bg-indigo-400'];
                 const avatarBg = palette[index % palette.length];
 
                 return (
                   <tr key={admin.id} className="border-b border-slate-100">
                     <td className="px-2 py-3">
-                      <span className="inline-flex h-10 min-w-10 items-center justify-center rounded-xl bg-slate-100 px-2 text-base font-semibold text-slate-600">
+                      <span className="inline-flex h-10 min-w-10 items-center justify-center rounded-xl bg-indigo-100 px-2 text-base font-semibold text-indigo-600">
                         {String(index + 1).padStart(2, '0')}
                       </span>
                     </td>
@@ -319,7 +319,7 @@ function AdminManager({ user }) {
                         </span>
                         <div>
                           <div className="text-2xl font-medium leading-tight text-slate-900">{admin.username}</div>
-                          <span className="mt-1 inline-flex rounded-full bg-blue-100 px-3 py-1 text-sm text-blue-700">
+                          <span className="mt-1 inline-flex rounded-full bg-indigo-100 px-3 py-1 text-sm text-slate-900">
                             {regionNames(admin.assigned_regions)}
                           </span>
                         </div>
@@ -330,14 +330,14 @@ function AdminManager({ user }) {
                         {admin.role === 'super_admin' ? 'Super Admin' : 'Admin'}
                       </span>
                     </td>
-                    <td className="px-2 py-3 text-lg text-slate-700">{regionNames(admin.assigned_regions)}</td>
+                    <td className="px-2 py-3 text-lg text-indigo-700">{regionNames(admin.assigned_regions)}</td>
                     <td className="px-2 py-3">
                       <div className="flex justify-end gap-2">
                         <button
                           type="button"
                           onClick={() => loadAdminForEdit(admin)}
                           aria-label="Tahrirlash"
-                          className="rounded-full border border-slate-300 bg-slate-100 p-3 text-slate-700 hover:bg-slate-200"
+                          className="rounded-full border border-indigo-200 bg-indigo-100 p-3 text-indigo-700 hover:bg-indigo-200"
                         >
                           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4">
                             <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM21.41 7.34a1 1 0 000-1.41l-3.34-3.34a1 1 0 00-1.41 0l-2.12 2.12 4.75 4.75 2.12-2.12z" />
@@ -369,3 +369,4 @@ function AdminManager({ user }) {
 }
 
 export default AdminManager;
+

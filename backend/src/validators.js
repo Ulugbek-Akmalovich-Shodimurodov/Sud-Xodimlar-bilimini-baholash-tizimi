@@ -1,10 +1,11 @@
 import Joi from 'joi';
 
-const latinTextPattern = /^[A-Za-zÀ-ÖØ-öø-ÿ' \-]+$/;
+const latinTextPattern = /^[A-Za-zÀ-ÖØ-öø-ÿ ,.!?"'()\-]+$/;
+const latinKeyPattern = /^[A-Za-zÀ-ÖØ-öø-ÿ0-9 ,.!?"'()\-]+$/;
 const latinIdentifierPattern = /^[A-Za-z0-9_]+$/;
 
 const latinText = Joi.string().pattern(latinTextPattern).min(2).required().messages({
-  'string.pattern.base': 'Faqat lotin alifbosida yozing',
+  'string.pattern.base': 'Faqat lotin harflari, bo‘shliq va belgilardan foydalaning',
   'string.empty': 'Bu maydon bo‘sh bo‘la olmaydi',
 });
 
@@ -45,55 +46,48 @@ export const positionSchema = Joi.object({
   name: latinText,
 });
 
+const sectionSchema = Joi.object({
+  id: Joi.number().integer().optional(),
+  key: Joi.string().pattern(latinIdentifierPattern).optional(),
+  label: Joi.string().min(1).required(),
+  sort_order: Joi.number().integer().min(0).default(0),
+});
+
 export const criteriaSchema = Joi.object({
-  key: latinIdentifier,
+  key: Joi.string().pattern(latinKeyPattern).min(2).required().messages({
+    'string.pattern.base': 'Kriteriya kaliti faqat lotin harflari, raqamlar va maxsus belgilardan iborat bo‘lishi mumkin',
+    'string.empty': 'Kriteriya kaliti talab qilinadi',
+  }),
   label: Joi.string().min(2).required(),
   short_label: Joi.string().min(1).required(),
   sort_order: Joi.number().integer().min(0).default(0),
+  sections: Joi.array().items(sectionSchema).default([]),
 });
 
 export const employeeSchema = Joi.object({
   full_name: Joi.string().pattern(latinTextPattern).min(3).required().messages({
-    'string.pattern.base': 'F.I.O faqat lotin harflari va bo‘shliqdan iborat bo‘lishi kerak',
+    'string.pattern.base': 'F.I.O faqat lotin harflari, bo‘shliq va maxsus belgilarni o‘z ichiga olishi mumkin',
     'string.empty': 'F.I.O talab qilinadi',
   }),
   position: Joi.string().pattern(latinTextPattern).min(2).required().messages({
-    'string.pattern.base': 'Lavozim faqat lotin harflari va bo‘shliqdan iborat bo‘lishi kerak',
+    'string.pattern.base': 'Lavozim faqat lotin harflari, bo‘shliq va maxsus belgilarni o‘z ichiga olishi mumkin',
     'string.empty': 'Lavozim talab qilinadi',
   }),
   region_id: Joi.number().integer().required(),
   district_id: Joi.number().integer().required(),
   scores: Joi.object().pattern(
-    Joi.string().pattern(latinIdentifierPattern),
+    Joi.string().min(1),
     Joi.alternatives().try(
       Joi.number().integer().min(0).max(100),
       Joi.string().allow(''),
       Joi.allow(null)
     )
   ).optional(),
-  konstitutsiya_score: Joi.alternatives().try(
-    Joi.number().integer().min(0).max(100),
-    Joi.string().allow(''),
-    Joi.allow(null)
-  ).optional(),
-  kodeks_score: Joi.alternatives().try(
-    Joi.number().integer().min(0).max(100),
-    Joi.string().allow(''),
-    Joi.allow(null)
-  ).optional(),
-  protsessual_kodeks_score: Joi.alternatives().try(
-    Joi.number().integer().min(0).max(100),
-    Joi.string().allow(''),
-    Joi.allow(null)
-  ).optional(),
-  akt_sohasi_score: Joi.alternatives().try(
-    Joi.number().integer().min(0).max(100),
-    Joi.string().allow(''),
-    Joi.allow(null)
-  ).optional(),
-  odob_axloq_score: Joi.alternatives().try(
-    Joi.number().integer().min(0).max(100),
-    Joi.string().allow(''),
-    Joi.allow(null)
+  chosen_sections: Joi.object().pattern(
+    Joi.string().min(1),
+    Joi.alternatives().try(
+      Joi.string().min(1),
+      Joi.array().items(Joi.string().min(1))
+    )
   ).optional(),
 });

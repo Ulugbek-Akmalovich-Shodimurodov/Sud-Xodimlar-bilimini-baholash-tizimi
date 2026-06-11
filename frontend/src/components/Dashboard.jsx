@@ -34,12 +34,15 @@ function Dashboard({ user }) {
     return [...stats.districts].sort((a, b) => Number(b.average_score) - Number(a.average_score))[0];
   }, [stats]);
 
+  const regionColors = ['#0ea5e9', '#8b5cf6', '#f59e0b', '#22c55e', '#ec4899'];
+  const districtColors = ['#fb7185', '#38bdf8', '#a855f7', '#f97316', '#14b8a6'];
+
   if (!user) {
     return (
-      <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
-        <h1 className="text-2xl font-semibold">Admin panel</h1>
-        <p className="mt-4 text-slate-600">Siz tizimga kirmagansiz. Iltimos, kirish sahifasiga o'ting.</p>
-        <Link to="/login" className="mt-6 inline-block rounded-2xl bg-[#173f9f] px-5 py-3 text-white">
+      <div className="rounded-3xl border border-indigo-100 bg-white p-8 shadow-sm">
+        <h1 className="text-2xl font-semibold text-slate-900">Admin panel</h1>
+        <p className="mt-4 text-indigo-600">Siz tizimga kirmagansiz. Iltimos, kirish sahifasiga o'ting.</p>
+        <Link to="/login" className="mt-6 inline-block rounded-2xl bg-indigo-900 px-5 py-3 text-white hover:bg-indigo-700">
           Kirish
         </Link>
       </div>
@@ -51,21 +54,21 @@ function Dashboard({ user }) {
       {error && <div className="rounded-2xl bg-red-100 p-4 text-red-700">{error}</div>}
 
       <section className="grid gap-4 lg:grid-cols-3">
-        <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+        <div className="rounded-3xl border border-indigo-100 bg-white p-6 shadow-sm">
           <div className="flex items-center justify-between gap-4">
             <div className="flex items-center gap-4">
-              <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-blue-100 text-blue-700">
+              <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-indigo-100 text-indigo-900">
                 <svg viewBox="0 0 24 24" className="h-8 w-8" fill="currentColor">
                   <path d="M16 11c1.66 0 3-1.79 3-4s-1.34-4-3-4-3 1.79-3 4 1.34 4 3 4zM8 11c1.66 0 3-1.79 3-4S9.66 3 8 3 5 4.79 5 7s1.34 4 3 4zm0 2c-2.67 0-8 1.34-8 4v2h10v-2c0-1.52.58-2.82 1.65-3.87C10.38 13.04 9.14 13 8 13zm8 0c-.29 0-.62.02-.97.05 1.12 1.02 1.97 2.38 1.97 3.95v2h7v-2c0-2.66-5.33-4-8-4z" />
                 </svg>
               </div>
               <div>
-                <p className="text-sm uppercase tracking-wide text-slate-500">Umumiy xodimlar</p>
+                <p className="text-sm uppercase tracking-wide text-indigo-600">Umumiy xodimlar</p>
                 <p className="mt-1 text-5xl font-semibold text-slate-900">{stats ? stats.summary.total_employees : '...'}</p>
-                <p className="mt-1 text-slate-600">Tizimdagi jami xodimlar</p>
+                <p className="mt-1 text-indigo-600">Tizimdagi jami xodimlar</p>
               </div>
             </div>
-            <div className="hidden text-blue-500 lg:block">
+            <div className="hidden text-indigo-500 lg:block">
               <svg viewBox="0 0 120 40" className="h-10 w-24" fill="none">
                 <path d="M2 22c14-18 24 16 38 0s22-20 36-4 24 4 42-8" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
               </svg>
@@ -73,21 +76,21 @@ function Dashboard({ user }) {
           </div>
         </div>
 
-        <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+        <div className="rounded-3xl border border-indigo-100 bg-white p-6 shadow-sm">
           <div className="flex items-center justify-between gap-4">
             <div className="flex items-center gap-4">
-              <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-600">
+              <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-900">
                 <svg viewBox="0 0 24 24" className="h-8 w-8" fill="currentColor">
                   <path d="M4 17l6-6 4 4 6-6v4h2V5h-8v2h4l-4 4-4-4-8 8z" />
                 </svg>
               </div>
               <div>
-                <p className="text-sm uppercase tracking-wide text-slate-500">O'rtacha natija</p>
+                <p className="text-sm uppercase tracking-wide text-emerald-600">O'rtacha natija</p>
                 <p className="mt-1 text-5xl font-semibold text-slate-900">{stats ? `${avgScore}%` : '...'}</p>
-                <p className="mt-1 text-slate-600">O'rtacha baholash natijasi</p>
+                <p className="mt-1 text-indigo-600">O'rtacha baholash natijasi</p>
               </div>
             </div>
-            <div className="hidden text-emerald-500 lg:block">
+            <div className="hidden text-indigo-500 lg:block">
               <svg viewBox="0 0 120 40" className="h-10 w-24" fill="none">
                 <path d="M2 22c14-18 24 16 38 0s22-20 36-4 24 4 42-8" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
               </svg>
@@ -95,18 +98,18 @@ function Dashboard({ user }) {
           </div>
         </div>
 
-        <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+        <div className="rounded-3xl border border-indigo-100 bg-white p-6 shadow-sm">
           <div className="flex items-center justify-between gap-4">
             <div className="flex items-center gap-4">
-              <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-violet-100 text-violet-600">
+              <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-amber-100 text-amber-900">
                 <svg viewBox="0 0 24 24" className="h-8 w-8" fill="currentColor">
                   <path d="M12 2l7 3v6c0 5-3.5 9-7 11-3.5-2-7-6-7-11V5l7-3zm0 4l-1.2 2.4L8 9l2 1.9-.5 2.8 2.5-1.3 2.5 1.3-.5-2.8 2-1.9-2.8-.6L12 6z" />
                 </svg>
               </div>
               <div>
-                <p className="text-sm uppercase tracking-wide text-slate-500">Rol</p>
+                <p className="text-sm uppercase tracking-wide text-amber-600">Rol</p>
                 <p className="mt-1 text-5xl font-semibold text-slate-900">{user.role === 'super_admin' ? 'Super Admin' : 'Admin'}</p>
-                <p className="mt-1 text-slate-600">Sizning joriy rolingiz</p>
+                <p className="mt-1 text-indigo-600">Sizning joriy rolingiz</p>
               </div>
             </div>
           </div>
@@ -115,17 +118,17 @@ function Dashboard({ user }) {
 
 
       <section className="grid gap-6 xl:grid-cols-2">
-        <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+        <div className="rounded-3xl border border-indigo-100 bg-white p-6 shadow-sm">
           <div className="mb-4 flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-100 text-blue-700">
+              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-cyan-100 text-cyan-900">
                 <svg viewBox="0 0 24 24" className="h-7 w-7" fill="currentColor">
                   <path d="M5 3h3v18H5V3zm5 6h3v12h-3V9zm5-4h3v16h-3V5z" />
                 </svg>
               </div>
-              <h2 className="text-2xl font-semibold tracking-tight text-[#0f2d74]">Viloyatlar bo'yicha o'rtacha natijalar</h2>
+              <h2 className="text-2xl font-semibold tracking-tight text-slate-900">Viloyatlar bo'yicha o'rtacha natijalar</h2>
             </div>
-            <select className="rounded-2xl border border-slate-200 bg-white px-4 py-2 text-slate-600">
+            <select className="rounded-2xl border border-indigo-100 bg-white px-4 py-2 text-indigo-700">
               <option>Ustunlik</option>
             </select>
           </div>
@@ -136,38 +139,38 @@ function Dashboard({ user }) {
                 <BarChart data={stats.regions} margin={{ top: 10, right: 10, left: -10, bottom: 20 }}>
                   <CartesianGrid strokeDasharray="4 4" stroke="#e2e8f0" />
                   <XAxis dataKey="name" tick={{ fontSize: 11, fill: '#475569' }} />
-                  <YAxis domain={[0, 100]} />
-                  <Tooltip formatter={(value) => `${Math.round(Number(value))}%`} />
+                  <YAxis domain={[0, 100]} tick={{ fill: '#475569' }} />
+                  <Tooltip formatter={(value) => `${Math.round(Number(value))}%`} wrapperStyle={{ backgroundColor: '#ffffff', borderColor: '#cbd5e1' }} labelStyle={{ color: '#0f172a' }} contentStyle={{ backgroundColor: '#ffffff', borderColor: '#cbd5e1' }} />
                   <Bar dataKey="average_score" radius={[8, 8, 0, 0]}>
                     {stats.regions.map((_, idx) => (
-                      <Cell key={idx} fill="#3b82f6" />
+                      <Cell key={idx} fill={regionColors[idx % regionColors.length]} />
                     ))}
                   </Bar>
                 </BarChart>
               </ResponsiveContainer>
             ) : (
-              <div className="mt-8 text-slate-500">Yuklanmoqda...</div>
+              <div className="mt-8 text-indigo-500">Yuklanmoqda...</div>
             )}
           </div>
 
-          <div className="mt-4 rounded-2xl bg-blue-50 px-4 py-3 text-base text-blue-700">
+          <div className="mt-4 rounded-2xl bg-indigo-50 px-4 py-3 text-base text-indigo-700">
             {topRegion
               ? `${topRegion.name} eng yuqori o'rtacha natijaga ega (${Math.round(Number(topRegion.average_score))}%).`
               : 'Ma\'lumot mavjud emas.'}
           </div>
         </div>
 
-        <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+        <div className="rounded-3xl border border-indigo-100 bg-white p-6 shadow-sm">
           <div className="mb-4 flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-700">
+              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-fuchsia-100 text-fuchsia-900">
                 <svg viewBox="0 0 24 24" className="h-7 w-7" fill="currentColor">
                   <path d="M5 10h3v11H5V10zm5-7h3v18h-3V3zm5 4h3v14h-3V7z" />
                 </svg>
               </div>
-              <h2 className="text-2xl font-semibold tracking-tight text-[#0f2d74]">Tumanlar bo'yicha o'rtacha natijalar</h2>
+              <h2 className="text-2xl font-semibold tracking-tight text-slate-900">Tumanlar bo'yicha o'rtacha natijalar</h2>
             </div>
-            <select className="rounded-2xl border border-slate-200 bg-white px-4 py-2 text-slate-600">
+            <select className="rounded-2xl border border-indigo-100 bg-white px-4 py-2 text-indigo-700">
               <option>Ustunlik</option>
             </select>
           </div>
@@ -178,21 +181,21 @@ function Dashboard({ user }) {
                 <BarChart data={stats.districts} margin={{ top: 10, right: 10, left: -10, bottom: 20 }}>
                   <CartesianGrid strokeDasharray="4 4" stroke="#e2e8f0" />
                   <XAxis dataKey="name" tick={{ fontSize: 11, fill: '#475569' }} />
-                  <YAxis domain={[0, 100]} />
-                  <Tooltip formatter={(value) => `${Math.round(Number(value))}%`} />
+                  <YAxis domain={[0, 100]} tick={{ fill: '#475569' }} />
+                  <Tooltip formatter={(value) => `${Math.round(Number(value))}%`} wrapperStyle={{ backgroundColor: '#ffffff', borderColor: '#cbd5e1' }} labelStyle={{ color: '#0f172a' }} contentStyle={{ backgroundColor: '#ffffff', borderColor: '#cbd5e1' }} />
                   <Bar dataKey="average_score" radius={[8, 8, 0, 0]}>
                     {stats.districts.map((_, idx) => (
-                      <Cell key={idx} fill="#22c55e" />
+                      <Cell key={idx} fill={districtColors[idx % districtColors.length]} />
                     ))}
                   </Bar>
                 </BarChart>
               </ResponsiveContainer>
             ) : (
-              <div className="mt-8 text-slate-500">Yuklanmoqda...</div>
+              <div className="mt-8 text-indigo-500">Yuklanmoqda...</div>
             )}
           </div>
 
-          <div className="mt-4 rounded-2xl bg-emerald-50 px-4 py-3 text-base text-emerald-700">
+          <div className="mt-4 rounded-2xl bg-indigo-50 px-4 py-3 text-base text-indigo-700">
             {topDistrict
               ? `${topDistrict.name} eng yuqori natijaga ega (${Math.round(Number(topDistrict.average_score))}%).`
               : 'Ma\'lumot mavjud emas.'}
@@ -201,42 +204,42 @@ function Dashboard({ user }) {
       </section>
 
       <section className="grid gap-6 lg:grid-cols-2">
-        <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+        <div className="rounded-3xl border border-indigo-100 bg-white p-6 shadow-sm">
           <div className="mb-4 flex items-center gap-3">
-            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-700">
+            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-indigo-100 text-slate-900">
               <svg viewBox="0 0 24 24" className="h-7 w-7" fill="currentColor">
                 <path d="M12 2l7 3v6c0 5-3.5 9-7 11-3.5-2-7-6-7-11V5l7-3zm0 4l-1.2 2.4L8 9l2 1.9-.5 2.8 2.5-1.3 2.5 1.3-.5-2.8 2-1.9-2.8-.6L12 6z" />
               </svg>
             </div>
-            <h2 className="text-2xl font-semibold tracking-tight text-[#0f2d74]">Yuqori natijali xodimlar</h2>
+            <h2 className="text-2xl font-semibold tracking-tight text-slate-900">Yuqori natijali xodimlar</h2>
           </div>
           <div className="space-y-3">
             {stats?.top?.best?.length > 0 ? (
               stats.top.best.map((employee, idx) => (
-                <div key={idx} className="flex items-center justify-between rounded-2xl bg-emerald-50 p-4">
+                <div key={idx} className="flex items-center justify-between rounded-2xl bg-indigo-50 p-4">
                   <div className="flex items-center gap-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-600 text-white font-semibold">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-amber-500 text-white font-semibold">
                       {idx + 1}
                     </div>
                     <div>
                       <p className="font-semibold text-slate-900">{employee.full_name}</p>
-                      <p className="text-sm text-slate-600">{employee.position}</p>
+                      <p className="text-sm text-indigo-600">{employee.position}</p>
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className="text-2xl font-bold text-emerald-600">{employee.score}%</p>
-                    <p className="text-xs text-slate-500">Natija</p>
+                    <p className="text-2xl font-bold text-slate-900">{employee.score}%</p>
+                    <p className="text-xs text-indigo-600">Natija</p>
                   </div>
                 </div>
               ))
             ) : (
-              <div className="rounded-2xl bg-slate-50 p-8 text-center text-slate-500">
+              <div className="rounded-2xl bg-indigo-50 p-8 text-center text-indigo-600">
                 <p>Ma'lumot mavjud emas</p>
               </div>
             )}
           </div>
           <div className="mt-4">
-            <Link to="/admin/employees" className="inline-flex items-center gap-2 rounded-2xl bg-emerald-600 px-4 py-2 text-white hover:bg-emerald-700">
+            <Link to="/admin/employees" className="inline-flex items-center gap-2 rounded-2xl bg-indigo-900 px-4 py-2 text-white hover:bg-indigo-700">
               <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor">
                 <path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14l-5-5 1.41-1.41L12 14.17l3.59-3.58L17 12l-5 5z" />
               </svg>
@@ -245,36 +248,36 @@ function Dashboard({ user }) {
           </div>
         </div>
 
-        <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+        <div className="rounded-3xl border border-indigo-100 bg-white p-6 shadow-sm">
           <div className="mb-4 flex items-center gap-3">
-            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-red-100 text-red-700">
+            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-red-500 text-white">
               <svg viewBox="0 0 24 24" className="h-7 w-7" fill="currentColor">
                 <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
               </svg>
             </div>
-            <h2 className="text-2xl font-semibold tracking-tight text-[#0f2d74]">Past natijali xodimlar</h2>
+            <h2 className="text-2xl font-semibold tracking-tight text-slate-900">Past natijali xodimlar</h2>
           </div>
           <div className="space-y-3">
             {stats?.top?.worst?.length > 0 ? (
               stats.top.worst.map((employee, idx) => (
-                <div key={idx} className="flex items-center justify-between rounded-2xl bg-red-50 p-4">
+                <div key={idx} className="flex items-center justify-between rounded-2xl bg-indigo-50 p-4">
                   <div className="flex items-center gap-3">
                     <div className="flex h-10 w-10 items-center justify-center rounded-full bg-red-600 text-white font-semibold">
                       {idx + 1}
                     </div>
                     <div>
                       <p className="font-semibold text-slate-900">{employee.full_name}</p>
-                      <p className="text-sm text-slate-600">{employee.position}</p>
+                      <p className="text-sm text-indigo-600">{employee.position}</p>
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className="text-2xl font-bold text-red-600">{employee.score}%</p>
-                    <p className="text-xs text-slate-500">Natija</p>
+                    <p className="text-2xl font-bold text-red-500">{employee.score}%</p>
+                    <p className="text-xs text-indigo-600">Natija</p>
                   </div>
                 </div>
               ))
             ) : (
-              <div className="rounded-2xl bg-slate-50 p-8 text-center text-slate-500">
+              <div className="rounded-2xl bg-indigo-50 p-8 text-center text-indigo-600">
                 <p>Ma'lumot mavjud emas</p>
               </div>
             )}
@@ -290,24 +293,24 @@ function Dashboard({ user }) {
         </div>
       </section>
 
-      <section className="relative overflow-hidden rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-        <div className="pointer-events-none absolute -right-20 bottom-0 h-44 w-96 rounded-tl-[120px] bg-blue-100/70" />
+      <section className="relative overflow-hidden rounded-3xl border border-indigo-100 bg-white p-6 shadow-sm">
+        <div className="pointer-events-none hidden md:block absolute -right-20 bottom-0 h-44 w-96 rounded-tl-[120px] bg-indigo-100/70" />
         <div className="relative flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div className="flex items-start gap-4">
-            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-blue-700 text-white">
+            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-indigo-900 text-white">
               <svg viewBox="0 0 24 24" className="h-8 w-8" fill="currentColor">
                 <path d="M11 2v10h10A10 10 0 0011 2zm-1 1.05A10 10 0 1021 13H10V3.05z" />
               </svg>
             </div>
             <div>
-              <h3 className="text-2xl font-semibold tracking-tight text-[#0f2d74]">Umumiy tahlil</h3>
-              <p className="mt-2 text-lg text-slate-700">
+              <h3 className="text-2xl font-semibold tracking-tight text-slate-900">Umumiy tahlil</h3>
+              <p className="mt-2 text-lg text-indigo-600">
                 Tizimdagi o'rtacha natija {avgScore}% ni tashkil etmoqda. {topRegion ? `${topRegion.name} viloyati` : 'Eng yaxshi hudud'} va{' '}
                 {topDistrict ? `${topDistrict.name}` : 'yetakchi tuman'} eng yaxshi natijalarni ko'rsatmoqda.
               </p>
             </div>
           </div>
-          <div className="hidden text-blue-700 md:block">
+          <div className="hidden text-indigo-600 md:block">
             <svg viewBox="0 0 120 80" className="h-20 w-32" fill="none">
               <rect x="4" y="10" width="70" height="50" rx="8" stroke="currentColor" strokeWidth="3" />
               <path d="M12 50h6V32h-6v18zm12 0h6V25h-6v25zm12 0h6V36h-6v14zm12 0h6V20h-6v30z" fill="currentColor" />
@@ -322,3 +325,4 @@ function Dashboard({ user }) {
 }
 
 export default Dashboard;
+

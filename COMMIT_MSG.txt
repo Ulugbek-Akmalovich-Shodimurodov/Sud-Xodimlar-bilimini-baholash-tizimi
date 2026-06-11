@@ -1,0 +1,1 @@
+Make employee DB queries resilient: auto-run init DB and retry on missing scores/criteria
