@@ -4,6 +4,7 @@ import bcrypt from 'bcrypt';
 import dotenv from 'dotenv';
 import { query } from '../db.js';
 import { loginSchema } from '../validators.js';
+import { normalizePermissions } from '../permissions.js';
 
 dotenv.config();
 const router = express.Router();
@@ -16,7 +17,7 @@ router.post('/login', async (req, res, next) => {
 
     const { username, password } = value;
     const result = await query(
-      'SELECT id, username, password, role, assigned_regions, status FROM admins WHERE username = $1',
+      'SELECT id, username, password, role, assigned_regions, permissions, status FROM admins WHERE username = $1',
       [username]
     );
     const admin = result.rows[0];
@@ -43,6 +44,7 @@ router.post('/login', async (req, res, next) => {
         username: admin.username,
         role: admin.role,
         assigned_regions: admin.assigned_regions,
+        permissions: normalizePermissions(admin.permissions, admin.role),
         status: admin.status,
       },
     });

@@ -1,9 +1,10 @@
 import express from 'express';
 import bcrypt from 'bcrypt';
 import { query } from '../db.js';
-import { authenticateToken, permit } from '../middleware/auth.js';
+import { authenticateToken, permitPermission } from '../middleware/auth.js';
 import { adminSchema, adminUpdateSchema } from '../validators.js';
 import { logAdminAction, getEntityName, getClientInfo } from '../utils/logger.js';
+import { normalizePermissions, PERMISSIONS } from '../permissions.js';
 
 const router = express.Router();
 const SALT_ROUNDS = 10;
@@ -23,6 +24,10 @@ function normalizeRegions(value, role) {
   return Array.isArray(value)
     ? [...new Set(value.map((item) => Number(item)).filter((item) => Number.isFinite(item)))]
     : [];
+}
+
+function permissionsForSave(value, role) {
+  return normalizePermissions(value, role);
 }
 
 async function assertSuperAdminSafety({ targetId, actorId, nextRole, nextStatus, operation }) {
@@ -59,7 +64,7 @@ async function assertSuperAdminSafety({ targetId, actorId, nextRole, nextStatus,
   return admin;
 }
 
-router.get('/', authenticateToken, permit('super_admin'), async (req, res, next) => {
+router.get('/', authenticateToken, permitPermission(PERMISSIONS.ADMINS_MANAGE), async (req, res, next) => {
   try {
     const result = await query(`
       SELECT
@@ -67,6 +72,7 @@ router.get('/', authenticateToken, permit('super_admin'), async (req, res, next)
         admins.username,
         admins.role,
         admins.assigned_regions,
+        admins.permissions,
         admins.status,
         admins.last_login_at,
         admins.created_at,
@@ -80,6 +86,7 @@ router.get('/', authenticateToken, permit('super_admin'), async (req, res, next)
 
     res.json(result.rows.map((admin) => ({
       ...admin,
+      permissions: normalizePermissions(admin.permissions, admin.role),
       activity_count: Number(admin.activity_count || 0),
     })));
   } catch (err) {
@@ -87,7 +94,7 @@ router.get('/', authenticateToken, permit('super_admin'), async (req, res, next)
   }
 });
 
-router.post('/', authenticateToken, permit('super_admin'), async (req, res, next) => {
+router.post('/', authenticateToken, permitPermission(PERMISSIONS.ADMINS_MANAGE), async (req, res, next) => {
   try {
     const { error, value } = adminSchema.validate(req.body);
     if (error) return res.status(400).json({ error: error.message });
@@ -95,10 +102,17 @@ router.post('/', authenticateToken, permit('super_admin'), async (req, res, next
     const assignedRegions = normalizeRegions(value.assigned_regions, value.role);
     const hashedPassword = await bcrypt.hash(value.password, SALT_ROUNDS);
     const insert = await query(
-      `INSERT INTO admins (username, password, role, assigned_regions, status)
-       VALUES ($1, $2, $3, $4::jsonb, $5)
-       RETURNING id, username, role, assigned_regions, status, last_login_at, created_at, updated_at`,
-      [value.username, hashedPassword, value.role, JSON.stringify(assignedRegions), value.status || 'active']
+      `INSERT INTO admins (username, password, role, assigned_regions, permissions, status)
+       VALUES ($1, $2, $3, $4::jsonb, $5::jsonb, $6)
+       RETURNING id, username, role, assigned_regions, permissions, status, last_login_at, created_at, updated_at`,
+      [
+        value.username,
+        hashedPassword,
+        value.role,
+        JSON.stringify(assignedRegions),
+        JSON.stringify(permissionsForSave(value.permissions, value.role)),
+        value.status || 'active',
+      ]
     );
 
     const clientInfo = getClientInfo(req);
@@ -119,10 +133,10 @@ router.post('/', authenticateToken, permit('super_admin'), async (req, res, next
   }
 });
 
-router.put('/:id', authenticateToken, permit('super_admin'), async (req, res, next) => {
+router.put('/:id', authenticateToken, permitPermission(PERMISSIONS.ADMINS_MANAGE), async (req, res, next) => {
   try {
     const oldAdminResult = await query(
-      'SELECT id, username, role, assigned_regions, status, last_login_at, created_at, updated_at FROM admins WHERE id = $1',
+      'SELECT id, username, role, assigned_regions, permissions, status, last_login_at, created_at, updated_at FROM admins WHERE id = $1',
       [req.params.id]
     );
     const oldData = oldAdminResult.rows[0];
@@ -146,14 +160,15 @@ router.put('/:id', authenticateToken, permit('super_admin'), async (req, res, ne
 
     const update = await query(
       `UPDATE admins
-       SET username = $1, password = $2, role = $3, assigned_regions = $4::jsonb, status = $5, updated_at = NOW()
-       WHERE id = $6
-       RETURNING id, username, role, assigned_regions, status, last_login_at, created_at, updated_at`,
+       SET username = $1, password = $2, role = $3, assigned_regions = $4::jsonb, permissions = $5::jsonb, status = $6, updated_at = NOW()
+       WHERE id = $7
+       RETURNING id, username, role, assigned_regions, permissions, status, last_login_at, created_at, updated_at`,
       [
         value.username,
         passwordToSave,
         value.role,
         JSON.stringify(assignedRegions),
+        JSON.stringify(permissionsForSave(value.permissions, value.role)),
         value.status || 'active',
         req.params.id,
       ]
@@ -179,7 +194,7 @@ router.put('/:id', authenticateToken, permit('super_admin'), async (req, res, ne
   }
 });
 
-router.put('/:id/password', authenticateToken, permit('super_admin'), async (req, res, next) => {
+router.put('/:id/password', authenticateToken, permitPermission(PERMISSIONS.ADMINS_MANAGE), async (req, res, next) => {
   try {
     const password = String(req.body?.password || '');
     if (password.length < 6) {
@@ -187,7 +202,7 @@ router.put('/:id/password', authenticateToken, permit('super_admin'), async (req
     }
 
     const oldAdminResult = await query(
-      'SELECT id, username, role, assigned_regions, status FROM admins WHERE id = $1',
+      'SELECT id, username, role, assigned_regions, permissions, status FROM admins WHERE id = $1',
       [req.params.id]
     );
     const oldData = oldAdminResult.rows[0];
@@ -195,9 +210,9 @@ router.put('/:id/password', authenticateToken, permit('super_admin'), async (req
 
     const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
     const update = await query(
-      `UPDATE admins SET password = $1, updated_at = NOW()
+       `UPDATE admins SET password = $1, updated_at = NOW()
        WHERE id = $2
-       RETURNING id, username, role, assigned_regions, status, last_login_at, created_at, updated_at`,
+       RETURNING id, username, role, assigned_regions, permissions, status, last_login_at, created_at, updated_at`,
       [hashedPassword, req.params.id]
     );
 
@@ -221,7 +236,7 @@ router.put('/:id/password', authenticateToken, permit('super_admin'), async (req
   }
 });
 
-router.delete('/:id', authenticateToken, permit('super_admin'), async (req, res, next) => {
+router.delete('/:id', authenticateToken, permitPermission(PERMISSIONS.ADMINS_MANAGE), async (req, res, next) => {
   try {
     const adminData = await assertSuperAdminSafety({
       targetId: req.params.id,

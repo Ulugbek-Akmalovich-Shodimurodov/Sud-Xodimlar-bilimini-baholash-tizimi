@@ -30,6 +30,7 @@ CREATE TABLE IF NOT EXISTS admins (
   password TEXT NOT NULL,
   role TEXT NOT NULL CHECK (role IN ('super_admin', 'admin')),
   assigned_regions JSONB NOT NULL DEFAULT '[]',
+  permissions JSONB NOT NULL DEFAULT '[]',
   status TEXT NOT NULL DEFAULT 'active' CHECK (status IN ('active', 'blocked')),
   last_login_at TIMESTAMP WITHOUT TIME ZONE,
   created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW(),
@@ -139,6 +140,7 @@ ALTER TABLE IF EXISTS admin_logs DROP CONSTRAINT IF EXISTS admin_logs_entity_typ
 ALTER TABLE IF EXISTS admin_logs ADD CONSTRAINT admin_logs_entity_type_check CHECK (entity_type IN ('employee', 'admin', 'region', 'district', 'position', 'criterion', 'college'));
 
 ALTER TABLE IF EXISTS admins ADD COLUMN IF NOT EXISTS status TEXT NOT NULL DEFAULT 'active';
+ALTER TABLE IF EXISTS admins ADD COLUMN IF NOT EXISTS permissions JSONB NOT NULL DEFAULT '[]';
 ALTER TABLE IF EXISTS admins ADD COLUMN IF NOT EXISTS last_login_at TIMESTAMP WITHOUT TIME ZONE;
 ALTER TABLE IF EXISTS admins ADD COLUMN IF NOT EXISTS created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW();
 ALTER TABLE IF EXISTS admins ADD COLUMN IF NOT EXISTS updated_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW();

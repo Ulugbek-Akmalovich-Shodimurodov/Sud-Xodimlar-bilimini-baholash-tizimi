@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import { query } from '../db.js';
+import { hasPermission } from '../permissions.js';
 
 dotenv.config();
 
@@ -25,7 +26,7 @@ async function loadAdminFromToken(req, res, next, optional = false) {
   }
 
   const admin = await query(
-    'SELECT id, username, role, assigned_regions, status FROM admins WHERE id = $1',
+    'SELECT id, username, role, assigned_regions, permissions, status FROM admins WHERE id = $1',
     [payload.id]
   );
   if (!admin.rows.length) {
@@ -57,6 +58,20 @@ export function permit(...allowedRoles) {
     if (!role || !allowedRoles.includes(role)) {
       return res.status(403).json({ error: "Ruxsat yo'q" });
     }
+    next();
+  };
+}
+
+export function permitPermission(permission) {
+  return (req, res, next) => {
+    if (!req.user) {
+      return res.status(401).json({ error: 'Token talab qilinadi' });
+    }
+
+    if (!hasPermission(req.user, permission)) {
+      return res.status(403).json({ error: "Bu amal uchun ruxsat yo'q" });
+    }
+
     next();
   };
 }
