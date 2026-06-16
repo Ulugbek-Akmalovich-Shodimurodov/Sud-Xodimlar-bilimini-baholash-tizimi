@@ -23,6 +23,7 @@ export const adminSchema = Joi.object({
   username: latinIdentifier,
   password: Joi.string().min(6).required(),
   role: Joi.string().valid('super_admin', 'admin').required(),
+  status: Joi.string().valid('active', 'blocked').default('active'),
   assigned_regions: Joi.array().items(Joi.number().integer()).default([]),
 });
 
@@ -30,6 +31,7 @@ export const adminUpdateSchema = Joi.object({
   username: latinIdentifier,
   password: Joi.string().min(6).allow('').optional(),
   role: Joi.string().valid('super_admin', 'admin').required(),
+  status: Joi.string().valid('active', 'blocked').default('active'),
   assigned_regions: Joi.array().items(Joi.number().integer()).default([]),
 });
 

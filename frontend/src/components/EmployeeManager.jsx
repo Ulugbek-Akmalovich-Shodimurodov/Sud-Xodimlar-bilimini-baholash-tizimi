@@ -4,6 +4,7 @@ import {
   fetchRegions,
   fetchDistricts,
   fetchPositions,
+  fetchColleges,
   fetchCriteria,
   createEmployee,
   updateEmployee,
@@ -14,6 +15,7 @@ import { scoreColorClass } from '../utils/scoreColor.js';
 const emptyForm = {
   full_name: '',
   position: '',
+  college_id: '',
   region_id: '',
   district_id: '',
   scores: {},
@@ -25,6 +27,7 @@ function EmployeeManager({ user }) {
   const [regions, setRegions] = useState([]);
   const [districts, setDistricts] = useState([]);
   const [positions, setPositions] = useState([]);
+  const [colleges, setColleges] = useState([]);
   const [criteria, setCriteria] = useState([]);
   const [selectedRegion, setSelectedRegion] = useState('');
   const [selectedDistrict, setSelectedDistrict] = useState('');
@@ -49,8 +52,14 @@ function EmployeeManager({ user }) {
   useEffect(() => {
     fetchRegions().then(setRegions).catch(console.error);
     fetchPositions().then(setPositions).catch(console.error);
-    fetchCriteria().then(setCriteria).catch(console.error);
+    fetchColleges().then(setColleges).catch(console.error);
   }, []);
+
+  useEffect(() => {
+    fetchCriteria(formState.college_id ? { college_id: formState.college_id } : undefined)
+      .then(setCriteria)
+      .catch(console.error);
+  }, [formState.college_id]);
 
   useEffect(() => {
     if (!selectedRegion) {
@@ -111,6 +120,7 @@ function EmployeeManager({ user }) {
       setFormState({
         full_name: employee.full_name,
         position: employee.position,
+        college_id: employee.college_id || '',
         region_id: employee.region_id,
         district_id: employee.district_id,
         scores: scoresFromEmployee,
@@ -141,6 +151,7 @@ function EmployeeManager({ user }) {
       const payload = {
         full_name: formState.full_name,
         position: formState.position,
+        college_id: formState.college_id ? Number(formState.college_id) : null,
         region_id: Number(formState.region_id),
         district_id: Number(formState.district_id),
         scores: Object.fromEntries(
@@ -386,6 +397,19 @@ function EmployeeManager({ user }) {
                       </select>
                     </div>
                     <div>
+                      <label className="mb-2 block text-sm font-medium text-indigo-700">Kollega</label>
+                      <select
+                        value={formState.college_id}
+                        onChange={(e) => setFormState({ ...formState, college_id: e.target.value })}
+                        className="w-full rounded-3xl border border-indigo-100 bg-white p-3 shadow-sm focus:border-slate-700 focus:ring-2 focus:ring-slate-500/20"
+                      >
+                        <option value="">Kollega tanlang</option>
+                        {colleges.map((college) => (
+                          <option key={college.id} value={college.id}>{college.name}</option>
+                        ))}
+                      </select>
+                    </div>
+                    <div>
                       <label className="mb-2 block text-sm font-medium text-indigo-700">Viloyat</label>
                       <select
                         value={formState.region_id}
@@ -531,4 +555,3 @@ function EmployeeManager({ user }) {
 }
 
 export default EmployeeManager;
-
