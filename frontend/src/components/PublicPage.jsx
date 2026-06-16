@@ -245,7 +245,11 @@ function PublicPage() {
                   <th className="px-4 py-3">Kollega</th>
                   <th className="px-4 py-3">Viloyat</th>
                   <th className="px-4 py-3">Tuman</th>
-                  
+                  {/* {criteria.length ? (
+                    criteria.map((c) => (
+                      <th key={c.key} className="px-4 py-3">{c.short_label}</th>
+                    ))
+                  ) : null} */}
                   <th className="px-4 py-3">Umumiy</th>
                 </tr>
               </thead>
