@@ -56,9 +56,15 @@ function EmployeeManager({ user }) {
   }, []);
 
   useEffect(() => {
-    fetchCriteria(formState.college_id ? { college_id: formState.college_id } : undefined)
-      .then(setCriteria)
-      .catch(console.error);
+    // Only fetch criteria when a college is selected. If no college is selected,
+    // clear criteria to avoid showing irrelevant fields.
+    if (formState.college_id) {
+      fetchCriteria({ college_id: formState.college_id })
+        .then(setCriteria)
+        .catch(console.error);
+    } else {
+      setCriteria([]);
+    }
   }, [formState.college_id]);
 
   useEffect(() => {
@@ -354,8 +360,8 @@ function EmployeeManager({ user }) {
       </section>
 
       {modalOpen && (
-        <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-indigo-900/50 p-4 py-8">
-          <div className="w-full max-w-[95vw] overflow-hidden rounded-[32px] bg-white shadow-2xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-indigo-900/50 p-4">
+          <div className="w-full max-w-[1100px] max-h-[90vh] overflow-hidden rounded-[32px] bg-white shadow-2xl">
             <div className="flex flex-col gap-4 border-b border-indigo-100 px-6 py-5 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <h2 className="text-xl font-semibold text-slate-900">{editing ? 'Xodimni tahrirlash' : 'Yangi xodim qo\'shish'}</h2>
@@ -363,7 +369,7 @@ function EmployeeManager({ user }) {
               <button onClick={() => setModalOpen(false)} className="rounded-2xl border border-indigo-100 bg-indigo-50 px-4 py-2 text-sm text-indigo-600 transition hover:bg-indigo-100">Bekor qilish</button>
             </div>
 
-            <div className="max-h-[82vh] overflow-hidden">
+            <div className="max-h-[72vh] overflow-hidden">
               <div className="grid gap-6 p-6 lg:grid-cols-[1.05fr_1.5fr]">
                 <div className="space-y-4 rounded-[28px] border border-indigo-100 bg-indigo-50 p-5">
                   <div className="rounded-3xl bg-gradient-to-r from-[#ffffff] via-[#e7f0ff] to-[#f4f7ff] p-5 shadow-sm">
