@@ -5,7 +5,6 @@ import {
   fetchDistricts,
   fetchPositions,
   fetchCriteria,
-  fetchColleges,
   createEmployee,
   updateEmployee,
   deleteEmployee,
@@ -15,7 +14,6 @@ import { scoreColorClass } from '../utils/scoreColor.js';
 const emptyForm = {
   full_name: '',
   position: '',
-  college_id: '',
   region_id: '',
   district_id: '',
   scores: {},
@@ -28,10 +26,8 @@ function EmployeeManager({ user }) {
   const [districts, setDistricts] = useState([]);
   const [positions, setPositions] = useState([]);
   const [criteria, setCriteria] = useState([]);
-  const [colleges, setColleges] = useState([]);
   const [selectedRegion, setSelectedRegion] = useState('');
   const [selectedDistrict, setSelectedDistrict] = useState('');
-  const [selectedCollege, setSelectedCollege] = useState('');
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
   const [limit] = useState(10);
@@ -54,7 +50,6 @@ function EmployeeManager({ user }) {
     fetchRegions().then(setRegions).catch(console.error);
     fetchPositions().then(setPositions).catch(console.error);
     fetchCriteria().then(setCriteria).catch(console.error);
-    fetchColleges().then(setColleges).catch(console.error);
   }, []);
 
   useEffect(() => {
@@ -75,7 +70,6 @@ function EmployeeManager({ user }) {
       search: search || undefined,
       region_id: selectedRegion || undefined,
       district_id: selectedDistrict || undefined,
-      college_id: selectedCollege || undefined,
     })
       .then((data) => {
         setEmployees(data.data);
@@ -87,7 +81,7 @@ function EmployeeManager({ user }) {
 
   useEffect(() => {
     fetchData();
-  }, [page, selectedRegion, selectedDistrict, selectedCollege, search]);
+  }, [page, selectedRegion, selectedDistrict, search]);
 
   useEffect(() => {
     if (!error) return undefined;
@@ -97,15 +91,7 @@ function EmployeeManager({ user }) {
 
   useEffect(() => {
     setSelectedIds([]);
-  }, [page, selectedRegion, selectedDistrict, selectedCollege, search]);
-
-  const activeCriteria = useMemo(() => {
-    const collegeId = Number(formState.college_id);
-    if (!collegeId) return [];
-    const college = colleges.find((item) => Number(item.id) === collegeId);
-    const allowedIds = new Set((college?.criteria_ids || []).map((id) => Number(id)));
-    return criteria.filter((criterion) => allowedIds.has(Number(criterion.id)));
-  }, [criteria, colleges, formState.college_id]);
+  }, [page, selectedRegion, selectedDistrict, search]);
 
   const handleOpenModal = (employee = null) => {
     if (employee) {
@@ -125,7 +111,6 @@ function EmployeeManager({ user }) {
       setFormState({
         full_name: employee.full_name,
         position: employee.position,
-        college_id: employee.college_id || '',
         region_id: employee.region_id,
         district_id: employee.district_id,
         scores: scoresFromEmployee,
@@ -144,10 +129,6 @@ function EmployeeManager({ user }) {
   const handleSave = async () => {
     try {
       setError('');
-      if (!formState.college_id) {
-        setError('Xodim uchun kollega tanlang');
-        return;
-      }
 
       const cleanedChosenSections = Object.entries(formState.chosen_sections || {}).reduce((acc, [key, value]) => {
         const values = Array.isArray(value)
@@ -160,7 +141,6 @@ function EmployeeManager({ user }) {
       const payload = {
         full_name: formState.full_name,
         position: formState.position,
-        college_id: Number(formState.college_id),
         region_id: Number(formState.region_id),
         district_id: Number(formState.district_id),
         scores: Object.fromEntries(
@@ -227,7 +207,7 @@ function EmployeeManager({ user }) {
           <button onClick={() => handleOpenModal()} className="rounded-2xl bg-indigo-700 px-5 py-3 text-white hover:bg-indigo-900">Yangi xodim</button>
         </div>
 
-        <div className="mt-6 grid gap-4 md:grid-cols-4">
+        <div className="mt-6 grid gap-4 md:grid-cols-3">
           <input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
@@ -252,16 +232,6 @@ function EmployeeManager({ user }) {
             <option value="">Tuman bo'yicha filtr</option>
             {districts.map((district) => (
               <option key={district.id} value={district.id}>{district.name}</option>
-            ))}
-          </select>
-          <select
-            value={selectedCollege}
-            onChange={(e) => setSelectedCollege(e.target.value)}
-            className="rounded-2xl border border-indigo-100 bg-indigo-50 px-4 py-3 text-slate-900 shadow-sm focus:border-slate-700 focus:ring-2 focus:ring-slate-500/20"
-          >
-            <option value="">Kollega bo'yicha filtr</option>
-            {colleges.map((college) => (
-              <option key={college.id} value={college.id}>{college.name}</option>
             ))}
           </select>
         </div>
@@ -311,7 +281,6 @@ function EmployeeManager({ user }) {
                 <th className="px-4 py-3">T/r</th>
                 <th className="px-4 py-3">F.I.O</th>
                 <th className="px-4 py-3">Lavozimi</th>
-                <th className="px-4 py-3">Kollega</th>
                 <th className="px-4 py-3">Viloyat</th>
                 <th className="px-4 py-3">Tuman</th>
                 <th className="px-4 py-3">Natija</th>
@@ -332,7 +301,6 @@ function EmployeeManager({ user }) {
                   <td className="px-4 py-3">{(page - 1) * limit + index + 1}</td>
                   <td className="px-4 py-3">{employee.full_name}</td>
                   <td className="px-4 py-3">{employee.position}</td>
-                  <td className="px-4 py-3">{employee.college_name || 'Belgilanmagan'}</td>
                   <td className="px-4 py-3">{employee.region_name}</td>
                   <td className="px-4 py-3">{employee.district_name}</td>
                   <td className={`px-4 py-3 ${scoreColorClass(employee.score)}`}>{employee.score}%</td>
@@ -380,7 +348,6 @@ function EmployeeManager({ user }) {
             <div className="flex flex-col gap-4 border-b border-indigo-100 px-6 py-5 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <h2 className="text-xl font-semibold text-slate-900">{editing ? 'Xodimni tahrirlash' : 'Yangi xodim qo\'shish'}</h2>
-                <p className="mt-1 text-sm text-indigo-500">Kriteriyalar soni ko‘p bo‘lsa ham qulay tarzda to‘ldiring.</p>
               </div>
               <button onClick={() => setModalOpen(false)} className="rounded-2xl border border-indigo-100 bg-indigo-50 px-4 py-2 text-sm text-indigo-600 transition hover:bg-indigo-100">Bekor qilish</button>
             </div>
@@ -419,24 +386,6 @@ function EmployeeManager({ user }) {
                       </select>
                     </div>
                     <div>
-                      <label className="mb-2 block text-sm font-medium text-indigo-700">Kollega</label>
-                      <select
-                        value={formState.college_id}
-                        onChange={(e) => setFormState({
-                          ...formState,
-                          college_id: e.target.value,
-                          scores: {},
-                          chosen_sections: {},
-                        })}
-                        className="w-full rounded-3xl border border-indigo-100 bg-white p-3 shadow-sm focus:border-slate-700 focus:ring-2 focus:ring-slate-500/20"
-                      >
-                        <option value="">Kollega tanlang</option>
-                        {colleges.map((college) => (
-                          <option key={college.id} value={college.id}>{college.name}</option>
-                        ))}
-                      </select>
-                    </div>
-                    <div>
                       <label className="mb-2 block text-sm font-medium text-indigo-700">Viloyat</label>
                       <select
                         value={formState.region_id}
@@ -468,15 +417,14 @@ function EmployeeManager({ user }) {
                   <div className="flex items-center justify-between border-b border-indigo-100 px-5 py-4 bg-indigo-50">
                     <div>
                       <div className="text-sm font-semibold text-indigo-700">Kriteriyalar</div>
-                      <div className="text-xs text-indigo-500">Tanlangan kollega kriteriyalari</div>
                     </div>
-                    <div className="rounded-full bg-indigo-700 px-3 py-1 text-sm font-semibold text-white">{activeCriteria.length} ta</div>
+                    <div className="rounded-full bg-indigo-700 px-3 py-1 text-sm font-semibold text-white">{criteria.length} ta</div>
                   </div>
 
                   <div className="max-h-[62vh] overflow-y-auto p-5">
-                    {activeCriteria.length ? (
+                    {criteria.length ? (
                       <div className="space-y-4">
-                        {activeCriteria.map((field) => {
+                        {criteria.map((field) => {
                           const sectionOptions = field.sections || [];
                           const selectedSections = Array.isArray(formState.chosen_sections?.[field.key])
                             ? formState.chosen_sections[field.key]
@@ -561,9 +509,7 @@ function EmployeeManager({ user }) {
                       </div>
                     ) : (
                       <div className="rounded-3xl border border-dashed border-indigo-200 bg-indigo-50 p-6 text-center text-indigo-500">
-                        {formState.college_id
-                          ? 'Bu kollegaga kriteriyalar biriktirilmagan. Kollegalar sahifasidan biriktiring.'
-                          : 'Avval xodim ishlaydigan kollegani tanlang.'}
+                        Kriteriyalar hali mavjud emas. Avval Kriteriyalar sahifasidan qo'shing.
                       </div>
                     )}
                   </div>
@@ -585,3 +531,4 @@ function EmployeeManager({ user }) {
 }
 
 export default EmployeeManager;
+
