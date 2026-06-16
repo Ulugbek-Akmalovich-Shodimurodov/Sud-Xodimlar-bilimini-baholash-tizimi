@@ -46,6 +46,12 @@ export const positionSchema = Joi.object({
   name: latinText,
 });
 
+export const collegeSchema = Joi.object({
+  name: Joi.string().min(2).required(),
+  description: Joi.string().allow('', null).optional(),
+  criteria_ids: Joi.array().items(Joi.number().integer()).default([]),
+});
+
 const sectionSchema = Joi.object({
   id: Joi.number().integer().optional(),
   key: Joi.string().pattern(latinIdentifierPattern).optional(),
@@ -73,6 +79,7 @@ export const employeeSchema = Joi.object({
     'string.pattern.base': 'Lavozim faqat lotin harflari, bo‘shliq va maxsus belgilarni o‘z ichiga olishi mumkin',
     'string.empty': 'Lavozim talab qilinadi',
   }),
+  college_id: Joi.number().integer().allow(null).optional(),
   region_id: Joi.number().integer().required(),
   district_id: Joi.number().integer().required(),
   scores: Joi.object().pattern(

@@ -51,6 +51,131 @@ section {
   @apply inline-flex rounded-full bg-indigo-100 px-3 py-1 text-sm font-medium text-indigo-700;
 }
 
+.dynamic-shell {
+  background:
+    radial-gradient(circle at 12% 18%, rgba(14, 165, 233, 0.18), transparent 30%),
+    radial-gradient(circle at 82% 8%, rgba(245, 158, 11, 0.14), transparent 26%),
+    linear-gradient(135deg, #eef2ff 0%, #f8fafc 48%, #ecfeff 100%);
+}
+
+.dynamic-shell::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(79, 70, 229, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(79, 70, 229, 0.06) 1px, transparent 1px);
+  background-size: 46px 46px;
+  mask-image: linear-gradient(to bottom, black, transparent 76%);
+  animation: grid-drift 18s linear infinite;
+}
+
+.glass-header {
+  @apply border-b border-white/70 bg-white/80 shadow-sm backdrop-blur-xl;
+}
+
+.animate-page {
+  animation: page-rise 520ms ease both;
+}
+
+.animate-card {
+  animation: page-rise 560ms ease both;
+  transition: transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
+}
+
+.animate-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 20px 45px rgba(79, 70, 229, 0.12);
+  border-color: rgba(99, 102, 241, 0.28);
+}
+
+.animate-row {
+  animation: row-in 420ms ease both;
+  transition: background-color 180ms ease, transform 180ms ease;
+}
+
+.animate-row:hover {
+  transform: translateX(3px);
+}
+
+.pulse-soft {
+  animation: pulse-soft 2.4s ease-in-out infinite;
+}
+
+.sparkline-path {
+  stroke-dasharray: 160;
+  stroke-dashoffset: 160;
+  animation: draw-line 1.4s ease forwards, pulse-soft 2.8s ease-in-out infinite 1.4s;
+}
+
+.loading-skeleton {
+  position: relative;
+  overflow: hidden;
+  @apply rounded-2xl bg-indigo-100;
+}
+
+.loading-skeleton::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.68), transparent);
+  animation: shimmer 1.2s infinite;
+}
+
+@keyframes page-rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes row-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes grid-drift {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 46px 46px;
+  }
+}
+
+@keyframes pulse-soft {
+  0%, 100% {
+    opacity: 0.75;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes draw-line {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes shimmer {
+  to {
+    transform: translateX(100%);
+  }
+}
+
 /* Responsive helpers for custom 700px breakpoint */
 .show-under-700 {
   display: none;
@@ -65,5 +190,22 @@ section {
   }
   .show-under-700 {
     display: block !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dynamic-shell::before,
+  .animate-page,
+  .animate-card,
+  .animate-row,
+  .pulse-soft,
+  .sparkline-path,
+  .loading-skeleton::after {
+    animation: none !important;
+  }
+
+  .animate-card,
+  .animate-row {
+    transition: none !important;
   }
 }

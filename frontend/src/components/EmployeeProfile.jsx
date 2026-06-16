@@ -19,8 +19,12 @@ function EmployeeProfile() {
     setLoading(true);
     setError('');
 
-    Promise.all([fetchEmployee(id), fetchCriteria(), fetchEmployees()])
-      .then(([employeeData, criteriaData, employeesData]) => {
+    fetchEmployee(id)
+      .then(async (employeeData) => {
+        const [criteriaData, employeesData] = await Promise.all([
+          fetchCriteria(employeeData.college_id ? { college_id: employeeData.college_id } : undefined),
+          fetchEmployees(employeeData.college_id ? { college_id: employeeData.college_id } : undefined),
+        ]);
         setEmployee(employeeData);
         setCriteria(criteriaData || []);
         let all = [];
@@ -151,6 +155,14 @@ function EmployeeProfile() {
                   </svg>
                 </span>
                 {employee.district_name}
+              </span>
+              <span className="inline-flex items-center gap-2 rounded-full bg-indigo-50 px-4 py-2 text-indigo-700 shadow-sm">
+                <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-white text-indigo-700 shadow-sm">
+                  <svg viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4">
+                    <path d="M4 4h7v7H4V4zm9 0h7v7h-7V4zM4 13h7v7H4v-7zm9 0h7v7h-7v-7z" />
+                  </svg>
+                </span>
+                {employee.college_name || 'Kollega belgilanmagan'}
               </span>
             </div>
           </div>

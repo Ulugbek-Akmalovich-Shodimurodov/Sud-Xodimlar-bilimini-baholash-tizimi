@@ -34,6 +34,27 @@ async function ensureCriterionSectionsTable() {
   `);
 }
 
+async function ensureCollegeCriteriaTable() {
+  await query(`
+    CREATE TABLE IF NOT EXISTS colleges (
+      id SERIAL PRIMARY KEY,
+      name TEXT NOT NULL UNIQUE,
+      description TEXT,
+      created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW(),
+      updated_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW()
+    )
+  `);
+
+  await query(`
+    CREATE TABLE IF NOT EXISTS college_criteria (
+      college_id INTEGER NOT NULL REFERENCES colleges(id) ON DELETE CASCADE,
+      criterion_id INTEGER NOT NULL REFERENCES criteria(id) ON DELETE CASCADE,
+      created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW(),
+      PRIMARY KEY (college_id, criterion_id)
+    )
+  `);
+}
+
 function buildCriteriaTree(rows) {
   const tree = [];
   const map = new Map();
@@ -94,6 +115,15 @@ router.get('/', async (req, res, next) => {
       return res.json([]);
     }
 
+    const collegeId = req.query.college_id ? Number(req.query.college_id) : null;
+    if (Number.isInteger(collegeId)) {
+      await ensureCollegeCriteriaTable();
+    }
+    const collegeFilter = Number.isInteger(collegeId)
+      ? 'INNER JOIN college_criteria cc ON cc.criterion_id = c.id AND cc.college_id = $1'
+      : '';
+    const params = Number.isInteger(collegeId) ? [collegeId] : [];
+
     const result = await query(`
       SELECT c.id AS criterion_id,
              c.key AS criterion_key,
@@ -105,9 +135,10 @@ router.get('/', async (req, res, next) => {
              s.label AS section_label,
              s.sort_order AS section_sort
       FROM criteria c
+      ${collegeFilter}
       LEFT JOIN criterion_sections s ON s.criterion_id = c.id
       ORDER BY c.sort_order, c.id, s.sort_order, s.id
-    `);
+    `, params);
 
     res.json(buildCriteriaTree(result.rows));
   } catch (err) {

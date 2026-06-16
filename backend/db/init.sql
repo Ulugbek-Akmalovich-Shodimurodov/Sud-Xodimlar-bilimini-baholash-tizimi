@@ -16,6 +16,14 @@ CREATE TABLE IF NOT EXISTS positions (
   name TEXT NOT NULL UNIQUE
 );
 
+CREATE TABLE IF NOT EXISTS colleges (
+  id SERIAL PRIMARY KEY,
+  name TEXT NOT NULL UNIQUE,
+  description TEXT,
+  created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW()
+);
+
 CREATE TABLE IF NOT EXISTS admins (
   id SERIAL PRIMARY KEY,
   username TEXT NOT NULL UNIQUE,
@@ -59,6 +67,7 @@ CREATE TABLE IF NOT EXISTS employees (
   id SERIAL PRIMARY KEY,
   full_name TEXT NOT NULL,
   position TEXT NOT NULL,
+  college_id INTEGER REFERENCES colleges(id) ON DELETE SET NULL,
   region_id INTEGER NOT NULL REFERENCES regions(id) ON DELETE CASCADE,
   district_id INTEGER NOT NULL REFERENCES districts(id) ON DELETE CASCADE,
   score INTEGER NOT NULL DEFAULT 0 CHECK (score >= 0 AND score <= 100),
@@ -78,6 +87,24 @@ CREATE TABLE IF NOT EXISTS employees (
   updated_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW()
 );
 
+CREATE TABLE IF NOT EXISTS criteria (
+  id SERIAL PRIMARY KEY,
+  key TEXT NOT NULL UNIQUE,
+  label TEXT NOT NULL,
+  short_label TEXT NOT NULL,
+  sort_order INTEGER NOT NULL DEFAULT 0,
+  created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS college_criteria (
+  college_id INTEGER NOT NULL REFERENCES colleges(id) ON DELETE CASCADE,
+  criterion_id INTEGER NOT NULL REFERENCES criteria(id) ON DELETE CASCADE,
+  created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW(),
+  PRIMARY KEY (college_id, criterion_id)
+);
+
+ALTER TABLE IF EXISTS employees ADD COLUMN IF NOT EXISTS college_id INTEGER REFERENCES colleges(id) ON DELETE SET NULL;
 ALTER TABLE IF EXISTS employees ADD COLUMN IF NOT EXISTS konstitutsiya_score INTEGER NOT NULL DEFAULT 0 CHECK (konstitutsiya_score >= 0 AND konstitutsiya_score <= 100);
 ALTER TABLE IF EXISTS employees ADD COLUMN IF NOT EXISTS kodeks_score INTEGER NOT NULL DEFAULT 0 CHECK (kodeks_score >= 0 AND kodeks_score <= 100);
 ALTER TABLE IF EXISTS employees ADD COLUMN IF NOT EXISTS protsessual_kodeks_score INTEGER NOT NULL DEFAULT 0 CHECK (protsessual_kodeks_score >= 0 AND protsessual_kodeks_score <= 100);
@@ -103,6 +130,9 @@ ALTER TABLE IF EXISTS admin_logs ADD COLUMN IF NOT EXISTS new_data JSONB;
 ALTER TABLE IF EXISTS admin_logs ADD COLUMN IF NOT EXISTS ip_address TEXT;
 ALTER TABLE IF EXISTS admin_logs ADD COLUMN IF NOT EXISTS user_agent TEXT;
 ALTER TABLE IF EXISTS admin_logs ADD COLUMN IF NOT EXISTS created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW();
+
+ALTER TABLE IF EXISTS admin_logs DROP CONSTRAINT IF EXISTS admin_logs_entity_type_check;
+ALTER TABLE IF EXISTS admin_logs ADD CONSTRAINT admin_logs_entity_type_check CHECK (entity_type IN ('employee', 'admin', 'region', 'district', 'position', 'criterion', 'college'));
 
 ALTER TABLE IF EXISTS employees DROP CONSTRAINT IF EXISTS employees_district_id_fkey;
 ALTER TABLE IF EXISTS employees ADD CONSTRAINT employees_district_id_fkey FOREIGN KEY (district_id) REFERENCES districts(id) ON DELETE CASCADE;

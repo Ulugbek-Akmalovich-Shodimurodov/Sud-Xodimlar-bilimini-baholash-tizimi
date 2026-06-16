@@ -25,12 +25,18 @@ async function buildExamPayload(value) {
   const payload = { scores: {}, chosen_sections: {} };
   let criteriaRows = [];
   try {
+    const collegeId = value.college_id ? Number(value.college_id) : null;
+    const collegeFilter = Number.isInteger(collegeId)
+      ? 'INNER JOIN college_criteria cc ON cc.criterion_id = c.id AND cc.college_id = $1'
+      : '';
+    const params = Number.isInteger(collegeId) ? [collegeId] : [];
     const result = await query(`
       SELECT c.key AS criterion_key, s.key AS section_key
       FROM criteria c
+      ${collegeFilter}
       LEFT JOIN criterion_sections s ON s.criterion_id = c.id
       ORDER BY c.sort_order, c.id, s.sort_order, s.id
-    `);
+    `, params);
     criteriaRows = result.rows;
   } catch (e) {
     // fallback to legacy scoring when sections/criteria table is missing
@@ -108,6 +114,10 @@ function buildFilters(queryParams, user) {
     filters.push(`employees.district_id = $${index++}`);
     values.push(queryParams.district_id);
   }
+  if (queryParams.college_id) {
+    filters.push(`employees.college_id = $${index++}`);
+    values.push(queryParams.college_id);
+  }
   if (queryParams.min_score) {
     filters.push(`employees.score >= $${index++}`);
     values.push(queryParams.min_score);
@@ -160,10 +170,11 @@ router.get('/', optionalAuthenticateToken, async (req, res, next) => {
     const filter = buildFilters(req.query, req.user || null);
 
     const listQuery = `
-      SELECT employees.*, regions.name AS region_name, districts.name AS district_name
+      SELECT employees.*, regions.name AS region_name, districts.name AS district_name, colleges.name AS college_name
       FROM employees
       LEFT JOIN regions ON employees.region_id = regions.id
       LEFT JOIN districts ON employees.district_id = districts.id
+      LEFT JOIN colleges ON employees.college_id = colleges.id
       ${filter.clause}
       ORDER BY employees.score DESC, employees.full_name
       LIMIT $${filter.values.length + 1}
@@ -194,10 +205,11 @@ router.get('/:id', optionalAuthenticateToken, async (req, res, next) => {
     }
 
     const result = await safeQuery(
-      `SELECT employees.*, regions.name AS region_name, districts.name AS district_name
+      `SELECT employees.*, regions.name AS region_name, districts.name AS district_name, colleges.name AS college_name
        FROM employees
        LEFT JOIN regions ON employees.region_id = regions.id
        LEFT JOIN districts ON employees.district_id = districts.id
+       LEFT JOIN colleges ON employees.college_id = colleges.id
        WHERE employees.id = $1${accessClause}`,
       values
     );
@@ -221,13 +233,14 @@ router.post('/', authenticateToken, permit('super_admin', 'admin'), async (req, 
 
     const insert = await safeQuery(
       `INSERT INTO employees (
-         full_name, position, region_id, district_id, score, scores, chosen_sections
+         full_name, position, college_id, region_id, district_id, score, scores, chosen_sections
        )
-       VALUES ($1, $2, $3, $4, $5, $6, $7)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
        RETURNING *`,
       [
         value.full_name,
         value.position,
+        value.college_id || null,
         value.region_id,
         value.district_id,
         examPayload.score,
@@ -284,13 +297,14 @@ router.put('/:id', authenticateToken, permit('super_admin', 'admin'), async (req
 
     const update = await safeQuery(
       `UPDATE employees
-       SET full_name = $1, position = $2, region_id = $3, district_id = $4, score = $5, scores = $6, chosen_sections = $7,
+       SET full_name = $1, position = $2, college_id = $3, region_id = $4, district_id = $5, score = $6, scores = $7, chosen_sections = $8,
            updated_at = NOW()
-       WHERE id = $8
+       WHERE id = $9
        RETURNING *`,
       [
         value.full_name,
         value.position,
+        value.college_id || null,
         value.region_id,
         value.district_id,
         examPayload.score,

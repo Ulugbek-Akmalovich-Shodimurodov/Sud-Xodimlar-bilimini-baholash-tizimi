@@ -42,8 +42,8 @@ export async function fetchRegions() {
   return response.data;
 }
 
-export async function fetchCriteria() {
-  const response = await api.get('/criteria');
+export async function fetchCriteria(params) {
+  const response = await api.get('/criteria', { params });
   return response.data;
 }
 
@@ -59,6 +59,25 @@ export async function updateCriteria(id, values) {
 
 export async function deleteCriteria(id) {
   await api.delete(`/criteria/${id}`);
+}
+
+export async function fetchColleges() {
+  const response = await api.get('/colleges');
+  return response.data;
+}
+
+export async function createCollege(values) {
+  const response = await api.post('/colleges', values);
+  return response.data;
+}
+
+export async function updateCollege(id, values) {
+  const response = await api.put(`/colleges/${id}`, values);
+  return response.data;
+}
+
+export async function deleteCollege(id) {
+  await api.delete(`/colleges/${id}`);
 }
 
 export async function fetchDistricts(params) {

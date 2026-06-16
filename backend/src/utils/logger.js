@@ -9,6 +9,7 @@ function detectChanges(oldData, newData) {
     position: 'Lavozimi',
     region_id: 'Viloyati',
     district_id: 'Tumani',
+    college_id: 'Kollegasi',
     scores: 'Kriteriya natijalari',
     score: 'Umumiy natija'
   };
@@ -29,7 +30,7 @@ function detectChanges(oldData, newData) {
             changes.push(`${scoreKey}: ${oldScore}% dan ${newScore}% ga o'zgartirildi`);
           }
         });
-      } else if (key === 'region_id' || key === 'district_id') {
+      } else if (key === 'region_id' || key === 'district_id' || key === 'college_id') {
         changes.push(`${label}: o'zgartirildi`);
       } else {
         changes.push(`${label}: "${oldValue}" dan "${newValue}" ga o'zgartirildi`);
@@ -105,6 +106,10 @@ export function getEntityName(entityType, data) {
       return data?.name || 'Noma\'lum tuman';
     case 'position':
       return data?.name || 'Noma\'lum lavozim';
+    case 'criterion':
+      return data?.label || data?.name || 'Noma\'lum kriteriya';
+    case 'college':
+      return data?.name || 'Noma\'lum kollega';
     default:
       return 'Noma\'lum obyekt';
   }
