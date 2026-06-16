@@ -287,7 +287,7 @@ function PublicPage() {
                     {employee.district_name}
                   </Link>
                 </td>
-                {criteria.length ? (
+                {/* {criteria.length ? (
                   criteria.map((c) => {
                     const score = (employee.scores && employee.scores[c.key]) || 0;
                     return (
@@ -298,7 +298,7 @@ function PublicPage() {
                       </td>
                     );
                   })
-                ) : null}
+                ) : null} */}
                 <td className={`px-4 py-3 text-center ${scoreColorClass(employee.score)}`}>
                   <Link to={`/employee/${employee.id}`} className="block">
                     {employee.score}%
