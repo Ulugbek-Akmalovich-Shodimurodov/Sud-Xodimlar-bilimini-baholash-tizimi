@@ -18,3 +18,959 @@ GET /api/colleges 500 25 - 18.654 ms
 GET /api/criteria 500 25 - 20.585 ms
 GET /api/employees?page=1&limit=10 500 25 - 21.387 ms
 POST /api/auth/login 500 25 - 4.587 ms
+POST /api/auth/login 500 25 - 4.385 ms
+POST /api/auth/login 500 25 - 4.069 ms
+POST /api/auth/login 500 25 - 4.370 ms
+POST /api/auth/login 500 25 - 4.195 ms
+GET /api/regions 500 25 - 10.022 ms
+GET /api/colleges 500 25 - 12.313 ms
+GET /api/criteria 500 25 - 16.018 ms
+GET /api/employees?page=1&limit=10 500 25 - 14.202 ms
+GET /api/regions 500 25 - 15.302 ms
+GET /api/colleges 500 25 - 13.380 ms
+GET /api/criteria 500 25 - 13.984 ms
+GET /api/employees?page=1&limit=10 500 25 - 8.473 ms
+GET /api/regions 500 25 - 8.226 ms
+GET /api/colleges 500 25 - 8.681 ms
+GET /api/criteria 500 25 - 11.128 ms
+GET /api/employees?page=1&limit=10 500 25 - 13.532 ms
+GET /api/regions 500 25 - 7.502 ms
+GET /api/colleges 500 25 - 8.743 ms
+GET /api/criteria 500 25 - 11.253 ms
+GET /api/employees?page=1&limit=10 500 25 - 13.230 ms
+GET /api/regions 500 53 - 78.581 ms
+GET /api/colleges 500 27 - 81.251 ms
+GET /api/employees?page=1&limit=10 500 27 - 79.325 ms
+GET /api/criteria 500 27 - 85.457 ms
+GET /api/colleges 500 53 - 64.294 ms
+GET /api/regions 500 53 - 68.130 ms
+GET /api/criteria 500 53 - 72.782 ms
+GET /api/employees?page=1&limit=10 500 53 - 272.536 ms
+DB QUERY {
+  text: "SELECT to_regclass('public.criteria') AS exists",
+  duration: 98,
+  rows: 1
+}
+DB QUERY {
+  text: '\n' +
+    '    CREATE TABLE IF NOT EXISTS criteria (\n' +
+    '      id SERIAL PRIMARY KEY,\n' +
+    '      key TEXT NOT NULL UNIQUE,\n' +
+    '      label TEXT NOT NULL,\n' +
+    '      short_label TEXT NOT NULL,\n' +
+    '      sort_order INTEGER NOT NULL DEFAULT 0,\n' +
+    '      created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW(),\n' +
+    '      updated_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW()\n' +
+    '    )\n' +
+    '  ',
+  duration: 112,
+  rows: null
+}
+DB QUERY {
+  text: 'SELECT COUNT(*) AS total FROM employees ',
+  duration: 107,
+  rows: 1
+}
+DB QUERY { text: 'SELECT * FROM regions ORDER BY name', duration: 115, rows: 0 }
+DB QUERY {
+  text: '\n' +
+    '      SELECT employees.*, regions.name AS region_name, districts.name AS district_name, colleges.name AS college_name\n' +
+    '      FROM employees\n' +
+    '      LEFT JOIN regions ON employees.region_id = regions.id\n' +
+    '      LEFT JOIN districts ON employees.district_id = districts.id\n' +
+    '      LEFT JOIN colleges ON employees.college_id = colleges.id\n' +
+    '      \n' +
+    '      ORDER BY employees.score DESC, employees.full_name\n' +
+    '      LIMIT $1\n' +
+    '      OFFSET $2',
+  duration: 109,
+  rows: 0
+}
+GET /api/employees?page=1&limit=10 200 41 - 110.306 ms
+GET /api/criteria 500 58 - 116.634 ms
+DB QUERY {
+  text: '\n' +
+    '    CREATE TABLE IF NOT EXISTS colleges (\n' +
+    '      id SERIAL PRIMARY KEY,\n' +
+    '      name TEXT NOT NULL UNIQUE,\n' +
+    '      description TEXT,\n' +
+    '      created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW(),\n' +
+    '      updated_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW()\n' +
+    '    )\n' +
+    '  ',
+  duration: 8,
+  rows: null
+}
+GET /api/regions 200 2 - 123.206 ms
+DB QUERY {
+  text: '\n' +
+    '    CREATE TABLE IF NOT EXISTS college_criteria (\n' +
+    '      college_id INTEGER NOT NULL REFERENCES colleges(id) ON DELETE CASCADE,\n' +
+    '      criterion_id INTEGER NOT NULL REFERENCES criteria(id) ON DELETE CASCADE,\n' +
+    '      created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW(),\n' +
+    '      PRIMARY KEY (college_id, criterion_id)\n' +
+    '    )\n' +
+    '  ',
+  duration: 6,
+  rows: null
+}
+DB QUERY {
+  text: 'SELECT COUNT(*) AS total FROM employees ',
+  duration: 4,
+  rows: 1
+}
+DB QUERY {
+  text: '\n' +
+    '      SELECT employees.*, regions.name AS region_name, districts.name AS district_name, colleges.name AS college_name\n' +
+    '      FROM employees\n' +
+    '      LEFT JOIN regions ON employees.region_id = regions.id\n' +
+    '      LEFT JOIN districts ON employees.district_id = districts.id\n' +
+    '      LEFT JOIN colleges ON employees.college_id = colleges.id\n' +
+    '      \n' +
+    '      ORDER BY employees.score DESC, employees.full_name\n' +
+    '      LIMIT $1\n' +
+    '      OFFSET $2',
+  duration: 6,
+  rows: 0
+}
+GET /api/employees?page=1&limit=10 304 - - 7.491 ms
+DB QUERY {
+  text: 'ALTER TABLE IF EXISTS employees ADD COLUMN IF NOT EXISTS college_id INTEGER REFERENCES colleges(id) ON DELETE SET NULL',
+  duration: 8,
+  rows: null
+}
+DB QUERY {
+  text: '\n' +
+    '      SELECT c.*,\n' +
+    '        COALESCE(\n' +
+    '          json_agg(cc.criterion_id ORDER BY cr.sort_order, cr.id) FILTER (WHERE cc.criterion_id IS NOT NULL),\n' +
+    "          '[]'\n" +
+    '        ) AS criteria_ids,\n' +
+    '        COUNT(DISTINCT e.id) AS employee_count\n' +
+    '      FROM colleges c\n' +
+    '      LEFT JOIN college_criteria cc ON cc.college_id = c.id\n' +
+    '      LEFT JOIN criteria cr ON cr.id = cc.criterion_id\n' +
+    '      LEFT JOIN employees e ON e.college_id = c.id\n' +
+    '      GROUP BY c.id\n' +
+    '      ORDER BY c.name\n' +
+    '    ',
+  duration: 6,
+  rows: 0
+}
+GET /api/colleges 200 2 - 143.321 ms
+DB QUERY {
+  text: '\n' +
+    '    CREATE TABLE IF NOT EXISTS criteria (\n' +
+    '      id SERIAL PRIMARY KEY,\n' +
+    '      key TEXT NOT NULL UNIQUE,\n' +
+    '      label TEXT NOT NULL,\n' +
+    '      short_label TEXT NOT NULL,\n' +
+    '      sort_order INTEGER NOT NULL DEFAULT 0,\n' +
+    '      created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW(),\n' +
+    '      updated_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW()\n' +
+    '    )\n' +
+    '  ',
+  duration: 1,
+  rows: null
+}
+DB QUERY {
+  text: '\n' +
+    '    CREATE TABLE IF NOT EXISTS colleges (\n' +
+    '      id SERIAL PRIMARY KEY,\n' +
+    '      name TEXT NOT NULL UNIQUE,\n' +
+    '      description TEXT,\n' +
+    '      created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW(),\n' +
+    '      updated_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW()\n' +
+    '    )\n' +
+    '  ',
+  duration: 1,
+  rows: null
+}
+DB QUERY {
+  text: '\n' +
+    '    CREATE TABLE IF NOT EXISTS college_criteria (\n' +
+    '      college_id INTEGER NOT NULL REFERENCES colleges(id) ON DELETE CASCADE,\n' +
+    '      criterion_id INTEGER NOT NULL REFERENCES criteria(id) ON DELETE CASCADE,\n' +
+    '      created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW(),\n' +
+    '      PRIMARY KEY (college_id, criterion_id)\n' +
+    '    )\n' +
+    '  ',
+  duration: 1,
+  rows: null
+}
+DB QUERY {
+  text: 'ALTER TABLE IF EXISTS employees ADD COLUMN IF NOT EXISTS college_id INTEGER REFERENCES colleges(id) ON DELETE SET NULL',
+  duration: 1,
+  rows: null
+}
+DB QUERY {
+  text: '\n' +
+    '      SELECT c.*,\n' +
+    '        COALESCE(\n' +
+    '          json_agg(cc.criterion_id ORDER BY cr.sort_order, cr.id) FILTER (WHERE cc.criterion_id IS NOT NULL),\n' +
+    "          '[]'\n" +
+    '        ) AS criteria_ids,\n' +
+    '        COUNT(DISTINCT e.id) AS employee_count\n' +
+    '      FROM colleges c\n' +
+    '      LEFT JOIN college_criteria cc ON cc.college_id = c.id\n' +
+    '      LEFT JOIN criteria cr ON cr.id = cc.criterion_id\n' +
+    '      LEFT JOIN employees e ON e.college_id = c.id\n' +
+    '      GROUP BY c.id\n' +
+    '      ORDER BY c.name\n' +
+    '    ',
+  duration: 1,
+  rows: 0
+}
+GET /api/colleges 304 - - 8.630 ms
+DB QUERY {
+  text: "SELECT to_regclass('public.criteria') AS exists",
+  duration: 55,
+  rows: 1
+}
+GET /api/criteria 500 58 - 58.100 ms
+DB QUERY { text: 'SELECT * FROM regions ORDER BY name', duration: 60, rows: 0 }
+GET /api/regions 304 - - 62.911 ms
+DB QUERY { text: 'SELECT * FROM regions ORDER BY name', duration: 52, rows: 0 }
+GET /api/regions 200 2 - 64.599 ms
+DB QUERY {
+  text: '\n' +
+    '    CREATE TABLE IF NOT EXISTS criteria (\n' +
+    '      id SERIAL PRIMARY KEY,\n' +
+    '      key TEXT NOT NULL UNIQUE,\n' +
+    '      label TEXT NOT NULL,\n' +
+    '      short_label TEXT NOT NULL,\n' +
+    '      sort_order INTEGER NOT NULL DEFAULT 0,\n' +
+    '      created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW(),\n' +
+    '      updated_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW()\n' +
+    '    )\n' +
+    '  ',
+  duration: 94,
+  rows: null
+}
+DB QUERY { text: 'SELECT * FROM regions ORDER BY name', duration: 111, rows: 0 }
+DB QUERY {
+  text: '\n' +
+    '    CREATE TABLE IF NOT EXISTS colleges (\n' +
+    '      id SERIAL PRIMARY KEY,\n' +
+    '      name TEXT NOT NULL UNIQUE,\n' +
+    '      description TEXT,\n' +
+    '      created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW(),\n' +
+    '      updated_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW()\n' +
+    '    )\n' +
+    '  ',
+  duration: 3,
+  rows: null
+}
+GET /api/regions 304 - - 116.042 ms
+DB QUERY {
+  text: '\n' +
+    '    CREATE TABLE IF NOT EXISTS college_criteria (\n' +
+    '      college_id INTEGER NOT NULL REFERENCES colleges(id) ON DELETE CASCADE,\n' +
+    '      criterion_id INTEGER NOT NULL REFERENCES criteria(id) ON DELETE CASCADE,\n' +
+    '      created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW(),\n' +
+    '      PRIMARY KEY (college_id, criterion_id)\n' +
+    '    )\n' +
+    '  ',
+  duration: 3,
+  rows: null
+}
+DB QUERY {
+  text: 'ALTER TABLE IF EXISTS employees ADD COLUMN IF NOT EXISTS college_id INTEGER REFERENCES colleges(id) ON DELETE SET NULL',
+  duration: 5,
+  rows: null
+}
+DB QUERY {
+  text: "SELECT to_regclass('public.criteria') AS exists",
+  duration: 120,
+  rows: 1
+}
+GET /api/criteria 500 58 - 123.741 ms
+DB QUERY {
+  text: 'SELECT COUNT(*) AS total FROM employees ',
+  duration: 120,
+  rows: 1
+}
+DB QUERY {
+  text: '\n' +
+    '      SELECT c.*,\n' +
+    '        COALESCE(\n' +
+    '          json_agg(cc.criterion_id ORDER BY cr.sort_order, cr.id) FILTER (WHERE cc.criterion_id IS NOT NULL),\n' +
+    "          '[]'\n" +
+    '        ) AS criteria_ids,\n' +
+    '        COUNT(DISTINCT e.id) AS employee_count\n' +
+    '      FROM colleges c\n' +
+    '      LEFT JOIN college_criteria cc ON cc.college_id = c.id\n' +
+    '      LEFT JOIN criteria cr ON cr.id = cc.criterion_id\n' +
+    '      LEFT JOIN employees e ON e.college_id = c.id\n' +
+    '      GROUP BY c.id\n' +
+    '      ORDER BY c.name\n' +
+    '    ',
+  duration: 10,
+  rows: 0
+}
+GET /api/colleges 304 - - 129.354 ms
+DB QUERY {
+  text: "SELECT to_regclass('public.criteria') AS exists",
+  duration: 1,
+  rows: 1
+}
+DB QUERY {
+  text: '\n' +
+    '    CREATE TABLE IF NOT EXISTS criteria (\n' +
+    '      id SERIAL PRIMARY KEY,\n' +
+    '      key TEXT NOT NULL UNIQUE,\n' +
+    '      label TEXT NOT NULL,\n' +
+    '      short_label TEXT NOT NULL,\n' +
+    '      sort_order INTEGER NOT NULL DEFAULT 0,\n' +
+    '      created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW(),\n' +
+    '      updated_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW()\n' +
+    '    )\n' +
+    '  ',
+  duration: 3,
+  rows: null
+}
+DB QUERY {
+  text: '\n' +
+    '      SELECT employees.*, regions.name AS region_name, districts.name AS district_name, colleges.name AS college_name\n' +
+    '      FROM employees\n' +
+    '      LEFT JOIN regions ON employees.region_id = regions.id\n' +
+    '      LEFT JOIN districts ON employees.district_id = districts.id\n' +
+    '      LEFT JOIN colleges ON employees.college_id = colleges.id\n' +
+    '      \n' +
+    '      ORDER BY employees.score DESC, employees.full_name\n' +
+    '      LIMIT $1\n' +
+    '      OFFSET $2',
+  duration: 128,
+  rows: 0
+}
+GET /api/employees?page=1&limit=10 304 - - 130.436 ms
+GET /api/criteria 500 58 - 9.524 ms
+DB QUERY {
+  text: '\n' +
+    '    CREATE TABLE IF NOT EXISTS colleges (\n' +
+    '      id SERIAL PRIMARY KEY,\n' +
+    '      name TEXT NOT NULL UNIQUE,\n' +
+    '      description TEXT,\n' +
+    '      created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW(),\n' +
+    '      updated_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW()\n' +
+    '    )\n' +
+    '  ',
+  duration: 6,
+  rows: null
+}
+DB QUERY {
+  text: '\n' +
+    '    CREATE TABLE IF NOT EXISTS college_criteria (\n' +
+    '      college_id INTEGER NOT NULL REFERENCES colleges(id) ON DELETE CASCADE,\n' +
+    '      criterion_id INTEGER NOT NULL REFERENCES criteria(id) ON DELETE CASCADE,\n' +
+    '      created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW(),\n' +
+    '      PRIMARY KEY (college_id, criterion_id)\n' +
+    '    )\n' +
+    '  ',
+  duration: 1,
+  rows: null
+}
+DB QUERY {
+  text: '\n' +
+    '      SELECT employees.*, regions.name AS region_name, districts.name AS district_name, colleges.name AS college_name\n' +
+    '      FROM employees\n' +
+    '      LEFT JOIN regions ON employees.region_id = regions.id\n' +
+    '      LEFT JOIN districts ON employees.district_id = districts.id\n' +
+    '      LEFT JOIN colleges ON employees.college_id = colleges.id\n' +
+    '      \n' +
+    '      ORDER BY employees.score DESC, employees.full_name\n' +
+    '      LIMIT $1\n' +
+    '      OFFSET $2',
+  duration: 2,
+  rows: 0
+}
+DB QUERY {
+  text: 'ALTER TABLE IF EXISTS employees ADD COLUMN IF NOT EXISTS college_id INTEGER REFERENCES colleges(id) ON DELETE SET NULL',
+  duration: 2,
+  rows: null
+}
+DB QUERY {
+  text: '\n' +
+    '      SELECT c.*,\n' +
+    '        COALESCE(\n' +
+    '          json_agg(cc.criterion_id ORDER BY cr.sort_order, cr.id) FILTER (WHERE cc.criterion_id IS NOT NULL),\n' +
+    "          '[]'\n" +
+    '        ) AS criteria_ids,\n' +
+    '        COUNT(DISTINCT e.id) AS employee_count\n' +
+    '      FROM colleges c\n' +
+    '      LEFT JOIN college_criteria cc ON cc.college_id = c.id\n' +
+    '      LEFT JOIN criteria cr ON cr.id = cc.criterion_id\n' +
+    '      LEFT JOIN employees e ON e.college_id = c.id\n' +
+    '      GROUP BY c.id\n' +
+    '      ORDER BY c.name\n' +
+    '    ',
+  duration: 8,
+  rows: 0
+}
+GET /api/colleges 304 - - 24.727 ms
+DB QUERY { text: 'SELECT * FROM regions ORDER BY name', duration: 61, rows: 0 }
+GET /api/regions 304 - - 65.046 ms
+DB QUERY {
+  text: 'SELECT COUNT(*) AS total FROM employees ',
+  duration: 50,
+  rows: 1
+}
+GET /api/employees?page=1&limit=10 304 - - 50.823 ms
+DB QUERY {
+  text: 'SELECT id, username, password, role, assigned_regions, status FROM admins WHERE username = $1',
+  duration: 47,
+  rows: 1
+}
+POST /api/auth/login 401 38 - 136.030 ms
+DB QUERY {
+  text: 'SELECT id, username, password, role, assigned_regions, status FROM admins WHERE username = $1',
+  duration: 1,
+  rows: 1
+}
+POST /api/auth/login 401 38 - 93.102 ms
+DB QUERY { text: 'SELECT * FROM regions ORDER BY name', duration: 8, rows: 0 }
+GET /api/regions 304 - - 14.092 ms
+DB QUERY {
+  text: '\n' +
+    '    CREATE TABLE IF NOT EXISTS criteria (\n' +
+    '      id SERIAL PRIMARY KEY,\n' +
+    '      key TEXT NOT NULL UNIQUE,\n' +
+    '      label TEXT NOT NULL,\n' +
+    '      short_label TEXT NOT NULL,\n' +
+    '      sort_order INTEGER NOT NULL DEFAULT 0,\n' +
+    '      created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW(),\n' +
+    '      updated_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW()\n' +
+    '    )\n' +
+    '  ',
+  duration: 66,
+  rows: null
+}
+DB QUERY {
+  text: '\n' +
+    '    CREATE TABLE IF NOT EXISTS colleges (\n' +
+    '      id SERIAL PRIMARY KEY,\n' +
+    '      name TEXT NOT NULL UNIQUE,\n' +
+    '      description TEXT,\n' +
+    '      created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW(),\n' +
+    '      updated_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW()\n' +
+    '    )\n' +
+    '  ',
+  duration: 1,
+  rows: null
+}
+DB QUERY {
+  text: '\n' +
+    '    CREATE TABLE IF NOT EXISTS college_criteria (\n' +
+    '      college_id INTEGER NOT NULL REFERENCES colleges(id) ON DELETE CASCADE,\n' +
+    '      criterion_id INTEGER NOT NULL REFERENCES criteria(id) ON DELETE CASCADE,\n' +
+    '      created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW(),\n' +
+    '      PRIMARY KEY (college_id, criterion_id)\n' +
+    '    )\n' +
+    '  ',
+  duration: 1,
+  rows: null
+}
+DB QUERY {
+  text: 'ALTER TABLE IF EXISTS employees ADD COLUMN IF NOT EXISTS college_id INTEGER REFERENCES colleges(id) ON DELETE SET NULL',
+  duration: 3,
+  rows: null
+}
+DB QUERY {
+  text: "SELECT to_regclass('public.criteria') AS exists",
+  duration: 75,
+  rows: 1
+}
+GET /api/criteria 500 58 - 79.919 ms
+DB QUERY {
+  text: 'SELECT COUNT(*) AS total FROM employees ',
+  duration: 81,
+  rows: 1
+}
+DB QUERY {
+  text: '\n' +
+    '      SELECT c.*,\n' +
+    '        COALESCE(\n' +
+    '          json_agg(cc.criterion_id ORDER BY cr.sort_order, cr.id) FILTER (WHERE cc.criterion_id IS NOT NULL),\n' +
+    "          '[]'\n" +
+    '        ) AS criteria_ids,\n' +
+    '        COUNT(DISTINCT e.id) AS employee_count\n' +
+    '      FROM colleges c\n' +
+    '      LEFT JOIN college_criteria cc ON cc.college_id = c.id\n' +
+    '      LEFT JOIN criteria cr ON cr.id = cc.criterion_id\n' +
+    '      LEFT JOIN employees e ON e.college_id = c.id\n' +
+    '      GROUP BY c.id\n' +
+    '      ORDER BY c.name\n' +
+    '    ',
+  duration: 13,
+  rows: 0
+}
+GET /api/colleges 304 - - 85.880 ms
+DB QUERY {
+  text: "SELECT to_regclass('public.criteria') AS exists",
+  duration: 3,
+  rows: 1
+}
+GET /api/criteria 500 58 - 6.656 ms
+DB QUERY {
+  text: '\n' +
+    '    CREATE TABLE IF NOT EXISTS criteria (\n' +
+    '      id SERIAL PRIMARY KEY,\n' +
+    '      key TEXT NOT NULL UNIQUE,\n' +
+    '      label TEXT NOT NULL,\n' +
+    '      short_label TEXT NOT NULL,\n' +
+    '      sort_order INTEGER NOT NULL DEFAULT 0,\n' +
+    '      created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW(),\n' +
+    '      updated_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW()\n' +
+    '    )\n' +
+    '  ',
+  duration: 4,
+  rows: null
+}
+DB QUERY {
+  text: '\n' +
+    '      SELECT employees.*, regions.name AS region_name, districts.name AS district_name, colleges.name AS college_name\n' +
+    '      FROM employees\n' +
+    '      LEFT JOIN regions ON employees.region_id = regions.id\n' +
+    '      LEFT JOIN districts ON employees.district_id = districts.id\n' +
+    '      LEFT JOIN colleges ON employees.college_id = colleges.id\n' +
+    '      \n' +
+    '      ORDER BY employees.score DESC, employees.full_name\n' +
+    '      LIMIT $1\n' +
+    '      OFFSET $2',
+  duration: 94,
+  rows: 0
+}
+GET /api/employees?page=1&limit=10 304 - - 94.372 ms
+DB QUERY {
+  text: '\n' +
+    '    CREATE TABLE IF NOT EXISTS colleges (\n' +
+    '      id SERIAL PRIMARY KEY,\n' +
+    '      name TEXT NOT NULL UNIQUE,\n' +
+    '      description TEXT,\n' +
+    '      created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW(),\n' +
+    '      updated_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW()\n' +
+    '    )\n' +
+    '  ',
+  duration: 2,
+  rows: null
+}
+DB QUERY { text: 'SELECT * FROM regions ORDER BY name', duration: 83, rows: 0 }
+DB QUERY {
+  text: '\n' +
+    '    CREATE TABLE IF NOT EXISTS college_criteria (\n' +
+    '      college_id INTEGER NOT NULL REFERENCES colleges(id) ON DELETE CASCADE,\n' +
+    '      criterion_id INTEGER NOT NULL REFERENCES criteria(id) ON DELETE CASCADE,\n' +
+    '      created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW(),\n' +
+    '      PRIMARY KEY (college_id, criterion_id)\n' +
+    '    )\n' +
+    '  ',
+  duration: 2,
+  rows: null
+}
+DB QUERY {
+  text: '\n' +
+    '      SELECT employees.*, regions.name AS region_name, districts.name AS district_name, colleges.name AS college_name\n' +
+    '      FROM employees\n' +
+    '      LEFT JOIN regions ON employees.region_id = regions.id\n' +
+    '      LEFT JOIN districts ON employees.district_id = districts.id\n' +
+    '      LEFT JOIN colleges ON employees.college_id = colleges.id\n' +
+    '      \n' +
+    '      ORDER BY employees.score DESC, employees.full_name\n' +
+    '      LIMIT $1\n' +
+    '      OFFSET $2',
+  duration: 3,
+  rows: 0
+}
+GET /api/regions 304 - - 87.150 ms
+DB QUERY {
+  text: 'ALTER TABLE IF EXISTS employees ADD COLUMN IF NOT EXISTS college_id INTEGER REFERENCES colleges(id) ON DELETE SET NULL',
+  duration: 4,
+  rows: null
+}
+DB QUERY {
+  text: '\n' +
+    '      SELECT c.*,\n' +
+    '        COALESCE(\n' +
+    '          json_agg(cc.criterion_id ORDER BY cr.sort_order, cr.id) FILTER (WHERE cc.criterion_id IS NOT NULL),\n' +
+    "          '[]'\n" +
+    '        ) AS criteria_ids,\n' +
+    '        COUNT(DISTINCT e.id) AS employee_count\n' +
+    '      FROM colleges c\n' +
+    '      LEFT JOIN college_criteria cc ON cc.college_id = c.id\n' +
+    '      LEFT JOIN criteria cr ON cr.id = cc.criterion_id\n' +
+    '      LEFT JOIN employees e ON e.college_id = c.id\n' +
+    '      GROUP BY c.id\n' +
+    '      ORDER BY c.name\n' +
+    '    ',
+  duration: 2,
+  rows: 0
+}
+GET /api/colleges 304 - - 18.250 ms
+DB QUERY {
+  text: 'SELECT COUNT(*) AS total FROM employees ',
+  duration: 47,
+  rows: 1
+}
+GET /api/employees?page=1&limit=10 304 - - 47.368 ms
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node src/index.js`[39m
+DB QUERY {
+  text: 'CREATE EXTENSION IF NOT EXISTS "uuid-ossp";\r\n' +
+    '\r\n' +
+    'CREATE TABLE IF NOT EXISTS regions (\r\n' +
+    '  id SERIAL PRIMARY KEY,\r\n' +
+    '  name TEXT NOT NULL UNIQUE\r\n' +
+    ');\r\n' +
+    '\r\n' +
+    'CREATE TABLE IF NOT EXISTS districts (\r\n' +
+    '  id SERIAL PRIMARY KEY,\r\n' +
+    '  name TEXT NOT NULL,\r\n' +
+    '  region_id INTEGER NOT NULL REFERENCES regions(id) ON DELETE CASCADE\r\n' +
+    ');\r\n' +
+    '\r\n' +
+    'CREATE TABLE IF NOT EXISTS positions (\n' +
+    '  id SERIAL PRIMARY KEY,\n' +
+    '  name TEXT NOT NULL UNIQUE\n' +
+    ');\n' +
+    '\n' +
+    'CREATE TABLE IF NOT EXISTS colleges (\n' +
+    '  id SERIAL PRIMARY KEY,\n' +
+    '  name TEXT NOT NULL UNIQUE,\n' +
+    '  description TEXT,\n' +
+    '  created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW(),\n' +
+    '  updated_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW()\n' +
+    ');\n' +
+    '\n' +
+    'CREATE TABLE IF NOT EXISTS admins (\n' +
+    '  id SERIAL PRIMARY KEY,\n' +
+    '  username TEXT NOT NULL UNIQUE,\n' +
+    '  password TEXT NOT NULL,\n' +
+    "  role TEXT NOT NULL CHECK (role IN ('super_admin', 'admin')),\n" +
+    "  assigned_regions JSONB NOT NULL DEFAULT '[]',\n" +
+    "  status TEXT NOT NULL DEFAULT 'active' CHECK (status IN ('active', 'blocked')),\n" +
+    '  last_login_at TIMESTAMP WITHOUT TIME ZONE,\n' +
+    '  created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW(),\n' +
+    '  updated_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW()\n' +
+    ');\n' +
+    '\r\n' +
+    'CREATE TABLE IF NOT EXISTS admin_logs (\r\n' +
+    '  id SERIAL PRIMARY KEY,\r\n' +
+    '  admin_id INTEGER,\r\n' +
+    '  admin_username TEXT NOT NULL,\r\n' +
+    '  action TEXT NOT NULL,\r\n' +
+    '  entity_type TEXT NOT NULL,\r\n' +
+    '  entity_id INTEGER,\r\n' +
+    '  entity_name TEXT,\r\n' +
+    '  change_description TEXT,\r\n' +
+    '  old_data JSONB,\r\n' +
+    '  new_data JSONB,\r\n' +
+    '  ip_address TEXT,\r\n' +
+    '  user_agent TEXT,\r\n' +
+    '  created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW()\r\n' +
+    ');\r\n' +
+    '\r\n' +
+    'CREATE TABLE IF NOT EXISTS admin_logs (\r\n' +
+    '  id SERIAL PRIMARY KEY,\r\n' +
+    '  admin_id INTEGER NOT NULL REFERENCES admins(id) ON DELETE CASCADE,\r\n' +
+    '  admin_username TEXT NOT NULL,\r\n' +
+    "  action TEXT NOT NULL CHECK (action IN ('CREATE', 'UPDATE', 'DELETE')),\r\n" +
+    "  entity_type TEXT NOT NULL CHECK (entity_type IN ('employee', 'admin', 'region', 'district', 'position')),\r\n" +
+    '  entity_id INTEGER,\r\n' +
+    '  entity_name TEXT,\r\n' +
+    '  old_data JSONB,\r\n' +
+    '  new_data JSONB,\r\n' +
+    '  ip_address TEXT,\r\n' +
+    '  user_agent TEXT,\r\n' +
+    '  created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW()\r\n' +
+    ');\r\n' +
+    '\r\n' +
+    'CREATE TABLE IF NOT EXISTS employees (\n' +
+    '  id SERIAL PRIMARY KEY,\n' +
+    '  full_name TEXT NOT NULL,\n' +
+    '  position TEXT NOT NULL,\n' +
+    '  college_id INTEGER REFERENCES colleges(id) ON DELETE SET NULL,\n' +
+    '  region_id INTEGER NOT NULL REFERENCES regions(id) ON DELETE CASCADE,\n' +
+    '  district_id INTEGER NOT NULL REFERENCES districts(id) ON DELETE CASCADE,\n' +
+    '  score INTEGER NOT NULL DEFAULT 0 CHECK (score >= 0 AND score <= 100),\r\n' +
+    "  scores JSONB NOT NULL DEFAULT '{}'::jsonb,\r\n" +
+    "  chosen_sections JSONB NOT NULL DEFAULT '{}'::jsonb,\r\n" +
+    '  konstitutsiya_score INTEGER NOT NULL DEFAULT 0 CHECK (konstitutsiya_score >= 0 AND konstitutsiya_score <= 100),\r\n' +
+    '  kodeks_score INTEGER NOT NULL DEFAULT 0 CHECK (kodeks_score >= 0 AND kodeks_score <= 100),\r\n' +
+    '  protsessual_kodeks_score INTEGER NOT NULL DEFAULT 0 CHECK (protsessual_kodeks_score >= 0 AND protsessual_kodeks_score <= 100),\r\n' +
+    '  akt_sohasi_score INTEGER NOT NULL DEFAULT 0 CHECK (akt_sohasi_score >= 0 AND akt_sohasi_score <= 100),\r\n' +
+    '  odob_axloq_score INTEGER NOT NULL DEFAULT 0 CHECK (odob_axloq_score >= 0 AND odob_axloq_score <= 100),\r\n' +
+    "  konstitutsiya_status TEXT NOT NULL DEFAULT 'topshirmadi' CHECK (konstitutsiya_status IN ('topshirdi', 'topshirmadi')),\r\n" +
+    "  kodeks_status TEXT NOT NULL DEFAULT 'topshirmadi' CHECK (kodeks_status IN ('topshirdi', 'topshirmadi')),\r\n" +
+    "  protsessual_kodeks_status TEXT NOT NULL DEFAULT 'topshirmadi' CHECK (protsessual_kodeks_status IN ('topshirdi', 'topshirmadi')),\r\n" +
+    "  akt_sohasi_status TEXT NOT NULL DEFAULT 'topshirmadi' CHECK (akt_sohasi_status IN ('topshirdi', 'topshirmadi')),\r\n" +
+    "  odob_axloq_status TEXT NOT NULL DEFAULT 'topshirmadi' CHECK (odob_axloq_status IN ('topshirdi', 'topshirmadi')),\r\n" +
+    '  created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW(),\r\n' +
+    '  updated_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW()\n' +
+    ');\n' +
+    '\n' +
+    'CREATE TABLE IF NOT EXISTS criteria (\n' +
+    '  id SERIAL PRIMARY KEY,\n' +
+    '  key TEXT NOT NULL UNIQUE,\n' +
+    '  label TEXT NOT NULL,\n' +
+    '  short_label TEXT NOT NULL,\n' +
+    '  sort_order INTEGER NOT NULL DEFAULT 0,\n' +
+    '  created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW(),\n' +
+    '  updated_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW()\n' +
+    ');\n' +
+    '\n' +
+    'CREATE TABLE IF NOT EXISTS college_criteria (\n' +
+    '  college_id INTEGER NOT NULL REFERENCES colleges(id) ON DELETE CASCADE,\n' +
+    '  criterion_id INTEGER NOT NULL REFERENCES criteria(id) ON DELETE CASCADE,\n' +
+    '  created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW(),\n' +
+    '  PRIMARY KEY (college_id, criterion_id)\n' +
+    ');\n' +
+    '\n' +
+    'ALTER TABLE IF EXISTS employees ADD COLUMN IF NOT EXISTS college_id INTEGER REFERENCES colleges(id) ON DELETE SET NULL;\n' +
+    'ALTER TABLE IF EXISTS employees ADD COLUMN IF NOT EXISTS konstitutsiya_score INTEGER NOT NULL DEFAULT 0 CHECK (konstitutsiya_score >= 0 AND konstitutsiya_score <= 100);\n' +
+    'ALTER TABLE IF EXISTS employees ADD COLUMN IF NOT EXISTS kodeks_score INTEGER NOT NULL DEFAULT 0 CHECK (kodeks_score >= 0 AND kodeks_score <= 100);\r\n' +
+    'ALTER TABLE IF EXISTS employees ADD COLUMN IF NOT EXISTS protsessual_kodeks_score INTEGER NOT NULL DEFAULT 0 CHECK (protsessual_kodeks_score >= 0 AND protsessual_kodeks_score <= 100);\r\n' +
+    'ALTER TABLE IF EXISTS employees ADD COLUMN IF NOT EXISTS akt_sohasi_score INTEGER NOT NULL DEFAULT 0 CHECK (akt_sohasi_score >= 0 AND akt_sohasi_score <= 100);\r\n' +
+    'ALTER TABLE IF EXISTS employees ADD COLUMN IF NOT EXISTS odob_axloq_score INTEGER NOT NULL DEFAULT 0 CHECK (odob_axloq_score >= 0 AND odob_axloq_score <= 100);\r\n' +
+    "ALTER TABLE IF EXISTS employees ADD COLUMN IF NOT EXISTS konstitutsiya_status TEXT NOT NULL DEFAULT 'topshirmadi' CHECK (konstitutsiya_status IN ('topshirdi', 'topshirmadi'));\r\n" +
+    "ALTER TABLE IF EXISTS employees ADD COLUMN IF NOT EXISTS kodeks_status TEXT NOT NULL DEFAULT 'topshirmadi' CHECK (kodeks_status IN ('topshirdi', 'topshirmadi'));\r\n" +
+    "ALTER TABLE IF EXISTS employees ADD COLUMN IF NOT EXISTS protsessual_kodeks_status TEXT NOT NULL DEFAULT 'topshirmadi' CHECK (protsessual_kodeks_status IN ('topshirdi', 'topshirmadi'));\r\n" +
+    "ALTER TABLE IF EXISTS employees ADD COLUMN IF NOT EXISTS akt_sohasi_status TEXT NOT NULL DEFAULT 'topshirmadi' CHECK (akt_sohasi_status IN ('topshirdi', 'topshirmadi'));\r\n" +
+    "ALTER TABLE IF EXISTS employees ADD COLUMN IF NOT EXISTS odob_axloq_status TEXT NOT NULL DEFAULT 'topshirmadi' CHECK (odob_axloq_status IN ('topshirdi', 'topshirmadi'));\r\n" +
+    "ALTER TABLE IF EXISTS employees ADD COLUMN IF NOT EXISTS scores JSONB NOT NULL DEFAULT '{}'::jsonb;\r\n" +
+    "ALTER TABLE IF EXISTS employees ADD COLUMN IF NOT EXISTS chosen_sections JSONB NOT NULL DEFAULT '{}'::jsonb;\r\n" +
+    '\r\n' +
+    'ALTER TABLE IF EXISTS admin_logs ADD COLUMN IF NOT EXISTS admin_id INTEGER NOT NULL REFERENCES admins(id) ON DELETE CASCADE;\r\n' +
+    'ALTER TABLE IF EXISTS admin_logs ADD COLUMN IF NOT EXISTS admin_username TEXT NOT NULL;\r\n' +
+    "ALTER TABLE IF EXISTS admin_logs ADD COLUMN IF NOT EXISTS action TEXT NOT NULL CHECK (action IN ('CREATE', 'UPDATE', 'DELETE'));\r\n" +
+    "ALTER TABLE IF EXISTS admin_logs ADD COLUMN IF NOT EXISTS entity_type TEXT NOT NULL CHECK (entity_type IN ('employee', 'admin', 'region', 'district', 'position'));\r\n" +
+    'ALTER TABLE IF EXISTS admin_logs ADD COLUMN IF NOT EXISTS entity_id INTEGER;\r\n' +
+    'ALTER TABLE IF EXISTS admin_logs ADD COLUMN IF NOT EXISTS entity_name TEXT;\r\n' +
+    'ALTER TABLE IF EXISTS admin_logs ADD COLUMN IF NOT EXISTS change_description TEXT;\r\n' +
+    'ALTER TABLE IF EXISTS admin_logs ADD COLUMN IF NOT EXISTS old_data JSONB;\r\n' +
+    'ALTER TABLE IF EXISTS admin_logs ADD COLUMN IF NOT EXISTS new_data JSONB;\r\n' +
+    'ALTER TABLE IF EXISTS admin_logs ADD COLUMN IF NOT EXISTS ip_address TEXT;\r\n' +
+    'ALTER TABLE IF EXISTS admin_logs ADD COLUMN IF NOT EXISTS user_agent TEXT;\r\n' +
+    'ALTER TABLE IF EXISTS admin_logs ADD COLUMN IF NOT EXISTS created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW();\n' +
+    '\n' +
+    'ALTER TABLE IF EXISTS admin_logs DROP CONSTRAINT IF EXISTS admin_logs_entity_type_check;\n' +
+    "ALTER TABLE IF EXISTS admin_logs ADD CONSTRAINT admin_logs_entity_type_check CHECK (entity_type IN ('employee', 'admin', 'region', 'district', 'position', 'criterion', 'college'));\n" +
+    '\n' +
+    "ALTER TABLE IF EXISTS admins ADD COLUMN IF NOT EXISTS status TEXT NOT NULL DEFAULT 'active';\n" +
+    'ALTER TABLE IF EXISTS admins ADD COLUMN IF NOT EXISTS last_login_at TIMESTAMP WITHOUT TIME ZONE;\n' +
+    'ALTER TABLE IF EXISTS admins ADD COLUMN IF NOT EXISTS created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW();\n' +
+    'ALTER TABLE IF EXISTS admins ADD COLUMN IF NOT EXISTS updated_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW();\n' +
+    'ALTER TABLE IF EXISTS admins DROP CONSTRAINT IF EXISTS admins_status_check;\n' +
+    "ALTER TABLE IF EXISTS admins ADD CONSTRAINT admins_status_check CHECK (status IN ('active', 'blocked'));\n" +
+    '\r\n' +
+    'ALTER TABLE IF EXISTS employees DROP CONSTRAINT IF EXISTS employees_district_id_fkey;\r\n' +
+    'ALTER TABLE IF EXISTS employees ADD CONSTRAINT employees_district_id_fkey FOREIGN KEY (district_id) REFERENCES districts(id) ON DELETE CASCADE;\r\n' +
+    '\r\n' +
+    'CREATE OR REPLACE FUNCTION update_timestamp()\r\n' +
+    'RETURNS TRIGGER AS $$\r\n' +
+    'BEGIN\r\n' +
+    '  NEW.updated_at = NOW();\r\n' +
+    '  RETURN NEW;\r\n' +
+    'END;\r\n' +
+    '$$ LANGUAGE plpgsql;\r\n' +
+    '\r\n' +
+    'DROP TRIGGER IF EXISTS employees_updated_at ON employees;\r\n' +
+    '\r\n' +
+    'CREATE TRIGGER employees_updated_at\r\n' +
+    'BEFORE UPDATE ON employees\r\n' +
+    'FOR EACH ROW EXECUTE FUNCTION update_timestamp();\r\n' +
+    '\r\n' +
+    'INSERT INTO admins (username, password, role, assigned_regions)\r\n' +
+    'VALUES\r\n' +
+    "  ('superadmin', '$2b$10$9u2vaDbOu/CEhP0h6MtS7ONedfqCdnh8rt09FDd5d.R9xiQxQAYtW', 'super_admin', '[]')\r\n" +
+    'ON CONFLICT (username) DO NOTHING;\r\n' +
+    '\r\n' +
+    '-- Default non-admin seed data has been removed.\r\n',
+  duration: 106,
+  rows: undefined
+}
+Database initialization SQL applied successfully.
+Supreme Court assessment backend listening on port 4000
+DB QUERY {
+  text: 'SELECT id, username, password, role, assigned_regions, status FROM admins WHERE username = $1',
+  duration: 6,
+  rows: 0
+}
+POST /api/auth/login 401 38 - 10.173 ms
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node src/index.js`[39m
+DB QUERY {
+  text: 'CREATE EXTENSION IF NOT EXISTS "uuid-ossp";\r\n' +
+    '\r\n' +
+    'CREATE TABLE IF NOT EXISTS regions (\r\n' +
+    '  id SERIAL PRIMARY KEY,\r\n' +
+    '  name TEXT NOT NULL UNIQUE\r\n' +
+    ');\r\n' +
+    '\r\n' +
+    'CREATE TABLE IF NOT EXISTS districts (\r\n' +
+    '  id SERIAL PRIMARY KEY,\r\n' +
+    '  name TEXT NOT NULL,\r\n' +
+    '  region_id INTEGER NOT NULL REFERENCES regions(id) ON DELETE CASCADE\r\n' +
+    ');\r\n' +
+    '\r\n' +
+    'CREATE TABLE IF NOT EXISTS positions (\n' +
+    '  id SERIAL PRIMARY KEY,\n' +
+    '  name TEXT NOT NULL UNIQUE\n' +
+    ');\n' +
+    '\n' +
+    'CREATE TABLE IF NOT EXISTS colleges (\n' +
+    '  id SERIAL PRIMARY KEY,\n' +
+    '  name TEXT NOT NULL UNIQUE,\n' +
+    '  description TEXT,\n' +
+    '  created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW(),\n' +
+    '  updated_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW()\n' +
+    ');\n' +
+    '\n' +
+    'CREATE TABLE IF NOT EXISTS admins (\n' +
+    '  id SERIAL PRIMARY KEY,\n' +
+    '  username TEXT NOT NULL UNIQUE,\n' +
+    '  password TEXT NOT NULL,\n' +
+    "  role TEXT NOT NULL CHECK (role IN ('super_admin', 'admin')),\n" +
+    "  assigned_regions JSONB NOT NULL DEFAULT '[]',\n" +
+    "  status TEXT NOT NULL DEFAULT 'active' CHECK (status IN ('active', 'blocked')),\n" +
+    '  last_login_at TIMESTAMP WITHOUT TIME ZONE,\n' +
+    '  created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW(),\n' +
+    '  updated_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW()\n' +
+    ');\n' +
+    '\r\n' +
+    'CREATE TABLE IF NOT EXISTS admin_logs (\r\n' +
+    '  id SERIAL PRIMARY KEY,\r\n' +
+    '  admin_id INTEGER,\r\n' +
+    '  admin_username TEXT NOT NULL,\r\n' +
+    '  action TEXT NOT NULL,\r\n' +
+    '  entity_type TEXT NOT NULL,\r\n' +
+    '  entity_id INTEGER,\r\n' +
+    '  entity_name TEXT,\r\n' +
+    '  change_description TEXT,\r\n' +
+    '  old_data JSONB,\r\n' +
+    '  new_data JSONB,\r\n' +
+    '  ip_address TEXT,\r\n' +
+    '  user_agent TEXT,\r\n' +
+    '  created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW()\r\n' +
+    ');\r\n' +
+    '\r\n' +
+    'CREATE TABLE IF NOT EXISTS admin_logs (\r\n' +
+    '  id SERIAL PRIMARY KEY,\r\n' +
+    '  admin_id INTEGER NOT NULL REFERENCES admins(id) ON DELETE CASCADE,\r\n' +
+    '  admin_username TEXT NOT NULL,\r\n' +
+    "  action TEXT NOT NULL CHECK (action IN ('CREATE', 'UPDATE', 'DELETE')),\r\n" +
+    "  entity_type TEXT NOT NULL CHECK (entity_type IN ('employee', 'admin', 'region', 'district', 'position')),\r\n" +
+    '  entity_id INTEGER,\r\n' +
+    '  entity_name TEXT,\r\n' +
+    '  old_data JSONB,\r\n' +
+    '  new_data JSONB,\r\n' +
+    '  ip_address TEXT,\r\n' +
+    '  user_agent TEXT,\r\n' +
+    '  created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW()\r\n' +
+    ');\r\n' +
+    '\r\n' +
+    'CREATE TABLE IF NOT EXISTS employees (\n' +
+    '  id SERIAL PRIMARY KEY,\n' +
+    '  full_name TEXT NOT NULL,\n' +
+    '  position TEXT NOT NULL,\n' +
+    '  college_id INTEGER REFERENCES colleges(id) ON DELETE SET NULL,\n' +
+    '  region_id INTEGER NOT NULL REFERENCES regions(id) ON DELETE CASCADE,\n' +
+    '  district_id INTEGER NOT NULL REFERENCES districts(id) ON DELETE CASCADE,\n' +
+    '  score INTEGER NOT NULL DEFAULT 0 CHECK (score >= 0 AND score <= 100),\r\n' +
+    "  scores JSONB NOT NULL DEFAULT '{}'::jsonb,\r\n" +
+    "  chosen_sections JSONB NOT NULL DEFAULT '{}'::jsonb,\r\n" +
+    '  konstitutsiya_score INTEGER NOT NULL DEFAULT 0 CHECK (konstitutsiya_score >= 0 AND konstitutsiya_score <= 100),\r\n' +
+    '  kodeks_score INTEGER NOT NULL DEFAULT 0 CHECK (kodeks_score >= 0 AND kodeks_score <= 100),\r\n' +
+    '  protsessual_kodeks_score INTEGER NOT NULL DEFAULT 0 CHECK (protsessual_kodeks_score >= 0 AND protsessual_kodeks_score <= 100),\r\n' +
+    '  akt_sohasi_score INTEGER NOT NULL DEFAULT 0 CHECK (akt_sohasi_score >= 0 AND akt_sohasi_score <= 100),\r\n' +
+    '  odob_axloq_score INTEGER NOT NULL DEFAULT 0 CHECK (odob_axloq_score >= 0 AND odob_axloq_score <= 100),\r\n' +
+    "  konstitutsiya_status TEXT NOT NULL DEFAULT 'topshirmadi' CHECK (konstitutsiya_status IN ('topshirdi', 'topshirmadi')),\r\n" +
+    "  kodeks_status TEXT NOT NULL DEFAULT 'topshirmadi' CHECK (kodeks_status IN ('topshirdi', 'topshirmadi')),\r\n" +
+    "  protsessual_kodeks_status TEXT NOT NULL DEFAULT 'topshirmadi' CHECK (protsessual_kodeks_status IN ('topshirdi', 'topshirmadi')),\r\n" +
+    "  akt_sohasi_status TEXT NOT NULL DEFAULT 'topshirmadi' CHECK (akt_sohasi_status IN ('topshirdi', 'topshirmadi')),\r\n" +
+    "  odob_axloq_status TEXT NOT NULL DEFAULT 'topshirmadi' CHECK (odob_axloq_status IN ('topshirdi', 'topshirmadi')),\r\n" +
+    '  created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW(),\r\n' +
+    '  updated_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW()\n' +
+    ');\n' +
+    '\n' +
+    'CREATE TABLE IF NOT EXISTS criteria (\n' +
+    '  id SERIAL PRIMARY KEY,\n' +
+    '  key TEXT NOT NULL UNIQUE,\n' +
+    '  label TEXT NOT NULL,\n' +
+    '  short_label TEXT NOT NULL,\n' +
+    '  sort_order INTEGER NOT NULL DEFAULT 0,\n' +
+    '  created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW(),\n' +
+    '  updated_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW()\n' +
+    ');\n' +
+    '\n' +
+    'CREATE TABLE IF NOT EXISTS college_criteria (\n' +
+    '  college_id INTEGER NOT NULL REFERENCES colleges(id) ON DELETE CASCADE,\n' +
+    '  criterion_id INTEGER NOT NULL REFERENCES criteria(id) ON DELETE CASCADE,\n' +
+    '  created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW(),\n' +
+    '  PRIMARY KEY (college_id, criterion_id)\n' +
+    ');\n' +
+    '\n' +
+    'ALTER TABLE IF EXISTS employees ADD COLUMN IF NOT EXISTS college_id INTEGER REFERENCES colleges(id) ON DELETE SET NULL;\n' +
+    'ALTER TABLE IF EXISTS employees ADD COLUMN IF NOT EXISTS konstitutsiya_score INTEGER NOT NULL DEFAULT 0 CHECK (konstitutsiya_score >= 0 AND konstitutsiya_score <= 100);\n' +
+    'ALTER TABLE IF EXISTS employees ADD COLUMN IF NOT EXISTS kodeks_score INTEGER NOT NULL DEFAULT 0 CHECK (kodeks_score >= 0 AND kodeks_score <= 100);\r\n' +
+    'ALTER TABLE IF EXISTS employees ADD COLUMN IF NOT EXISTS protsessual_kodeks_score INTEGER NOT NULL DEFAULT 0 CHECK (protsessual_kodeks_score >= 0 AND protsessual_kodeks_score <= 100);\r\n' +
+    'ALTER TABLE IF EXISTS employees ADD COLUMN IF NOT EXISTS akt_sohasi_score INTEGER NOT NULL DEFAULT 0 CHECK (akt_sohasi_score >= 0 AND akt_sohasi_score <= 100);\r\n' +
+    'ALTER TABLE IF EXISTS employees ADD COLUMN IF NOT EXISTS odob_axloq_score INTEGER NOT NULL DEFAULT 0 CHECK (odob_axloq_score >= 0 AND odob_axloq_score <= 100);\r\n' +
+    "ALTER TABLE IF EXISTS employees ADD COLUMN IF NOT EXISTS konstitutsiya_status TEXT NOT NULL DEFAULT 'topshirmadi' CHECK (konstitutsiya_status IN ('topshirdi', 'topshirmadi'));\r\n" +
+    "ALTER TABLE IF EXISTS employees ADD COLUMN IF NOT EXISTS kodeks_status TEXT NOT NULL DEFAULT 'topshirmadi' CHECK (kodeks_status IN ('topshirdi', 'topshirmadi'));\r\n" +
+    "ALTER TABLE IF EXISTS employees ADD COLUMN IF NOT EXISTS protsessual_kodeks_status TEXT NOT NULL DEFAULT 'topshirmadi' CHECK (protsessual_kodeks_status IN ('topshirdi', 'topshirmadi'));\r\n" +
+    "ALTER TABLE IF EXISTS employees ADD COLUMN IF NOT EXISTS akt_sohasi_status TEXT NOT NULL DEFAULT 'topshirmadi' CHECK (akt_sohasi_status IN ('topshirdi', 'topshirmadi'));\r\n" +
+    "ALTER TABLE IF EXISTS employees ADD COLUMN IF NOT EXISTS odob_axloq_status TEXT NOT NULL DEFAULT 'topshirmadi' CHECK (odob_axloq_status IN ('topshirdi', 'topshirmadi'));\r\n" +
+    "ALTER TABLE IF EXISTS employees ADD COLUMN IF NOT EXISTS scores JSONB NOT NULL DEFAULT '{}'::jsonb;\r\n" +
+    "ALTER TABLE IF EXISTS employees ADD COLUMN IF NOT EXISTS chosen_sections JSONB NOT NULL DEFAULT '{}'::jsonb;\r\n" +
+    '\r\n' +
+    'ALTER TABLE IF EXISTS admin_logs ADD COLUMN IF NOT EXISTS admin_id INTEGER NOT NULL REFERENCES admins(id) ON DELETE CASCADE;\r\n' +
+    'ALTER TABLE IF EXISTS admin_logs ADD COLUMN IF NOT EXISTS admin_username TEXT NOT NULL;\r\n' +
+    "ALTER TABLE IF EXISTS admin_logs ADD COLUMN IF NOT EXISTS action TEXT NOT NULL CHECK (action IN ('CREATE', 'UPDATE', 'DELETE'));\r\n" +
+    "ALTER TABLE IF EXISTS admin_logs ADD COLUMN IF NOT EXISTS entity_type TEXT NOT NULL CHECK (entity_type IN ('employee', 'admin', 'region', 'district', 'position'));\r\n" +
+    'ALTER TABLE IF EXISTS admin_logs ADD COLUMN IF NOT EXISTS entity_id INTEGER;\r\n' +
+    'ALTER TABLE IF EXISTS admin_logs ADD COLUMN IF NOT EXISTS entity_name TEXT;\r\n' +
+    'ALTER TABLE IF EXISTS admin_logs ADD COLUMN IF NOT EXISTS change_description TEXT;\r\n' +
+    'ALTER TABLE IF EXISTS admin_logs ADD COLUMN IF NOT EXISTS old_data JSONB;\r\n' +
+    'ALTER TABLE IF EXISTS admin_logs ADD COLUMN IF NOT EXISTS new_data JSONB;\r\n' +
+    'ALTER TABLE IF EXISTS admin_logs ADD COLUMN IF NOT EXISTS ip_address TEXT;\r\n' +
+    'ALTER TABLE IF EXISTS admin_logs ADD COLUMN IF NOT EXISTS user_agent TEXT;\r\n' +
+    'ALTER TABLE IF EXISTS admin_logs ADD COLUMN IF NOT EXISTS created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW();\n' +
+    '\n' +
+    'ALTER TABLE IF EXISTS admin_logs DROP CONSTRAINT IF EXISTS admin_logs_entity_type_check;\n' +
+    "ALTER TABLE IF EXISTS admin_logs ADD CONSTRAINT admin_logs_entity_type_check CHECK (entity_type IN ('employee', 'admin', 'region', 'district', 'position', 'criterion', 'college'));\n" +
+    '\n' +
+    "ALTER TABLE IF EXISTS admins ADD COLUMN IF NOT EXISTS status TEXT NOT NULL DEFAULT 'active';\n" +
+    'ALTER TABLE IF EXISTS admins ADD COLUMN IF NOT EXISTS last_login_at TIMESTAMP WITHOUT TIME ZONE;\n' +
+    'ALTER TABLE IF EXISTS admins ADD COLUMN IF NOT EXISTS created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW();\n' +
+    'ALTER TABLE IF EXISTS admins ADD COLUMN IF NOT EXISTS updated_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW();\n' +
+    'ALTER TABLE IF EXISTS admins DROP CONSTRAINT IF EXISTS admins_status_check;\n' +
+    "ALTER TABLE IF EXISTS admins ADD CONSTRAINT admins_status_check CHECK (status IN ('active', 'blocked'));\n" +
+    '\r\n' +
+    'ALTER TABLE IF EXISTS employees DROP CONSTRAINT IF EXISTS employees_district_id_fkey;\r\n' +
+    'ALTER TABLE IF EXISTS employees ADD CONSTRAINT employees_district_id_fkey FOREIGN KEY (district_id) REFERENCES districts(id) ON DELETE CASCADE;\r\n' +
+    '\r\n' +
+    'CREATE OR REPLACE FUNCTION update_timestamp()\r\n' +
+    'RETURNS TRIGGER AS $$\r\n' +
+    'BEGIN\r\n' +
+    '  NEW.updated_at = NOW();\r\n' +
+    '  RETURN NEW;\r\n' +
+    'END;\r\n' +
+    '$$ LANGUAGE plpgsql;\r\n' +
+    '\r\n' +
+    'DROP TRIGGER IF EXISTS employees_updated_at ON employees;\r\n' +
+    '\r\n' +
+    'CREATE TRIGGER employees_updated_at\r\n' +
+    'BEFORE UPDATE ON employees\r\n' +
+    'FOR EACH ROW EXECUTE FUNCTION update_timestamp();\r\n' +
+    '\r\n' +
+    'INSERT INTO admins (username, password, role, assigned_regions)\r\n' +
+    'VALUES\r\n' +
+    "  ('superadmin', '$2b$10$9u2vaDbOu/CEhP0h6MtS7ONedfqCdnh8rt09FDd5d.R9xiQxQAYtW', 'super_admin', '[]')\r\n" +
+    'ON CONFLICT (username) DO NOTHING;\r\n' +
+    '\r\n' +
+    '-- Default non-admin seed data has been removed.\r\n',
+  duration: 81,
+  rows: undefined
+}
+Database initialization SQL applied successfully.
+Supreme Court assessment backend listening on port 4000

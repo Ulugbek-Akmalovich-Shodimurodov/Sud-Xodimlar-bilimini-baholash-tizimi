@@ -303,3 +303,1049 @@ AggregateError [ECONNREFUSED]:
     }
   ]
 }
+AggregateError [ECONNREFUSED]: 
+    at C:\Users\a4\OneDrive\Ishchi stol\Sayt\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async query (file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/db.js:27:15)
+    at async file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/routes/auth.js:18:20 {
+  code: 'ECONNREFUSED',
+  [errors]: [
+    Error: connect ECONNREFUSED ::1:5432
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -4078,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '::1',
+      port: 5432
+    },
+    Error: connect ECONNREFUSED 127.0.0.1:5432
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -4078,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '127.0.0.1',
+      port: 5432
+    }
+  ]
+}
+AggregateError [ECONNREFUSED]: 
+    at C:\Users\a4\OneDrive\Ishchi stol\Sayt\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async query (file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/db.js:27:15)
+    at async file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/routes/auth.js:18:20 {
+  code: 'ECONNREFUSED',
+  [errors]: [
+    Error: connect ECONNREFUSED ::1:5432
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -4078,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '::1',
+      port: 5432
+    },
+    Error: connect ECONNREFUSED 127.0.0.1:5432
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -4078,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '127.0.0.1',
+      port: 5432
+    }
+  ]
+}
+AggregateError [ECONNREFUSED]: 
+    at C:\Users\a4\OneDrive\Ishchi stol\Sayt\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async query (file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/db.js:27:15)
+    at async file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/routes/auth.js:18:20 {
+  code: 'ECONNREFUSED',
+  [errors]: [
+    Error: connect ECONNREFUSED ::1:5432
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -4078,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '::1',
+      port: 5432
+    },
+    Error: connect ECONNREFUSED 127.0.0.1:5432
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -4078,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '127.0.0.1',
+      port: 5432
+    }
+  ]
+}
+AggregateError [ECONNREFUSED]: 
+    at C:\Users\a4\OneDrive\Ishchi stol\Sayt\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async query (file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/db.js:27:15)
+    at async file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/routes/auth.js:18:20 {
+  code: 'ECONNREFUSED',
+  [errors]: [
+    Error: connect ECONNREFUSED ::1:5432
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -4078,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '::1',
+      port: 5432
+    },
+    Error: connect ECONNREFUSED 127.0.0.1:5432
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -4078,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '127.0.0.1',
+      port: 5432
+    }
+  ]
+}
+AggregateError [ECONNREFUSED]: 
+    at C:\Users\a4\OneDrive\Ishchi stol\Sayt\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async query (file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/db.js:27:15)
+    at async file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/routes/regions.js:29:20 {
+  code: 'ECONNREFUSED',
+  [errors]: [
+    Error: connect ECONNREFUSED ::1:5432
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -4078,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '::1',
+      port: 5432
+    },
+    Error: connect ECONNREFUSED 127.0.0.1:5432
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -4078,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '127.0.0.1',
+      port: 5432
+    }
+  ]
+}
+AggregateError [ECONNREFUSED]: 
+    at C:\Users\a4\OneDrive\Ishchi stol\Sayt\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async query (file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/db.js:27:15)
+    at async ensureCollegeTables (file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/routes/colleges.js:10:3)
+    at async file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/routes/colleges.js:81:5 {
+  code: 'ECONNREFUSED',
+  [errors]: [
+    Error: connect ECONNREFUSED ::1:5432
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -4078,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '::1',
+      port: 5432
+    },
+    Error: connect ECONNREFUSED 127.0.0.1:5432
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -4078,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '127.0.0.1',
+      port: 5432
+    }
+  ]
+}
+AggregateError [ECONNREFUSED]: 
+    at C:\Users\a4\OneDrive\Ishchi stol\Sayt\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async query (file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/db.js:27:15)
+    at async file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/routes/criteria.js:113:24 {
+  code: 'ECONNREFUSED',
+  [errors]: [
+    Error: connect ECONNREFUSED ::1:5432
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -4078,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '::1',
+      port: 5432
+    },
+    Error: connect ECONNREFUSED 127.0.0.1:5432
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -4078,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '127.0.0.1',
+      port: 5432
+    }
+  ]
+}
+AggregateError [ECONNREFUSED]: 
+    at C:\Users\a4\OneDrive\Ishchi stol\Sayt\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async query (file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/db.js:27:15)
+    at async safeQuery (file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/routes/employees.js:149:12)
+    at async Promise.all (index 1)
+    at async file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/routes/employees.js:184:27 {
+  code: 'ECONNREFUSED',
+  [errors]: [
+    Error: connect ECONNREFUSED ::1:5432
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -4078,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '::1',
+      port: 5432
+    },
+    Error: connect ECONNREFUSED 127.0.0.1:5432
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -4078,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '127.0.0.1',
+      port: 5432
+    }
+  ]
+}
+AggregateError [ECONNREFUSED]: 
+    at C:\Users\a4\OneDrive\Ishchi stol\Sayt\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async query (file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/db.js:27:15)
+    at async file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/routes/regions.js:29:20 {
+  code: 'ECONNREFUSED',
+  [errors]: [
+    Error: connect ECONNREFUSED ::1:5432
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -4078,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '::1',
+      port: 5432
+    },
+    Error: connect ECONNREFUSED 127.0.0.1:5432
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -4078,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '127.0.0.1',
+      port: 5432
+    }
+  ]
+}
+AggregateError [ECONNREFUSED]: 
+    at C:\Users\a4\OneDrive\Ishchi stol\Sayt\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async query (file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/db.js:27:15)
+    at async ensureCollegeTables (file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/routes/colleges.js:10:3)
+    at async file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/routes/colleges.js:81:5 {
+  code: 'ECONNREFUSED',
+  [errors]: [
+    Error: connect ECONNREFUSED ::1:5432
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -4078,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '::1',
+      port: 5432
+    },
+    Error: connect ECONNREFUSED 127.0.0.1:5432
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -4078,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '127.0.0.1',
+      port: 5432
+    }
+  ]
+}
+AggregateError [ECONNREFUSED]: 
+    at C:\Users\a4\OneDrive\Ishchi stol\Sayt\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async query (file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/db.js:27:15)
+    at async file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/routes/criteria.js:113:24 {
+  code: 'ECONNREFUSED',
+  [errors]: [
+    Error: connect ECONNREFUSED ::1:5432
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -4078,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '::1',
+      port: 5432
+    },
+    Error: connect ECONNREFUSED 127.0.0.1:5432
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -4078,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '127.0.0.1',
+      port: 5432
+    }
+  ]
+}
+AggregateError [ECONNREFUSED]: 
+    at C:\Users\a4\OneDrive\Ishchi stol\Sayt\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async query (file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/db.js:27:15)
+    at async safeQuery (file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/routes/employees.js:149:12)
+    at async Promise.all (index 0)
+    at async file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/routes/employees.js:184:27 {
+  code: 'ECONNREFUSED',
+  [errors]: [
+    Error: connect ECONNREFUSED ::1:5432
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -4078,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '::1',
+      port: 5432
+    },
+    Error: connect ECONNREFUSED 127.0.0.1:5432
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -4078,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '127.0.0.1',
+      port: 5432
+    }
+  ]
+}
+AggregateError [ECONNREFUSED]: 
+    at C:\Users\a4\OneDrive\Ishchi stol\Sayt\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async query (file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/db.js:27:15)
+    at async file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/routes/regions.js:29:20 {
+  code: 'ECONNREFUSED',
+  [errors]: [
+    Error: connect ECONNREFUSED ::1:5432
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -4078,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '::1',
+      port: 5432
+    },
+    Error: connect ECONNREFUSED 127.0.0.1:5432
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -4078,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '127.0.0.1',
+      port: 5432
+    }
+  ]
+}
+AggregateError [ECONNREFUSED]: 
+    at C:\Users\a4\OneDrive\Ishchi stol\Sayt\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async query (file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/db.js:27:15)
+    at async ensureCollegeTables (file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/routes/colleges.js:10:3)
+    at async file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/routes/colleges.js:81:5 {
+  code: 'ECONNREFUSED',
+  [errors]: [
+    Error: connect ECONNREFUSED ::1:5432
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -4078,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '::1',
+      port: 5432
+    },
+    Error: connect ECONNREFUSED 127.0.0.1:5432
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -4078,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '127.0.0.1',
+      port: 5432
+    }
+  ]
+}
+AggregateError [ECONNREFUSED]: 
+    at C:\Users\a4\OneDrive\Ishchi stol\Sayt\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async query (file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/db.js:27:15)
+    at async file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/routes/criteria.js:113:24 {
+  code: 'ECONNREFUSED',
+  [errors]: [
+    Error: connect ECONNREFUSED ::1:5432
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -4078,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '::1',
+      port: 5432
+    },
+    Error: connect ECONNREFUSED 127.0.0.1:5432
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -4078,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '127.0.0.1',
+      port: 5432
+    }
+  ]
+}
+AggregateError [ECONNREFUSED]: 
+    at C:\Users\a4\OneDrive\Ishchi stol\Sayt\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async query (file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/db.js:27:15)
+    at async safeQuery (file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/routes/employees.js:149:12)
+    at async Promise.all (index 0)
+    at async file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/routes/employees.js:184:27 {
+  code: 'ECONNREFUSED',
+  [errors]: [
+    Error: connect ECONNREFUSED ::1:5432
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -4078,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '::1',
+      port: 5432
+    },
+    Error: connect ECONNREFUSED 127.0.0.1:5432
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -4078,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '127.0.0.1',
+      port: 5432
+    }
+  ]
+}
+AggregateError [ECONNREFUSED]: 
+    at C:\Users\a4\OneDrive\Ishchi stol\Sayt\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async query (file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/db.js:27:15)
+    at async file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/routes/regions.js:29:20 {
+  code: 'ECONNREFUSED',
+  [errors]: [
+    Error: connect ECONNREFUSED ::1:5432
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -4078,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '::1',
+      port: 5432
+    },
+    Error: connect ECONNREFUSED 127.0.0.1:5432
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -4078,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '127.0.0.1',
+      port: 5432
+    }
+  ]
+}
+AggregateError [ECONNREFUSED]: 
+    at C:\Users\a4\OneDrive\Ishchi stol\Sayt\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async query (file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/db.js:27:15)
+    at async ensureCollegeTables (file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/routes/colleges.js:10:3)
+    at async file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/routes/colleges.js:81:5 {
+  code: 'ECONNREFUSED',
+  [errors]: [
+    Error: connect ECONNREFUSED ::1:5432
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -4078,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '::1',
+      port: 5432
+    },
+    Error: connect ECONNREFUSED 127.0.0.1:5432
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -4078,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '127.0.0.1',
+      port: 5432
+    }
+  ]
+}
+AggregateError [ECONNREFUSED]: 
+    at C:\Users\a4\OneDrive\Ishchi stol\Sayt\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async query (file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/db.js:27:15)
+    at async file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/routes/criteria.js:113:24 {
+  code: 'ECONNREFUSED',
+  [errors]: [
+    Error: connect ECONNREFUSED ::1:5432
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -4078,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '::1',
+      port: 5432
+    },
+    Error: connect ECONNREFUSED 127.0.0.1:5432
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -4078,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '127.0.0.1',
+      port: 5432
+    }
+  ]
+}
+AggregateError [ECONNREFUSED]: 
+    at C:\Users\a4\OneDrive\Ishchi stol\Sayt\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async query (file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/db.js:27:15)
+    at async safeQuery (file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/routes/employees.js:149:12)
+    at async Promise.all (index 0)
+    at async file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/routes/employees.js:184:27 {
+  code: 'ECONNREFUSED',
+  [errors]: [
+    Error: connect ECONNREFUSED ::1:5432
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -4078,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '::1',
+      port: 5432
+    },
+    Error: connect ECONNREFUSED 127.0.0.1:5432
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -4078,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '127.0.0.1',
+      port: 5432
+    }
+  ]
+}
+error: database "supreme_court" does not exist
+    at C:\Users\a4\OneDrive\Ishchi stol\Sayt\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async query (file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/db.js:27:15)
+    at async file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/routes/regions.js:29:20 {
+  length: 99,
+  severity: 'FATAL',
+  code: '3D000',
+  detail: undefined,
+  hint: undefined,
+  position: undefined,
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'postinit.c',
+  line: '1023',
+  routine: 'InitPostgres'
+}
+Error: read ECONNRESET
+    at C:\Users\a4\OneDrive\Ishchi stol\Sayt\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async query (file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/db.js:27:15)
+    at async ensureCollegeTables (file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/routes/colleges.js:10:3)
+    at async file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/routes/colleges.js:81:5 {
+  errno: -4077,
+  code: 'ECONNRESET',
+  syscall: 'read'
+}
+Error: read ECONNRESET
+    at C:\Users\a4\OneDrive\Ishchi stol\Sayt\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async query (file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/db.js:27:15)
+    at async safeQuery (file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/routes/employees.js:149:12)
+    at async Promise.all (index 0)
+    at async file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/routes/employees.js:184:27 {
+  errno: -4077,
+  code: 'ECONNRESET',
+  syscall: 'read'
+}
+Error: read ECONNRESET
+    at C:\Users\a4\OneDrive\Ishchi stol\Sayt\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async query (file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/db.js:27:15)
+    at async file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/routes/criteria.js:113:24 {
+  errno: -4077,
+  code: 'ECONNRESET',
+  syscall: 'read'
+}
+error: database "supreme_court" does not exist
+    at C:\Users\a4\OneDrive\Ishchi stol\Sayt\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async query (file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/db.js:27:15)
+    at async ensureCollegeTables (file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/routes/colleges.js:10:3)
+    at async file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/routes/colleges.js:81:5 {
+  length: 99,
+  severity: 'FATAL',
+  code: '3D000',
+  detail: undefined,
+  hint: undefined,
+  position: undefined,
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'postinit.c',
+  line: '1023',
+  routine: 'InitPostgres'
+}
+error: database "supreme_court" does not exist
+    at C:\Users\a4\OneDrive\Ishchi stol\Sayt\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async query (file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/db.js:27:15)
+    at async file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/routes/regions.js:29:20 {
+  length: 99,
+  severity: 'FATAL',
+  code: '3D000',
+  detail: undefined,
+  hint: undefined,
+  position: undefined,
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'postinit.c',
+  line: '1023',
+  routine: 'InitPostgres'
+}
+Detected missing schema element, running initializeDatabase and retrying query
+error: database "supreme_court" does not exist
+    at C:\Users\a4\OneDrive\Ishchi stol\Sayt\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async query (file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/db.js:27:15)
+    at async file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/routes/criteria.js:113:24 {
+  length: 99,
+  severity: 'FATAL',
+  code: '3D000',
+  detail: undefined,
+  hint: undefined,
+  position: undefined,
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'postinit.c',
+  line: '1023',
+  routine: 'InitPostgres'
+}
+Detected missing schema element, running initializeDatabase and retrying query
+Database initialization failed: error: database "supreme_court" does not exist
+    at C:\Users\a4\OneDrive\Ishchi stol\Sayt\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async query (file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/db.js:27:15)
+    at async initializeDatabase (file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/initDb.js:13:5)
+    at async safeQuery (file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/routes/employees.js:155:9)
+    at async Promise.all (index 1)
+    at async file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/routes/employees.js:184:27 {
+  length: 99,
+  severity: 'FATAL',
+  code: '3D000',
+  detail: undefined,
+  hint: undefined,
+  position: undefined,
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'postinit.c',
+  line: '1023',
+  routine: 'InitPostgres'
+}
+error: database "supreme_court" does not exist
+    at C:\Users\a4\OneDrive\Ishchi stol\Sayt\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async query (file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/db.js:27:15)
+    at async initializeDatabase (file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/initDb.js:13:5)
+    at async safeQuery (file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/routes/employees.js:155:9)
+    at async Promise.all (index 1)
+    at async file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/routes/employees.js:184:27 {
+  length: 99,
+  severity: 'FATAL',
+  code: '3D000',
+  detail: undefined,
+  hint: undefined,
+  position: undefined,
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'postinit.c',
+  line: '1023',
+  routine: 'InitPostgres'
+}
+Database initialization failed: Error: read ECONNRESET
+    at C:\Users\a4\OneDrive\Ishchi stol\Sayt\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async query (file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/db.js:27:15)
+    at async initializeDatabase (file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/initDb.js:13:5)
+    at async safeQuery (file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/routes/employees.js:155:9)
+    at async Promise.all (index 0) {
+  errno: -4077,
+  code: 'ECONNRESET',
+  syscall: 'read'
+}
+error: relation "criterion_sections" does not exist
+    at C:\Users\a4\OneDrive\Ishchi stol\Sayt\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async query (file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/db.js:27:15)
+    at async file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/routes/criteria.js:127:20 {
+  length: 118,
+  severity: 'ERROR',
+  code: '42P01',
+  detail: undefined,
+  hint: undefined,
+  position: '382',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'parse_relation.c',
+  line: '1452',
+  routine: 'parserOpenTable'
+}
+Failed to log admin action: error: null value in column "admin_username" of relation "admin_logs" violates not-null constraint
+    at C:\Users\a4\OneDrive\Ishchi stol\Sayt\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async query (file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/db.js:27:15)
+    at async logAdminAction (file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/utils/logger.js:72:5)
+    at async file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/routes/regions.js:32:5 {
+  length: 374,
+  severity: 'ERROR',
+  code: '23502',
+  detail: 'Failing row contains (1, null, null, READ, region, null, Regions, , null, null, ::1, Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KH..., 2026-06-16 17:47:42.709036).',
+  hint: undefined,
+  position: undefined,
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: 'public',
+  table: 'admin_logs',
+  column: 'admin_username',
+  dataType: undefined,
+  constraint: undefined,
+  file: 'execMain.c',
+  line: '2063',
+  routine: 'ExecConstraints'
+}
+error: relation "criterion_sections" does not exist
+    at C:\Users\a4\OneDrive\Ishchi stol\Sayt\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async query (file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/db.js:27:15)
+    at async file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/routes/criteria.js:127:20 {
+  length: 118,
+  severity: 'ERROR',
+  code: '42P01',
+  detail: undefined,
+  hint: undefined,
+  position: '382',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'parse_relation.c',
+  line: '1452',
+  routine: 'parserOpenTable'
+}
+Failed to log admin action: error: null value in column "admin_username" of relation "admin_logs" violates not-null constraint
+    at C:\Users\a4\OneDrive\Ishchi stol\Sayt\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async query (file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/db.js:27:15)
+    at async logAdminAction (file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/utils/logger.js:72:5)
+    at async file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/routes/regions.js:32:5 {
+  length: 374,
+  severity: 'ERROR',
+  code: '23502',
+  detail: 'Failing row contains (2, null, null, READ, region, null, Regions, , null, null, ::1, Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KH..., 2026-06-16 17:47:42.783148).',
+  hint: undefined,
+  position: undefined,
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: 'public',
+  table: 'admin_logs',
+  column: 'admin_username',
+  dataType: undefined,
+  constraint: undefined,
+  file: 'execMain.c',
+  line: '2063',
+  routine: 'ExecConstraints'
+}
+Failed to log admin action: error: null value in column "admin_username" of relation "admin_logs" violates not-null constraint
+    at C:\Users\a4\OneDrive\Ishchi stol\Sayt\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async query (file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/db.js:27:15)
+    at async logAdminAction (file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/utils/logger.js:72:5)
+    at async file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/routes/regions.js:32:5 {
+  length: 374,
+  severity: 'ERROR',
+  code: '23502',
+  detail: 'Failing row contains (3, null, null, READ, region, null, Regions, , null, null, ::1, Mozilla/5.0 (Windows NT; Windows NT 10.0; en-US) WindowsPowerShe..., 2026-06-16 17:47:53.058728).',
+  hint: undefined,
+  position: undefined,
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: 'public',
+  table: 'admin_logs',
+  column: 'admin_username',
+  dataType: undefined,
+  constraint: undefined,
+  file: 'execMain.c',
+  line: '2063',
+  routine: 'ExecConstraints'
+}
+Failed to log admin action: error: null value in column "admin_username" of relation "admin_logs" violates not-null constraint
+    at C:\Users\a4\OneDrive\Ishchi stol\Sayt\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async query (file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/db.js:27:15)
+    at async logAdminAction (file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/utils/logger.js:72:5)
+    at async file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/routes/regions.js:32:5 {
+  length: 374,
+  severity: 'ERROR',
+  code: '23502',
+  detail: 'Failing row contains (4, null, null, READ, region, null, Regions, , null, null, ::1, Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KH..., 2026-06-16 17:48:03.259459).',
+  hint: undefined,
+  position: undefined,
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: 'public',
+  table: 'admin_logs',
+  column: 'admin_username',
+  dataType: undefined,
+  constraint: undefined,
+  file: 'execMain.c',
+  line: '2063',
+  routine: 'ExecConstraints'
+}
+error: relation "criterion_sections" does not exist
+    at C:\Users\a4\OneDrive\Ishchi stol\Sayt\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async query (file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/db.js:27:15)
+    at async file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/routes/criteria.js:127:20 {
+  length: 118,
+  severity: 'ERROR',
+  code: '42P01',
+  detail: undefined,
+  hint: undefined,
+  position: '382',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'parse_relation.c',
+  line: '1452',
+  routine: 'parserOpenTable'
+}
+error: relation "criterion_sections" does not exist
+    at C:\Users\a4\OneDrive\Ishchi stol\Sayt\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async query (file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/db.js:27:15)
+    at async file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/routes/criteria.js:127:20 {
+  length: 118,
+  severity: 'ERROR',
+  code: '42P01',
+  detail: undefined,
+  hint: undefined,
+  position: '382',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'parse_relation.c',
+  line: '1452',
+  routine: 'parserOpenTable'
+}
+Failed to log admin action: error: null value in column "admin_username" of relation "admin_logs" violates not-null constraint
+    at C:\Users\a4\OneDrive\Ishchi stol\Sayt\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async query (file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/db.js:27:15)
+    at async logAdminAction (file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/utils/logger.js:72:5)
+    at async file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/routes/regions.js:32:5 {
+  length: 374,
+  severity: 'ERROR',
+  code: '23502',
+  detail: 'Failing row contains (5, null, null, READ, region, null, Regions, , null, null, ::1, Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KH..., 2026-06-16 17:48:03.328461).',
+  hint: undefined,
+  position: undefined,
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: 'public',
+  table: 'admin_logs',
+  column: 'admin_username',
+  dataType: undefined,
+  constraint: undefined,
+  file: 'execMain.c',
+  line: '2063',
+  routine: 'ExecConstraints'
+}
+Failed to log admin action: error: null value in column "admin_username" of relation "admin_logs" violates not-null constraint
+    at C:\Users\a4\OneDrive\Ishchi stol\Sayt\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async query (file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/db.js:27:15)
+    at async logAdminAction (file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/utils/logger.js:72:5)
+    at async file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/routes/regions.js:32:5 {
+  length: 374,
+  severity: 'ERROR',
+  code: '23502',
+  detail: 'Failing row contains (6, null, null, READ, region, null, Regions, , null, null, ::1, Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KH..., 2026-06-16 17:48:21.805436).',
+  hint: undefined,
+  position: undefined,
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: 'public',
+  table: 'admin_logs',
+  column: 'admin_username',
+  dataType: undefined,
+  constraint: undefined,
+  file: 'execMain.c',
+  line: '2063',
+  routine: 'ExecConstraints'
+}
+error: relation "criterion_sections" does not exist
+    at C:\Users\a4\OneDrive\Ishchi stol\Sayt\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async query (file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/db.js:27:15)
+    at async file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/routes/criteria.js:127:20 {
+  length: 118,
+  severity: 'ERROR',
+  code: '42P01',
+  detail: undefined,
+  hint: undefined,
+  position: '382',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'parse_relation.c',
+  line: '1452',
+  routine: 'parserOpenTable'
+}
+error: relation "criterion_sections" does not exist
+    at C:\Users\a4\OneDrive\Ishchi stol\Sayt\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async query (file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/db.js:27:15)
+    at async file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/routes/criteria.js:127:20 {
+  length: 118,
+  severity: 'ERROR',
+  code: '42P01',
+  detail: undefined,
+  hint: undefined,
+  position: '382',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'parse_relation.c',
+  line: '1452',
+  routine: 'parserOpenTable'
+}
+Failed to log admin action: error: null value in column "admin_username" of relation "admin_logs" violates not-null constraint
+    at C:\Users\a4\OneDrive\Ishchi stol\Sayt\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async query (file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/db.js:27:15)
+    at async logAdminAction (file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/utils/logger.js:72:5)
+    at async file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/routes/regions.js:32:5 {
+  length: 374,
+  severity: 'ERROR',
+  code: '23502',
+  detail: 'Failing row contains (7, null, null, READ, region, null, Regions, , null, null, ::1, Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KH..., 2026-06-16 17:48:21.896957).',
+  hint: undefined,
+  position: undefined,
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: 'public',
+  table: 'admin_logs',
+  column: 'admin_username',
+  dataType: undefined,
+  constraint: undefined,
+  file: 'execMain.c',
+  line: '2063',
+  routine: 'ExecConstraints'
+}

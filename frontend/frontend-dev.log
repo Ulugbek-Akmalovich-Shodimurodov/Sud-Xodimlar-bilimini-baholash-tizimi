@@ -13,3 +13,4 @@ Re-optimizing dependencies because vite config has changed
   [32m➜[39m  [1mNetwork[22m: [36mhttp://192.168.162.1:[1m5173[22m/[39m
   [32m➜[39m  [1mNetwork[22m: [36mhttp://192.168.177.1:[1m5173[22m/[39m
   [32m➜[39m  [1mNetwork[22m: [36mhttp://192.168.1.102:[1m5173[22m/[39m
+[2m5:27:53 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/Dashboard.jsx, /src/index.css[22m
