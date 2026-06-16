@@ -108,7 +108,7 @@ function Dashboard({ user }) {
               </div>
               <div>
                 <p className="text-sm uppercase tracking-wide text-amber-600">Rol</p>
-                <p className="mt-1 text-5xl font-semibold text-slate-900">{user.role === 'super_admin' ? 'Super Admin' : 'Admin'}</p>
+                <p className="mt-1 text-3xl font-semibold text-slate-900">{user.role === 'super_admin' ? 'Super Admin' : 'Admin'}</p>
                 <p className="mt-1 text-indigo-600">Sizning joriy rolingiz</p>
               </div>
             </div>
