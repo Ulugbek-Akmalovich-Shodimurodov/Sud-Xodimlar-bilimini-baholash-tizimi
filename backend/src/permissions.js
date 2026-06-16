@@ -25,11 +25,17 @@ const ADMIN_DEFAULT_PERMISSIONS = Object.freeze([
 export function normalizePermissions(value, role = 'admin') {
   if (role === 'super_admin') return [...ALL_PERMISSIONS];
 
-  const source = Array.isArray(value)
-    ? value
-    : value && typeof value === 'object'
-      ? Object.entries(value).filter(([, enabled]) => Boolean(enabled)).map(([key]) => key)
-      : ADMIN_DEFAULT_PERMISSIONS;
+  // If permissions are explicitly provided as an array, use them — unless empty,
+  // in which case fall back to admin defaults so that admins aren't locked out.
+  let source;
+  if (Array.isArray(value)) {
+    source = value.length ? value : ADMIN_DEFAULT_PERMISSIONS;
+  } else if (value && typeof value === 'object') {
+    const enabled = Object.entries(value).filter(([, enabledFlag]) => Boolean(enabledFlag)).map(([key]) => key);
+    source = enabled.length ? enabled : ADMIN_DEFAULT_PERMISSIONS;
+  } else {
+    source = ADMIN_DEFAULT_PERMISSIONS;
+  }
 
   return [...new Set(source.filter((permission) => ALL_PERMISSIONS.includes(permission)))];
 }
