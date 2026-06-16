@@ -137,8 +137,8 @@ function buildFilters(queryParams, user) {
     if (!assigned.length) {
       filters.push('1 = 0');
     } else {
-      filters.push(`employees.region_id = ANY($${index++})`);
-      values.push(assigned);
+      filters.push(`employees.region_id = ANY($${index++}::int[])`);
+      values.push(assigned.map((r) => Number(r)));
     }
   }
 
@@ -209,8 +209,8 @@ router.get('/:id', optionalAuthenticateToken, async (req, res, next) => {
     if (req.user?.role === 'admin') {
       const assigned = Array.isArray(req.user.assigned_regions) ? req.user.assigned_regions : [];
       if (!assigned.length) return res.status(404).json({ error: 'Xodim topilmadi' });
-      accessClause = ' AND employees.region_id = ANY($2)';
-      values.push(assigned);
+      accessClause = ' AND employees.region_id = ANY($2::int[])';
+      values.push(assigned.map((r) => Number(r)));
     }
 
     const result = await safeQuery(

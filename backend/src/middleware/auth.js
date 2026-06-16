@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import { query } from '../db.js';
-import { hasPermission } from '../permissions.js';
+import { hasPermission, normalizePermissions } from '../permissions.js';
 
 dotenv.config();
 
@@ -35,8 +35,14 @@ async function loadAdminFromToken(req, res, next, optional = false) {
   if (admin.rows[0].status === 'blocked') {
     return res.status(403).json({ error: 'Admin bloklangan' });
   }
+  // Normalize assigned_regions to an array of numbers and normalize permissions
+  const row = admin.rows[0];
+  row.assigned_regions = Array.isArray(row.assigned_regions)
+    ? row.assigned_regions.map((r) => Number(r)).filter((n) => Number.isFinite(n))
+    : [];
+  row.permissions = normalizePermissions(row.permissions, row.role);
 
-  req.user = admin.rows[0];
+  req.user = row;
   return next();
 }
 

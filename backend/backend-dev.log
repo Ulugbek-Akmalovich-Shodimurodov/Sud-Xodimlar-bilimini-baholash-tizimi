@@ -4589,3 +4589,132 @@ DB QUERY {
 }
 Database initialization SQL applied successfully.
 Supreme Court assessment backend listening on port 4000
+DB QUERY {
+  text: '\n' +
+    '    CREATE TABLE IF NOT EXISTS criteria (\n' +
+    '      id SERIAL PRIMARY KEY,\n' +
+    '      key TEXT NOT NULL UNIQUE,\n' +
+    '      label TEXT NOT NULL,\n' +
+    '      short_label TEXT NOT NULL,\n' +
+    '      sort_order INTEGER NOT NULL DEFAULT 0,\n' +
+    '      created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW(),\n' +
+    '      updated_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW()\n' +
+    '    )\n' +
+    '  ',
+  duration: 37,
+  rows: null
+}
+DB QUERY {
+  text: '\n' +
+    '    CREATE TABLE IF NOT EXISTS colleges (\n' +
+    '      id SERIAL PRIMARY KEY,\n' +
+    '      name TEXT NOT NULL UNIQUE,\n' +
+    '      description TEXT,\n' +
+    '      created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW(),\n' +
+    '      updated_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW()\n' +
+    '    )\n' +
+    '  ',
+  duration: 1,
+  rows: null
+}
+DB QUERY {
+  text: '\n' +
+    '    CREATE TABLE IF NOT EXISTS college_criteria (\n' +
+    '      college_id INTEGER NOT NULL REFERENCES colleges(id) ON DELETE CASCADE,\n' +
+    '      criterion_id INTEGER NOT NULL REFERENCES criteria(id) ON DELETE CASCADE,\n' +
+    '      created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW(),\n' +
+    '      PRIMARY KEY (college_id, criterion_id)\n' +
+    '    )\n' +
+    '  ',
+  duration: 1,
+  rows: null
+}
+DB QUERY {
+  text: 'ALTER TABLE IF EXISTS employees ADD COLUMN IF NOT EXISTS college_id INTEGER REFERENCES colleges(id) ON DELETE SET NULL',
+  duration: 2,
+  rows: null
+}
+DB QUERY {
+  text: '\n' +
+    '      SELECT c.*,\n' +
+    '          COALESCE(\n' +
+    '            json_agg(DISTINCT cc.criterion_id) FILTER (WHERE cc.criterion_id IS NOT NULL),\n' +
+    "            '[]'\n" +
+    '          ) AS criteria_ids,\n' +
+    '        COUNT(DISTINCT e.id) AS employee_count\n' +
+    '      FROM colleges c\n' +
+    '      LEFT JOIN college_criteria cc ON cc.college_id = c.id\n' +
+    '      LEFT JOIN criteria cr ON cr.id = cc.criterion_id\n' +
+    '      LEFT JOIN employees e ON e.college_id = c.id\n' +
+    '      GROUP BY c.id\n' +
+    '      ORDER BY c.name\n' +
+    '    ',
+  duration: 7,
+  rows: 0
+}
+GET /api/colleges 304 - - 51.066 ms
+GET /favicon.ico 404 150 - 1.585 ms
+DB QUERY {
+  text: '\n' +
+    '    CREATE TABLE IF NOT EXISTS criteria (\n' +
+    '      id SERIAL PRIMARY KEY,\n' +
+    '      key TEXT NOT NULL UNIQUE,\n' +
+    '      label TEXT NOT NULL,\n' +
+    '      short_label TEXT NOT NULL,\n' +
+    '      sort_order INTEGER NOT NULL DEFAULT 0,\n' +
+    '      created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW(),\n' +
+    '      updated_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW()\n' +
+    '    )\n' +
+    '  ',
+  duration: 1,
+  rows: null
+}
+DB QUERY {
+  text: '\n' +
+    '    CREATE TABLE IF NOT EXISTS colleges (\n' +
+    '      id SERIAL PRIMARY KEY,\n' +
+    '      name TEXT NOT NULL UNIQUE,\n' +
+    '      description TEXT,\n' +
+    '      created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW(),\n' +
+    '      updated_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW()\n' +
+    '    )\n' +
+    '  ',
+  duration: 1,
+  rows: null
+}
+DB QUERY {
+  text: '\n' +
+    '    CREATE TABLE IF NOT EXISTS college_criteria (\n' +
+    '      college_id INTEGER NOT NULL REFERENCES colleges(id) ON DELETE CASCADE,\n' +
+    '      criterion_id INTEGER NOT NULL REFERENCES criteria(id) ON DELETE CASCADE,\n' +
+    '      created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW(),\n' +
+    '      PRIMARY KEY (college_id, criterion_id)\n' +
+    '    )\n' +
+    '  ',
+  duration: 1,
+  rows: null
+}
+DB QUERY {
+  text: 'ALTER TABLE IF EXISTS employees ADD COLUMN IF NOT EXISTS college_id INTEGER REFERENCES colleges(id) ON DELETE SET NULL',
+  duration: 1,
+  rows: null
+}
+DB QUERY {
+  text: '\n' +
+    '      SELECT c.*,\n' +
+    '          COALESCE(\n' +
+    '            json_agg(DISTINCT cc.criterion_id) FILTER (WHERE cc.criterion_id IS NOT NULL),\n' +
+    "            '[]'\n" +
+    '          ) AS criteria_ids,\n' +
+    '        COUNT(DISTINCT e.id) AS employee_count\n' +
+    '      FROM colleges c\n' +
+    '      LEFT JOIN college_criteria cc ON cc.college_id = c.id\n' +
+    '      LEFT JOIN criteria cr ON cr.id = cc.criterion_id\n' +
+    '      LEFT JOIN employees e ON e.college_id = c.id\n' +
+    '      GROUP BY c.id\n' +
+    '      ORDER BY c.name\n' +
+    '    ',
+  duration: 2,
+  rows: 0
+}
+GET /api/colleges 304 - - 11.990 ms
