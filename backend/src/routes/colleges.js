@@ -63,10 +63,10 @@ async function setCollegeCriteria(collegeId, criteriaIds) {
 async function fetchCollegeById(id) {
   const result = await query(
     `SELECT c.*,
-       COALESCE(
-         json_agg(cc.criterion_id ORDER BY cr.sort_order, cr.id) FILTER (WHERE cc.criterion_id IS NOT NULL),
-         '[]'
-       ) AS criteria_ids
+         COALESCE(
+           json_agg(DISTINCT cc.criterion_id) FILTER (WHERE cc.criterion_id IS NOT NULL),
+           '[]'
+         ) AS criteria_ids
      FROM colleges c
      LEFT JOIN college_criteria cc ON cc.college_id = c.id
      LEFT JOIN criteria cr ON cr.id = cc.criterion_id
@@ -82,10 +82,10 @@ router.get('/', async (req, res, next) => {
     await ensureCollegeTables();
     const result = await query(`
       SELECT c.*,
-        COALESCE(
-          json_agg(cc.criterion_id ORDER BY cr.sort_order, cr.id) FILTER (WHERE cc.criterion_id IS NOT NULL),
-          '[]'
-        ) AS criteria_ids,
+          COALESCE(
+            json_agg(DISTINCT cc.criterion_id) FILTER (WHERE cc.criterion_id IS NOT NULL),
+            '[]'
+          ) AS criteria_ids,
         COUNT(DISTINCT e.id) AS employee_count
       FROM colleges c
       LEFT JOIN college_criteria cc ON cc.college_id = c.id

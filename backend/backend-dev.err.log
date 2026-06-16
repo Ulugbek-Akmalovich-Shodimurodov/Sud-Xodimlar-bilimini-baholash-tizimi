@@ -1349,3 +1349,97 @@ Failed to log admin action: error: null value in column "admin_username" of rela
   line: '2063',
   routine: 'ExecConstraints'
 }
+Failed to log admin action: error: null value in column "admin_username" of relation "admin_logs" violates not-null constraint
+    at C:\Users\a4\OneDrive\Ishchi stol\Sayt\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async query (file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/db.js:27:15)
+    at async logAdminAction (file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/utils/logger.js:72:5)
+    at async file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/routes/regions.js:33:5 {
+  length: 374,
+  severity: 'ERROR',
+  code: '23502',
+  detail: 'Failing row contains (8, null, null, READ, region, null, Regions, , null, null, ::1, Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KH..., 2026-06-16 18:50:08.952765).',
+  hint: undefined,
+  position: undefined,
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: 'public',
+  table: 'admin_logs',
+  column: 'admin_username',
+  dataType: undefined,
+  constraint: undefined,
+  file: 'execMain.c',
+  line: '2063',
+  routine: 'ExecConstraints'
+}
+error: relation "criterion_sections" does not exist
+    at C:\Users\a4\OneDrive\Ishchi stol\Sayt\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async query (file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/db.js:27:15)
+    at async file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/routes/criteria.js:128:20 {
+  length: 118,
+  severity: 'ERROR',
+  code: '42P01',
+  detail: undefined,
+  hint: undefined,
+  position: '382',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'parse_relation.c',
+  line: '1452',
+  routine: 'parserOpenTable'
+}
+error: relation "criterion_sections" does not exist
+    at C:\Users\a4\OneDrive\Ishchi stol\Sayt\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async query (file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/db.js:27:15)
+    at async file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/routes/criteria.js:128:20 {
+  length: 118,
+  severity: 'ERROR',
+  code: '42P01',
+  detail: undefined,
+  hint: undefined,
+  position: '382',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'parse_relation.c',
+  line: '1452',
+  routine: 'parserOpenTable'
+}
+Failed to log admin action: error: null value in column "admin_username" of relation "admin_logs" violates not-null constraint
+    at C:\Users\a4\OneDrive\Ishchi stol\Sayt\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async query (file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/db.js:27:15)
+    at async logAdminAction (file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/utils/logger.js:72:5)
+    at async file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/routes/regions.js:33:5 {
+  length: 373,
+  severity: 'ERROR',
+  code: '23502',
+  detail: 'Failing row contains (9, null, null, READ, region, null, Regions, , null, null, ::1, Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KH..., 2026-06-16 18:50:09.11869).',
+  hint: undefined,
+  position: undefined,
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: 'public',
+  table: 'admin_logs',
+  column: 'admin_username',
+  dataType: undefined,
+  constraint: undefined,
+  file: 'execMain.c',
+  line: '2063',
+  routine: 'ExecConstraints'
+}
