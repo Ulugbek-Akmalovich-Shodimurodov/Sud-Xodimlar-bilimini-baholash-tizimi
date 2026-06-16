@@ -110,6 +110,11 @@ export async function updateAdmin(id, values) {
   return response.data;
 }
 
+export async function updateAdminPassword(id, password) {
+  const response = await api.put(`/admins/${id}/password`, { password });
+  return response.data;
+}
+
 export async function deleteAdmin(id) {
   await api.delete(`/admins/${id}`);
 }

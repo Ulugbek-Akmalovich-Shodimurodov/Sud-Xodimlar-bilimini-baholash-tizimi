@@ -9,12 +9,12 @@ if (!SECRET || typeof SECRET !== 'string') {
   throw new Error('JWT_SECRET muhit o\'zgarmasini backend/.env faylida belgilang.');
 }
 
-export async function authenticateToken(req, res, next) {
+async function loadAdminFromToken(req, res, next, optional = false) {
   const authHeader = req.headers.authorization;
   const token = authHeader?.split(' ')[1];
 
   if (!token) {
-    return res.status(401).json({ error: 'Token talab qilinadi' });
+    return optional ? next() : res.status(401).json({ error: 'Token talab qilinadi' });
   }
 
   let payload;
@@ -24,37 +24,27 @@ export async function authenticateToken(req, res, next) {
     return res.status(403).json({ error: "Noto'g'ri token" });
   }
 
-  const { id } = payload;
-  const admin = await query('SELECT id, username, role, assigned_regions FROM admins WHERE id = $1', [id]);
+  const admin = await query(
+    'SELECT id, username, role, assigned_regions, status FROM admins WHERE id = $1',
+    [payload.id]
+  );
   if (!admin.rows.length) {
     return res.status(401).json({ error: 'Admin topilmadi' });
   }
+  if (admin.rows[0].status === 'blocked') {
+    return res.status(403).json({ error: 'Admin bloklangan' });
+  }
 
   req.user = admin.rows[0];
-  next();
+  return next();
+}
+
+export async function authenticateToken(req, res, next) {
+  return loadAdminFromToken(req, res, next, false);
 }
 
 export async function optionalAuthenticateToken(req, res, next) {
-  const authHeader = req.headers.authorization;
-  const token = authHeader?.split(' ')[1];
-
-  if (!token) return next();
-
-  let payload;
-  try {
-    payload = jwt.verify(token, SECRET);
-  } catch (err) {
-    return res.status(403).json({ error: "Noto'g'ri token" });
-  }
-
-  const { id } = payload;
-  const admin = await query('SELECT id, username, role, assigned_regions FROM admins WHERE id = $1', [id]);
-  if (!admin.rows.length) {
-    return res.status(401).json({ error: 'Admin topilmadi' });
-  }
-
-  req.user = admin.rows[0];
-  next();
+  return loadAdminFromToken(req, res, next, true);
 }
 
 export function permit(...allowedRoles) {
@@ -80,11 +70,10 @@ export function regionGuard(req, res, next) {
   if (role === 'super_admin') return next();
 
   const regionId = Number(req.body.region_id || req.query.region_id || req.params.region_id);
-  const districtId = Number(req.body.district_id || req.query.district_id || req.params.district_id);
   const assigned = Array.isArray(assigned_regions) ? assigned_regions : [];
 
   if (regionId && !assigned.includes(regionId)) {
-    return res.status(403).json({ error: 'Siz faqat o‘z hududingizni boshqarishingiz mumkin' });
+    return res.status(403).json({ error: 'Siz faqat o\'z hududingizni boshqarishingiz mumkin' });
   }
 
   next();

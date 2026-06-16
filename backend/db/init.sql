@@ -29,7 +29,11 @@ CREATE TABLE IF NOT EXISTS admins (
   username TEXT NOT NULL UNIQUE,
   password TEXT NOT NULL,
   role TEXT NOT NULL CHECK (role IN ('super_admin', 'admin')),
-  assigned_regions JSONB NOT NULL DEFAULT '[]'
+  assigned_regions JSONB NOT NULL DEFAULT '[]',
+  status TEXT NOT NULL DEFAULT 'active' CHECK (status IN ('active', 'blocked')),
+  last_login_at TIMESTAMP WITHOUT TIME ZONE,
+  created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW()
 );
 
 CREATE TABLE IF NOT EXISTS admin_logs (
@@ -133,6 +137,13 @@ ALTER TABLE IF EXISTS admin_logs ADD COLUMN IF NOT EXISTS created_at TIMESTAMP W
 
 ALTER TABLE IF EXISTS admin_logs DROP CONSTRAINT IF EXISTS admin_logs_entity_type_check;
 ALTER TABLE IF EXISTS admin_logs ADD CONSTRAINT admin_logs_entity_type_check CHECK (entity_type IN ('employee', 'admin', 'region', 'district', 'position', 'criterion', 'college'));
+
+ALTER TABLE IF EXISTS admins ADD COLUMN IF NOT EXISTS status TEXT NOT NULL DEFAULT 'active';
+ALTER TABLE IF EXISTS admins ADD COLUMN IF NOT EXISTS last_login_at TIMESTAMP WITHOUT TIME ZONE;
+ALTER TABLE IF EXISTS admins ADD COLUMN IF NOT EXISTS created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW();
+ALTER TABLE IF EXISTS admins ADD COLUMN IF NOT EXISTS updated_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW();
+ALTER TABLE IF EXISTS admins DROP CONSTRAINT IF EXISTS admins_status_check;
+ALTER TABLE IF EXISTS admins ADD CONSTRAINT admins_status_check CHECK (status IN ('active', 'blocked'));
 
 ALTER TABLE IF EXISTS employees DROP CONSTRAINT IF EXISTS employees_district_id_fkey;
 ALTER TABLE IF EXISTS employees ADD CONSTRAINT employees_district_id_fkey FOREIGN KEY (district_id) REFERENCES districts(id) ON DELETE CASCADE;

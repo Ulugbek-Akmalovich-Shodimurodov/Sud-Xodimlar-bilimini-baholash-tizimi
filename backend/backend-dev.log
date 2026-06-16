@@ -1,0 +1,20 @@
+
+> supreme-court-assessment-backend@1.0.0 dev
+> nodemon src/index.js
+
+[33m[nodemon] 3.1.14[39m
+[33m[nodemon] to restart at any time, enter `rs`[39m
+[33m[nodemon] watching path(s): *.*[39m
+[33m[nodemon] watching extensions: js,mjs,cjs,json[39m
+[32m[nodemon] starting `node src/index.js`[39m
+Supreme Court assessment backend listening on port 4000
+GET /api/regions 500 25 - 10.012 ms
+GET /api/regions 500 25 - 20.739 ms
+GET /api/colleges 500 25 - 23.991 ms
+GET /api/criteria 500 25 - 26.706 ms
+GET /api/employees?page=1&limit=10 500 25 - 28.852 ms
+GET /api/regions 500 25 - 14.139 ms
+GET /api/colleges 500 25 - 18.654 ms
+GET /api/criteria 500 25 - 20.585 ms
+GET /api/employees?page=1&limit=10 500 25 - 21.387 ms
+POST /api/auth/login 500 25 - 4.587 ms

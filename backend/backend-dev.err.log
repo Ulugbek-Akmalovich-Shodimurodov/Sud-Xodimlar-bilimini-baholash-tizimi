@@ -1,0 +1,305 @@
+Database initialization failed: AggregateError [ECONNREFUSED]: 
+    at C:\Users\a4\OneDrive\Ishchi stol\Sayt\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async query (file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/db.js:27:15)
+    at async initializeDatabase (file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/initDb.js:13:5)
+    at async file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/index.js:9:3 {
+  code: 'ECONNREFUSED',
+  [errors]: [
+    Error: connect ECONNREFUSED ::1:5432
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -4078,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '::1',
+      port: 5432
+    },
+    Error: connect ECONNREFUSED 127.0.0.1:5432
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -4078,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '127.0.0.1',
+      port: 5432
+    }
+  ]
+}
+Database initialization failed (continuing): 
+AggregateError [ECONNREFUSED]: 
+    at C:\Users\a4\OneDrive\Ishchi stol\Sayt\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async query (file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/db.js:27:15)
+    at async file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/routes/regions.js:29:20 {
+  code: 'ECONNREFUSED',
+  [errors]: [
+    Error: connect ECONNREFUSED ::1:5432
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -4078,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '::1',
+      port: 5432
+    },
+    Error: connect ECONNREFUSED 127.0.0.1:5432
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -4078,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '127.0.0.1',
+      port: 5432
+    }
+  ]
+}
+AggregateError [ECONNREFUSED]: 
+    at C:\Users\a4\OneDrive\Ishchi stol\Sayt\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async query (file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/db.js:27:15)
+    at async file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/routes/regions.js:29:20 {
+  code: 'ECONNREFUSED',
+  [errors]: [
+    Error: connect ECONNREFUSED ::1:5432
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -4078,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '::1',
+      port: 5432
+    },
+    Error: connect ECONNREFUSED 127.0.0.1:5432
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -4078,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '127.0.0.1',
+      port: 5432
+    }
+  ]
+}
+AggregateError [ECONNREFUSED]: 
+    at C:\Users\a4\OneDrive\Ishchi stol\Sayt\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async query (file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/db.js:27:15)
+    at async ensureCollegeTables (file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/routes/colleges.js:10:3)
+    at async file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/routes/colleges.js:81:5 {
+  code: 'ECONNREFUSED',
+  [errors]: [
+    Error: connect ECONNREFUSED ::1:5432
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -4078,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '::1',
+      port: 5432
+    },
+    Error: connect ECONNREFUSED 127.0.0.1:5432
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -4078,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '127.0.0.1',
+      port: 5432
+    }
+  ]
+}
+AggregateError [ECONNREFUSED]: 
+    at C:\Users\a4\OneDrive\Ishchi stol\Sayt\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async query (file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/db.js:27:15)
+    at async file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/routes/criteria.js:113:24 {
+  code: 'ECONNREFUSED',
+  [errors]: [
+    Error: connect ECONNREFUSED ::1:5432
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -4078,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '::1',
+      port: 5432
+    },
+    Error: connect ECONNREFUSED 127.0.0.1:5432
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -4078,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '127.0.0.1',
+      port: 5432
+    }
+  ]
+}
+AggregateError [ECONNREFUSED]: 
+    at C:\Users\a4\OneDrive\Ishchi stol\Sayt\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async query (file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/db.js:27:15)
+    at async safeQuery (file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/routes/employees.js:149:12)
+    at async Promise.all (index 0)
+    at async file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/routes/employees.js:184:27 {
+  code: 'ECONNREFUSED',
+  [errors]: [
+    Error: connect ECONNREFUSED ::1:5432
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -4078,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '::1',
+      port: 5432
+    },
+    Error: connect ECONNREFUSED 127.0.0.1:5432
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -4078,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '127.0.0.1',
+      port: 5432
+    }
+  ]
+}
+AggregateError [ECONNREFUSED]: 
+    at C:\Users\a4\OneDrive\Ishchi stol\Sayt\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async query (file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/db.js:27:15)
+    at async file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/routes/regions.js:29:20 {
+  code: 'ECONNREFUSED',
+  [errors]: [
+    Error: connect ECONNREFUSED ::1:5432
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -4078,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '::1',
+      port: 5432
+    },
+    Error: connect ECONNREFUSED 127.0.0.1:5432
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -4078,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '127.0.0.1',
+      port: 5432
+    }
+  ]
+}
+AggregateError [ECONNREFUSED]: 
+    at C:\Users\a4\OneDrive\Ishchi stol\Sayt\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async query (file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/db.js:27:15)
+    at async ensureCollegeTables (file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/routes/colleges.js:10:3)
+    at async file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/routes/colleges.js:81:5 {
+  code: 'ECONNREFUSED',
+  [errors]: [
+    Error: connect ECONNREFUSED ::1:5432
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -4078,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '::1',
+      port: 5432
+    },
+    Error: connect ECONNREFUSED 127.0.0.1:5432
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -4078,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '127.0.0.1',
+      port: 5432
+    }
+  ]
+}
+AggregateError [ECONNREFUSED]: 
+    at C:\Users\a4\OneDrive\Ishchi stol\Sayt\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async query (file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/db.js:27:15)
+    at async file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/routes/criteria.js:113:24 {
+  code: 'ECONNREFUSED',
+  [errors]: [
+    Error: connect ECONNREFUSED ::1:5432
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -4078,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '::1',
+      port: 5432
+    },
+    Error: connect ECONNREFUSED 127.0.0.1:5432
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -4078,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '127.0.0.1',
+      port: 5432
+    }
+  ]
+}
+AggregateError [ECONNREFUSED]: 
+    at C:\Users\a4\OneDrive\Ishchi stol\Sayt\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async query (file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/db.js:27:15)
+    at async safeQuery (file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/routes/employees.js:149:12)
+    at async Promise.all (index 0)
+    at async file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/routes/employees.js:184:27 {
+  code: 'ECONNREFUSED',
+  [errors]: [
+    Error: connect ECONNREFUSED ::1:5432
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -4078,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '::1',
+      port: 5432
+    },
+    Error: connect ECONNREFUSED 127.0.0.1:5432
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -4078,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '127.0.0.1',
+      port: 5432
+    }
+  ]
+}
+AggregateError [ECONNREFUSED]: 
+    at C:\Users\a4\OneDrive\Ishchi stol\Sayt\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async query (file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/db.js:27:15)
+    at async file:///C:/Users/a4/OneDrive/Ishchi%20stol/Sayt/backend/src/routes/auth.js:18:20 {
+  code: 'ECONNREFUSED',
+  [errors]: [
+    Error: connect ECONNREFUSED ::1:5432
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -4078,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '::1',
+      port: 5432
+    },
+    Error: connect ECONNREFUSED 127.0.0.1:5432
+        at createConnectionError (node:net:1678:14)
+        at afterConnectMultiple (node:net:1708:16) {
+      errno: -4078,
+      code: 'ECONNREFUSED',
+      syscall: 'connect',
+      address: '127.0.0.1',
+      port: 5432
+    }
+  ]
+}
