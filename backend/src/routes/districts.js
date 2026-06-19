@@ -1,8 +1,9 @@
 import express from 'express';
 import { query } from '../db.js';
-import { authenticateToken, optionalAuthenticateToken, permit } from '../middleware/auth.js';
+import { authenticateToken, optionalAuthenticateToken, permitPermission } from '../middleware/auth.js';
 import { districtSchema } from '../validators.js';
 import { logAdminAction, getEntityName, getClientInfo } from '../utils/logger.js';
+import { PERMISSIONS } from '../permissions.js';
 
 const router = express.Router();
 
@@ -48,7 +49,7 @@ router.get('/', optionalAuthenticateToken, async (req, res, next) => {
   }
 });
 
-router.post('/', authenticateToken, permit('super_admin'), async (req, res, next) => {
+router.post('/', authenticateToken, permitPermission(PERMISSIONS.DISTRICTS_MANAGE), async (req, res, next) => {
   try {
     const { error, value } = districtSchema.validate(req.body);
     if (error) return res.status(400).json({ error: error.message });
@@ -73,7 +74,7 @@ router.post('/', authenticateToken, permit('super_admin'), async (req, res, next
   }
 });
 
-router.put('/:id', authenticateToken, permit('super_admin'), async (req, res, next) => {
+router.put('/:id', authenticateToken, permitPermission(PERMISSIONS.DISTRICTS_MANAGE), async (req, res, next) => {
   try {
     const { error, value } = districtSchema.validate(req.body);
     if (error) return res.status(400).json({ error: error.message });
@@ -104,7 +105,7 @@ router.put('/:id', authenticateToken, permit('super_admin'), async (req, res, ne
   }
 });
 
-router.delete('/:id', authenticateToken, permit('super_admin'), async (req, res, next) => {
+router.delete('/:id', authenticateToken, permitPermission(PERMISSIONS.DISTRICTS_MANAGE), async (req, res, next) => {
   try {
     const employeeCount = await query('SELECT COUNT(*) AS total FROM employees WHERE district_id = $1', [req.params.id]);
     if (Number(employeeCount.rows[0].total) > 0) {

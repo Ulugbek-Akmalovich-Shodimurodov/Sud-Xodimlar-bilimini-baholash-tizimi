@@ -1,8 +1,9 @@
 import express from 'express';
 import { query } from '../db.js';
-import { authenticateToken, optionalAuthenticateToken, permit } from '../middleware/auth.js';
+import { authenticateToken, optionalAuthenticateToken, permitPermission } from '../middleware/auth.js';
 import { regionSchema } from '../validators.js';
 import { logAdminAction, getEntityName, getClientInfo } from '../utils/logger.js';
+import { PERMISSIONS } from '../permissions.js';
 
 const router = express.Router();
 
@@ -44,7 +45,7 @@ router.get('/', optionalAuthenticateToken, async (req, res, next) => {
   }
 });
 
-router.post('/', authenticateToken, permit('super_admin'), async (req, res, next) => {
+router.post('/', authenticateToken, permitPermission(PERMISSIONS.REGIONS_MANAGE), async (req, res, next) => {
   try {
     const { error, value } = regionSchema.validate(req.body);
     if (error) return res.status(400).json({ error: error.message });
@@ -69,7 +70,7 @@ router.post('/', authenticateToken, permit('super_admin'), async (req, res, next
   }
 });
 
-router.put('/:id', authenticateToken, permit('super_admin'), async (req, res, next) => {
+router.put('/:id', authenticateToken, permitPermission(PERMISSIONS.REGIONS_MANAGE), async (req, res, next) => {
   try {
     const { error, value } = regionSchema.validate(req.body);
     if (error) return res.status(400).json({ error: error.message });
@@ -100,7 +101,7 @@ router.put('/:id', authenticateToken, permit('super_admin'), async (req, res, ne
   }
 });
 
-router.delete('/:id', authenticateToken, permit('super_admin'), async (req, res, next) => {
+router.delete('/:id', authenticateToken, permitPermission(PERMISSIONS.REGIONS_MANAGE), async (req, res, next) => {
   try {
     const regionId = Number(req.params.id);
     if (!Number.isInteger(regionId) || regionId <= 0) {

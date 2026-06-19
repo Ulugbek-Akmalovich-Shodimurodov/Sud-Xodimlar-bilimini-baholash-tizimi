@@ -1,9 +1,10 @@
 import express from 'express';
 import { query } from '../db.js';
 import { initializeDatabase } from '../initDb.js';
-import { authenticateToken, optionalAuthenticateToken, permit } from '../middleware/auth.js';
+import { authenticateToken, optionalAuthenticateToken, permit, permitPermission } from '../middleware/auth.js';
 import { employeeSchema } from '../validators.js';
 import { logAdminAction, getEntityName, getClientInfo } from '../utils/logger.js';
+import { hasPermission, PERMISSIONS } from '../permissions.js';
 
 const router = express.Router();
 function normalizeScore(value) {
@@ -136,8 +137,8 @@ function buildFilters(queryParams, user) {
     if (!assigned.length) {
       filters.push('1 = 0');
     } else {
-      filters.push(`employees.region_id = ANY($${index++})`);
-      values.push(assigned);
+      filters.push(`employees.region_id = ANY($${index++}::int[])`);
+      values.push(assigned.map((r) => Number(r)));
     }
   }
 
@@ -164,6 +165,10 @@ async function safeQuery(text, params) {
 
 router.get('/', optionalAuthenticateToken, async (req, res, next) => {
   try {
+    if (req.user && !hasPermission(req.user, PERMISSIONS.EMPLOYEES_VIEW)) {
+      return res.status(403).json({ error: "Xodimlarni ko'rish uchun ruxsat yo'q" });
+    }
+
     const page = parseInt(req.query.page, 10) || 1;
     const limit = parseInt(req.query.limit, 10) || 20;
     const offset = (page - 1) * limit;
@@ -194,14 +199,18 @@ router.get('/', optionalAuthenticateToken, async (req, res, next) => {
 
 router.get('/:id', optionalAuthenticateToken, async (req, res, next) => {
   try {
+    if (req.user && !hasPermission(req.user, PERMISSIONS.EMPLOYEES_VIEW)) {
+      return res.status(403).json({ error: "Xodimni ko'rish uchun ruxsat yo'q" });
+    }
+
     let accessClause = '';
     const values = [req.params.id];
 
     if (req.user?.role === 'admin') {
       const assigned = Array.isArray(req.user.assigned_regions) ? req.user.assigned_regions : [];
       if (!assigned.length) return res.status(404).json({ error: 'Xodim topilmadi' });
-      accessClause = ' AND employees.region_id = ANY($2)';
-      values.push(assigned);
+      accessClause = ' AND employees.region_id = ANY($2::int[])';
+      values.push(assigned.map((r) => Number(r)));
     }
 
     const result = await safeQuery(
@@ -220,7 +229,7 @@ router.get('/:id', optionalAuthenticateToken, async (req, res, next) => {
   }
 });
 
-router.post('/', authenticateToken, permit('super_admin', 'admin'), async (req, res, next) => {
+router.post('/', authenticateToken, permit('super_admin', 'admin'), permitPermission(PERMISSIONS.EMPLOYEES_CREATE), async (req, res, next) => {
   try {
     const { error, value } = employeeSchema.validate(req.body);
     if (error) return res.status(400).json({ error: error.message });
@@ -268,7 +277,7 @@ router.post('/', authenticateToken, permit('super_admin', 'admin'), async (req, 
   }
 });
 
-router.put('/:id', authenticateToken, permit('super_admin', 'admin'), async (req, res, next) => {
+router.put('/:id', authenticateToken, permit('super_admin', 'admin'), permitPermission(PERMISSIONS.EMPLOYEES_UPDATE), async (req, res, next) => {
   try {
     const { error, value } = employeeSchema.validate(req.body);
     if (error) return res.status(400).json({ error: error.message });
@@ -334,7 +343,7 @@ router.put('/:id', authenticateToken, permit('super_admin', 'admin'), async (req
   }
 });
 
-router.delete('/:id', authenticateToken, permit('super_admin', 'admin'), async (req, res, next) => {
+router.delete('/:id', authenticateToken, permit('super_admin', 'admin'), permitPermission(PERMISSIONS.EMPLOYEES_DELETE), async (req, res, next) => {
   try {
     // Get employee data for logging before deletion
     const employeeResult = await safeQuery('SELECT * FROM employees WHERE id = $1', [req.params.id]);

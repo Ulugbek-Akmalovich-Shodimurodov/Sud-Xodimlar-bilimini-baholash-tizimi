@@ -25,6 +25,7 @@ export const adminSchema = Joi.object({
   role: Joi.string().valid('super_admin', 'admin').required(),
   status: Joi.string().valid('active', 'blocked').default('active'),
   assigned_regions: Joi.array().items(Joi.number().integer()).default([]),
+  permissions: Joi.array().items(Joi.string()).default([]),
 });
 
 export const adminUpdateSchema = Joi.object({
@@ -33,6 +34,7 @@ export const adminUpdateSchema = Joi.object({
   role: Joi.string().valid('super_admin', 'admin').required(),
   status: Joi.string().valid('active', 'blocked').default('active'),
   assigned_regions: Joi.array().items(Joi.number().integer()).default([]),
+  permissions: Joi.array().items(Joi.string()).default([]),
 });
 
 export const regionSchema = Joi.object({

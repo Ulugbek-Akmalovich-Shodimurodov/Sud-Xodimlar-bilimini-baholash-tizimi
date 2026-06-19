@@ -1,8 +1,9 @@
 import express from 'express';
 import { query } from '../db.js';
-import { authenticateToken, permit } from '../middleware/auth.js';
+import { authenticateToken, permitPermission } from '../middleware/auth.js';
 import { collegeSchema } from '../validators.js';
 import { logAdminAction, getEntityName, getClientInfo } from '../utils/logger.js';
+import { PERMISSIONS } from '../permissions.js';
 
 const router = express.Router();
 
@@ -62,10 +63,10 @@ async function setCollegeCriteria(collegeId, criteriaIds) {
 async function fetchCollegeById(id) {
   const result = await query(
     `SELECT c.*,
-       COALESCE(
-         json_agg(cc.criterion_id ORDER BY cr.sort_order, cr.id) FILTER (WHERE cc.criterion_id IS NOT NULL),
-         '[]'
-       ) AS criteria_ids
+         COALESCE(
+           json_agg(DISTINCT cc.criterion_id) FILTER (WHERE cc.criterion_id IS NOT NULL),
+           '[]'
+         ) AS criteria_ids
      FROM colleges c
      LEFT JOIN college_criteria cc ON cc.college_id = c.id
      LEFT JOIN criteria cr ON cr.id = cc.criterion_id
@@ -81,10 +82,10 @@ router.get('/', async (req, res, next) => {
     await ensureCollegeTables();
     const result = await query(`
       SELECT c.*,
-        COALESCE(
-          json_agg(cc.criterion_id ORDER BY cr.sort_order, cr.id) FILTER (WHERE cc.criterion_id IS NOT NULL),
-          '[]'
-        ) AS criteria_ids,
+          COALESCE(
+            json_agg(DISTINCT cc.criterion_id) FILTER (WHERE cc.criterion_id IS NOT NULL),
+            '[]'
+          ) AS criteria_ids,
         COUNT(DISTINCT e.id) AS employee_count
       FROM colleges c
       LEFT JOIN college_criteria cc ON cc.college_id = c.id
@@ -103,7 +104,7 @@ router.get('/', async (req, res, next) => {
   }
 });
 
-router.post('/', authenticateToken, permit('super_admin'), async (req, res, next) => {
+router.post('/', authenticateToken, permitPermission(PERMISSIONS.COLLEGES_MANAGE), async (req, res, next) => {
   try {
     const { error, value } = collegeSchema.validate(req.body);
     if (error) return res.status(400).json({ error: error.message });
@@ -136,7 +137,7 @@ router.post('/', authenticateToken, permit('super_admin'), async (req, res, next
   }
 });
 
-router.put('/:id', authenticateToken, permit('super_admin'), async (req, res, next) => {
+router.put('/:id', authenticateToken, permitPermission(PERMISSIONS.COLLEGES_MANAGE), async (req, res, next) => {
   try {
     const { error, value } = collegeSchema.validate(req.body);
     if (error) return res.status(400).json({ error: error.message });
@@ -173,7 +174,7 @@ router.put('/:id', authenticateToken, permit('super_admin'), async (req, res, ne
   }
 });
 
-router.delete('/:id', authenticateToken, permit('super_admin'), async (req, res, next) => {
+router.delete('/:id', authenticateToken, permitPermission(PERMISSIONS.COLLEGES_MANAGE), async (req, res, next) => {
   try {
     await ensureCollegeTables();
     const oldData = await fetchCollegeById(req.params.id);

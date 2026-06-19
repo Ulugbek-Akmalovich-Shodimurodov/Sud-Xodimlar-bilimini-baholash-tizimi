@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import { query } from '../db.js';
+import { hasPermission, normalizePermissions } from '../permissions.js';
 
 dotenv.config();
 
@@ -25,7 +26,7 @@ async function loadAdminFromToken(req, res, next, optional = false) {
   }
 
   const admin = await query(
-    'SELECT id, username, role, assigned_regions, status FROM admins WHERE id = $1',
+    'SELECT id, username, role, assigned_regions, permissions, status FROM admins WHERE id = $1',
     [payload.id]
   );
   if (!admin.rows.length) {
@@ -34,8 +35,14 @@ async function loadAdminFromToken(req, res, next, optional = false) {
   if (admin.rows[0].status === 'blocked') {
     return res.status(403).json({ error: 'Admin bloklangan' });
   }
+  // Normalize assigned_regions to an array of numbers and normalize permissions
+  const row = admin.rows[0];
+  row.assigned_regions = Array.isArray(row.assigned_regions)
+    ? row.assigned_regions.map((r) => Number(r)).filter((n) => Number.isFinite(n))
+    : [];
+  row.permissions = normalizePermissions(row.permissions, row.role);
 
-  req.user = admin.rows[0];
+  req.user = row;
   return next();
 }
 
@@ -57,6 +64,20 @@ export function permit(...allowedRoles) {
     if (!role || !allowedRoles.includes(role)) {
       return res.status(403).json({ error: "Ruxsat yo'q" });
     }
+    next();
+  };
+}
+
+export function permitPermission(permission) {
+  return (req, res, next) => {
+    if (!req.user) {
+      return res.status(401).json({ error: 'Token talab qilinadi' });
+    }
+
+    if (!hasPermission(req.user, permission)) {
+      return res.status(403).json({ error: "Bu amal uchun ruxsat yo'q" });
+    }
+
     next();
   };
 }

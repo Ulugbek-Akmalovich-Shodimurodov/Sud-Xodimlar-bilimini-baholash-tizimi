@@ -1,15 +1,16 @@
 import { Link, Outlet, useLocation } from 'react-router-dom';
+import { hasPermission, PERMISSIONS } from '../utils/permissions.js';
 
 const navItems = [
   { to: '/admin', label: 'Dashboard', description: 'Bosh sahifa', icon: 'M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z' },
-  { to: '/admin/employees', label: 'Xodimlar', description: 'Xodimlarni boshqarish', icon: 'M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z' },
-  { to: '/admin/regions', label: 'Viloyatlar', description: 'Hududlarni boshqarish', icon: 'M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z' },
-  { to: '/admin/districts', label: 'Tumanlar', description: 'Tumanlarni boshqarish', icon: 'M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.97.76 1.58V19z' },
-  { to: '/admin/positions', label: 'Lavozimlar', description: 'Lavozimlarni boshqarish', icon: 'M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-6 0h-4V4h4v2z' },
-  { to: '/admin/colleges', label: 'Kollegalar', description: 'Kriteriyalarni boglash', icon: 'M4 4h7v7H4V4zm9 0h7v7h-7V4zM4 13h7v7H4v-7zm9 0h7v7h-7v-7z' },
-  { to: '/admin/criteria', label: 'Kriteriyalar', description: 'Kriteriyalarni boshqarish', icon: 'M3 5h18v2H3V5zm0 6h18v2H3v-2zm0 6h18v2H3v-2z' },
-  { to: '/admin/admins', label: 'Adminlar', description: 'Adminlarni boshqarish', icon: 'M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z' },
-  { to: '/admin/logs', label: 'Loglar', description: 'Tizim loglari', icon: 'M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z' },
+  { to: '/admin/employees', permission: PERMISSIONS.EMPLOYEES_VIEW, label: 'Xodimlar', description: 'Xodimlarni boshqarish', icon: 'M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z' },
+  { to: '/admin/regions', permission: PERMISSIONS.REGIONS_MANAGE, label: 'Viloyatlar', description: 'Hududlarni boshqarish', icon: 'M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z' },
+  { to: '/admin/districts', permission: PERMISSIONS.DISTRICTS_MANAGE, label: 'Tumanlar', description: 'Tumanlarni boshqarish', icon: 'M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.97.76 1.58V19z' },
+  { to: '/admin/positions', permission: PERMISSIONS.POSITIONS_MANAGE, label: 'Lavozimlar', description: 'Lavozimlarni boshqarish', icon: 'M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-6 0h-4V4h4v2z' },
+  { to: '/admin/colleges', permission: PERMISSIONS.COLLEGES_MANAGE, label: 'Kollegalar', description: 'Kriteriyalarni boglash', icon: 'M4 4h7v7H4V4zm9 0h7v7h-7V4zM4 13h7v7H4v-7zm9 0h7v7h-7v-7z' },
+  { to: '/admin/criteria', permission: PERMISSIONS.CRITERIA_MANAGE, label: 'Kriteriyalar', description: 'Kriteriyalarni boshqarish', icon: 'M3 5h18v2H3V5zm0 6h18v2H3v-2zm0 6h18v2H3v-2z' },
+  { to: '/admin/admins', permission: PERMISSIONS.ADMINS_MANAGE, label: 'Adminlar', description: 'Adminlarni boshqarish', icon: 'M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z' },
+  { to: '/admin/logs', permission: PERMISSIONS.LOGS_VIEW, label: 'Loglar', description: 'Tizim loglari', icon: 'M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z' },
 ];
 
 function AdminLayout({ user }) {
@@ -45,7 +46,7 @@ function AdminLayout({ user }) {
           <h2 className="text-xl font-semibold text-slate-900">Admin menyu</h2>
         </div>
         <nav className="space-y-3">
-          {navItems.map((item, index) => {
+          {navItems.filter((item) => !item.permission || hasPermission(user, item.permission)).map((item, index) => {
             const active = location.pathname === item.to;
             const accent = navAccentStyles[index % navAccentStyles.length];
             return (

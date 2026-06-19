@@ -1,10 +1,11 @@
 import express from 'express';
 import { query } from '../db.js';
-import { authenticateToken, permit } from '../middleware/auth.js';
+import { authenticateToken, permitPermission } from '../middleware/auth.js';
+import { PERMISSIONS } from '../permissions.js';
 
 const router = express.Router();
 
-router.get('/', authenticateToken, permit('super_admin'), async (req, res, next) => {
+router.get('/', authenticateToken, permitPermission(PERMISSIONS.LOGS_VIEW), async (req, res, next) => {
   try {
     const page = parseInt(req.query.page, 10) || 1;
     const limit = parseInt(req.query.limit, 10) || 20;
@@ -66,7 +67,7 @@ router.get('/', authenticateToken, permit('super_admin'), async (req, res, next)
   }
 });
 
-router.get('/stats', authenticateToken, permit('super_admin'), async (req, res, next) => {
+router.get('/stats', authenticateToken, permitPermission(PERMISSIONS.LOGS_VIEW), async (req, res, next) => {
   try {
     const stats = await Promise.all([
       query('SELECT COUNT(*) as total_logs FROM admin_logs'),
